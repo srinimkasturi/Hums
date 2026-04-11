@@ -1,6 +1,6 @@
 #(c)  srinivasa m. kasturi, MIT License
 #HUMS Human as Universal Model System
-#Use this model to search, process, and present anything to any human, it is doorway an entry point for humans for anything any reason etc.,
+#Use this systems thinking based model to search, process, and present (user interface designed by human for human using human makeup) anything to any human, it is doorway an entry point for humans for anything any reason etc.,
 bucket_id,bucket_name,bucket_role,signal_id,signal_name,signal_description
 B1,Who We Are,Identity & Inner Life,S01,Feel,Emotional experience and affective states
 B1,Who We Are,Identity & Inner Life,S02,Ideate,Generation of ideas and imaginative thought
