@@ -1,4 +1,4 @@
-#(c) srinivasa m. kasturi, MIT License
+#(c)  srinivasa m. kasturi, MIT License
 #HUMS Human as Universal Model System
 #Use this model to search, process, and present anything to any human
 bucket_id,bucket_name,bucket_role,signal_id,signal_name,signal_description
