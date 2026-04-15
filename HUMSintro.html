@@ -207,6 +207,30 @@
   }
   .scene.active .hypothesis-text { opacity: 1; }
 
+  .hums-coming {
+    font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+    color: var(--gold);
+    opacity: 0;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+    transition: opacity 0.8s ease 1.8s;
+  }
+  .scene.active .hums-coming { opacity: 0.85; }
+
+  /* Copyright notice */
+  #copyright {
+    position: absolute;
+    top: 9px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: clamp(0.6rem, 1.3vw, 0.78rem);
+    color: var(--ink);
+    opacity: 0.38;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    z-index: 20;
+  }
+
   /* Fractal hint in final */
   .fractal-hint {
     position: absolute; opacity: 0.06;
@@ -428,7 +452,7 @@
         <line class="draw d6 gold-stroke" x1="30" y1="60" x2="70" y2="60" stroke-dasharray="60"/>
       </g>
     </svg>
-    <div class="caption">What if we learnt <em>Knowledge like a System</em>?</div>
+    <div class="caption">What if we learnt Knowledge <em>like a System</em> — and put it to work <em>like a System itself</em>?</div>
   </div>
 
   <!-- SCENE 8: Hypothesis -->
@@ -477,7 +501,11 @@
     </svg>
     <div class="hums-title">HUMS</div>
     <div class="hums-sub">Human as Universal Modelling System</div>
+    <div class="hums-coming">✦ The HUMS interface to visit any knowledge — coming soon ✦</div>
   </div>
+
+  <!-- Copyright -->
+  <div id="copyright">© Srinivasa M. Kasturi · HUMS™ — Human as Universal Modelling System · All rights reserved</div>
 
   <!-- Progress & Nav -->
   <div id="progress"></div>
