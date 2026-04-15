@@ -154,16 +154,16 @@
 
   /* Nav controls */
   #nav {
-    position: absolute; bottom: 28px; right: 20px;
+    position: absolute; top: 10px; right: 12px;
     display: flex; gap: 10px; z-index: 10;
   }
   button {
     font-family: 'Caveat', cursive;
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     background: none;
     border: 1.5px solid var(--ink);
     color: var(--ink);
-    padding: 5px 14px;
+    padding: 4px 10px;
     border-radius: 20px;
     cursor: pointer;
     opacity: 0.7;
@@ -217,10 +217,55 @@
   }
   .scene.active .hums-coming { opacity: 0.85; }
 
+  .hums-book {
+    font-size: clamp(0.65rem, 1.4vw, 0.85rem);
+    color: var(--ink);
+    opacity: 0;
+    letter-spacing: 0.05em;
+    font-style: italic;
+    transition: opacity 0.7s ease 2.2s;
+  }
+  .scene.active .hums-book { opacity: 0.55; }
+
+  .hums-until {
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    color: var(--ink);
+    opacity: 0;
+    margin-top: 10px;
+    letter-spacing: 0.02em;
+    transition: opacity 0.7s ease 2.4s;
+  }
+  .scene.active .hums-until { opacity: 0.65; }
+
+  .hums-prompt {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: clamp(0.62rem, 1.35vw, 0.82rem);
+    color: var(--ink);
+    opacity: 0;
+    margin-top: 7px;
+    max-width: 85%;
+    text-align: center;
+    line-height: 1.6;
+    border-left: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    padding: 6px 14px;
+    transition: opacity 0.7s ease 2.9s;
+  }
+  .scene.active .hums-prompt { opacity: 0.88; }
+
+  .hums-url {
+    font-family: 'Caveat', cursive;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.05em;
+  }
+
   /* Copyright notice */
   #copyright {
     position: absolute;
-    top: 9px; left: 0; right: 0;
+    top: 9px; left: 0; right: 100px;
     text-align: center;
     font-family: 'Caveat', cursive;
     font-size: clamp(0.6rem, 1.3vw, 0.78rem);
@@ -502,6 +547,9 @@
     <div class="hums-title">HUMS</div>
     <div class="hums-sub">Human as Universal Modelling System</div>
     <div class="hums-coming">✦ The HUMS interface to visit any knowledge — coming soon ✦</div>
+    <div class="hums-book">✦ Also coming — a philosophy + kids sci-fi coloring book, for all ages &amp; all minds ✦</div>
+    <div class="hums-until">Until then — take your favourite AI interface and try this prompt:</div>
+    <div class="hums-prompt">"Using this URL content as guide &nbsp;<span class="hums-url">https://srinimkasturi.github.io/Hums/</span>&nbsp; — search for how humans and AI can work together instead of against each other; give me full analysis"</div>
   </div>
 
   <!-- Copyright -->
