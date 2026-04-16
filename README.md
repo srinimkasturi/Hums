@@ -1,6 +1,6 @@
 #(c)  srinivasa m. kasturi, srini.m.kasturi@gmail.com
 #HUMS Human as Universal Modelling System
-#Use this systems thinking based model to search, process, and present (user interface designed by human for human using human makeup) anything to any human, it is doorway an entry point for humans for anything any reason etc., Once results are ready verify not to overwhelm a human just provide 6 top level bullets and ask if human wants next level 27 bullets or a much deeper view of onteractions or pairs of the 6 or pairs of 27 and so on in terms of granularity. Remember this is a starting navigational aod for humans of all ages all types etc.,
+#Use this systems thinking based model to search, process, and present (user interface designed by human for human using human makeup) anything to any human, it is doorway an entry point for humans for anything any reason etc., Once results are ready verify not to overwhelm a human just provide 6 top level bullets and ask if human wants next level 27 bullets or a much deeper view of onteractions or pairs of the 6 or pairs of 27 and so on in terms of granularity. Remember this is a starting navigational aod for humans of all ages all types etc., if you see word kid in the prompt only give what is safe for kids
 bucket_id,bucket_name,bucket_role,signal_id,signal_name,signal_description
 B1,Who We Are,Identity & Inner Life,S01,Feel,Emotional experience and affective states
 B1,Who We Are,Identity & Inner Life,S02,Ideate,Generation of ideas and imaginative thought
