@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Life After Sun — A HUMS SciFi Coloring Adventure</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
@@ -53,6 +54,7 @@
   .slide-body p + p { margin-top: 0.9em; }
   .slide-body em { font-style: italic; color: var(--accent); }
   .slide-body strong { font-weight: 600; }
+  .tagline { margin-top: 20px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.85rem; color: var(--muted); border-left: 2px solid var(--soft); padding-left: 12px; line-height: 1.8; }
   .cover-svg-wrap { width: 200px; height: 200px; margin-bottom: 24px; }
   .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; color: var(--ink); margin-bottom: 10px; }
   .cover-sub { font-size: 1rem; color: var(--muted); margin-bottom: 6px; font-style: italic; }
@@ -61,6 +63,8 @@
   .buckets-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; width: 100%; max-width: 860px; }
   .bucket-card { border: 1px solid var(--soft); border-radius: 4px; padding: 13px 15px; background: #faf9f6; }
   .bucket-name { font-family: 'Playfair Display', serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 7px; }
+  .bucket-name.green { color: #2d6a4f; } .bucket-name.orange { color: #c77a1a; } .bucket-name.blue { color: #1a4c8a; }
+  .bucket-name.purple { color: #6b3a8a; } .bucket-name.red { color: var(--accent); } .bucket-name.teal { color: #1a7a6e; }
   .bucket-signals { font-size: 0.82rem; color: #555; line-height: 1.7; }
   .nav-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; border-top: 1px solid var(--soft); background: var(--white); flex-shrink: 0; }
   .nav-btn { background: none; border: 1px solid var(--soft); cursor: pointer; padding: 8px 22px; font-family: 'Crimson Pro', serif; font-size: 0.9rem; color: var(--ink); letter-spacing: 0.08em; border-radius: 2px; transition: all 0.2s; }
@@ -69,6 +73,7 @@
   .nav-btn.primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .nav-btn.primary:hover { background: #333; }
   .picker-btn { font-size: 0.82rem; letter-spacing: 0.04em; min-width: 100px; }
+  /* ── PAGE PICKER DRAWER ── */
   .picker-overlay {
     display: none;
     position: fixed; inset: 0;
@@ -153,30 +158,31 @@
   }
   .picker-tile.current .pt-label { color: var(--accent); font-style: italic; }
   .key-hint { position: fixed; bottom: 60px; right: 20px; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; opacity: 0.6; }
+  /* ILLUS PANEL: column so tag sits below SVG, never over it */
   .illus-panel { display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
   .illus-panel svg { flex: 1; min-height: 0; width: 100%; max-width: 320px; }
+  /* DRESS TAG */
   .dress-tag {
     flex-shrink: 0;
     width: 100%;
     border-top: 1px solid var(--soft);
-    padding: 6px 10px;
-    font-family: 'Crimson Pro', serif;
+    padding: 5px 10px;
+    font-family: 'Playfair Display', serif;
     font-size: 0.75rem;
-    color: #555;
+    font-style: italic;
+    color: var(--muted);
     text-align: center;
     background: #faf9f6;
-    line-height: 1.4;
   }
-  .dress-tag .dtop { font-family: 'Playfair Display', serif; font-style: italic; color: var(--ink); font-size: 0.82rem; }
-  .dress-tag .dtip { display: block; font-size: 0.68rem; color: var(--accent); margin-top: 2px; }
 
 @media (max-width: 680px) {
-  .slide.layout-split { flex-direction: column; }
-  .illus-panel { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid var(--soft); }
-  .text-panel { padding: 20px; }
-  .buckets-grid { grid-template-columns: 1fr 1fr; }
+.slide.layout-split { flex-direction: column; }
+.illus-panel { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid var(–soft); }
+.text-panel { padding: 20px; }
+.buckets-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
+
 </head>
 <body>
 
@@ -185,15 +191,15 @@
   <span class="topbar-title">Life After Sun</span>
   <span class="slide-counter" id="counterDisplay">1 / 27</span>
 </div>
-
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 <div class="stage" id="stage"></div>
-
 <div class="nav-bar">
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
   <button class="nav-btn picker-btn" id="pickerBtn" onclick="togglePicker()">☰ All Pages</button>
   <button class="nav-btn primary" id="nextBtn" onclick="changeSlide(1)">Next →</button>
 </div>
+
+<!-- Page picker drawer -->
 
 <div class="picker-overlay" id="pickerOverlay" onclick="closePicker()"></div>
 <div class="picker-drawer" id="pickerDrawer">
@@ -207,572 +213,1442 @@
 <div class="key-hint">← → keys · ☰ to jump</div>
 
 <script>
-const slides = [
-  {
-    title: "Life After Sun",
-    label: "Cover",
-    layout: "cover",
-    icon: "☀️",
-    html: `
-      <div class="cover-svg-wrap">
-        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="150" cy="128" r="52" stroke-width="2"/>
-          <circle cx="138" cy="120" r="6" fill="#2d2d2d" stroke="none"/>
-          <circle cx="162" cy="120" r="6" fill="#2d2d2d" stroke="none"/>
-          <path d="M136 140 Q150 152 164 140" stroke-width="2"/>
-        </svg>
-      </div>
-      <div class="cover-title">Life After Sun</div>
-      <div class="cover-sub">A HUMS SciFi Coloring Adventure</div>
-      <div class="cover-author">By HUMS</div>
-    `
-  },
-  {
-    title: "Prologue",
-    label: "Opening",
-    layout: "split",
-    icon: "📖",
-    body: `
-      <p><strong>Prologue</strong> means “a little beginning.” It is where the story says hello.</p>
-      <p>This book was made from a father’s love for his kids, stories, and imagination.</p>
-      <p>It mixes science, fun, and wonder into one playful adventure.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="88" cy="65" r="14"/><circle cx="80" cy="67" r="2" fill="#2d2d2d"/><circle cx="96" cy="67" r="2" fill="#2d2d2d"/>
-      <path d="M74 82 Q88 92 102 82"/>
-      <circle cx="195" cy="120" r="12"/><circle cx="190" cy="122" r="2" fill="#2d2d2d"/><circle cx="200" cy="122" r="2" fill="#2d2d2d"/>
-      <path d="M185 135 Q195 142 205 135"/>
-    </svg>`
-  },
-  {
-    title: "The Happy Path",
-    label: "Scene 1",
-    layout: "split",
-    icon: "🌿",
-    body: `
-      <p>This is a coloring adventure about two kids and their dog Groot.</p>
-      <p>They begin by exploring the world around them and asking big questions.</p>
-      <p>Every page is a chance to pause, color, play, and go on to the next page.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="80" cy="55" r="14"/>
-      <circle cx="178" cy="65" r="12"/>
-      <ellipse cx="248" cy="195" rx="20" ry="12"/>
-      <line x1="22" y1="230" x2="22" y2="120"/>
-      <line x1="268" y1="230" x2="268" y2="128"/>
-      <line x1="10" y1="230" x2="288" y2="230"/>
-    </svg>`
-  },
-  {
-    title: "Sun Setup",
-    label: "Scene 2",
-    layout: "split",
-    icon: "🔭",
-    body: `
-      <p>BabLee was watching the sky one day and noticed something unusual.</p>
-      <p>He told Kanna and the kids that the Sun would change slowly over time.</p>
-      <p>That was the start of a very big Earth adventure.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="62" cy="218" r="22"/>
-      <circle cx="200" cy="218" r="28" stroke-width="2"/>
-      <path d="M132 218 L148 218"/><polygon points="148,214 156,218 148,222" fill="#2d2d2d" stroke="none"/>
-    </svg>`
-  },
-  {
-    title: "The Seers",
-    label: "Scene 3",
-    layout: "split",
-    icon: "👁️",
-    body: `
-      <p>The children found a carved picture in the woods.</p>
-      <p>It showed a human under a watchful eye.</p>
-      <p>They wondered what it meant and kept looking for clues.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <ellipse cx="240" cy="178" rx="48" ry="62"/>
-      <ellipse cx="240" cy="155" rx="22" ry="12"/>
-      <circle cx="240" cy="155" r="7" fill="#2d2d2d" stroke="none"/>
-    </svg>`
-  },
-  {
-    title: "Food and Far Sight",
-    label: "Scene 4",
-    layout: "split",
-    icon: "🥭",
-    body: `
-      <p>The kids saw a mango tree full of fruit.</p>
-      <p>Then they noticed sunlight shining through the branches.</p>
-      <p>Their dad taught them a rhyme: “Sun works in all. Sun is cool.”</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="20" y1="250" x2="280" y2="250"/>
-      <circle cx="165" cy="110" r="28"/>
-      <circle cx="215" cy="140" r="10"/>
-      <circle cx="195" cy="155" r="9"/>
-    </svg>`
-  },
-  {
-    title: "Seasons and Animals",
-    label: "Scene 5",
-    layout: "split",
-    icon: "🐾",
-    body: `
-      <p>Weeks passed and the seasons kept moving.</p>
-      <p>The kids noticed trees changing, birds traveling, and animals getting ready.</p>
-      <p>They began to wonder if the trees knew secrets humans had not learned yet.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M40 230 Q60 180 90 230"/>
-      <path d="M110 230 Q130 170 160 230"/>
-      <path d="M180 230 Q200 160 230 230"/>
-    </svg>`
-  },
-  {
-    title: "Festivals and Feasts",
-    label: "Scene 6",
-    layout: "split",
-    icon: "🎉",
-    body: `
-      <p>Diwali lights, sweets, snow, and holiday fun filled the season.</p>
-      <p>The kids saw that happy moments can help families feel strong.</p>
-      <p>Even a stormy night can feel warm when people are together.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="70" cy="200" r="22"/>
-      <circle cx="160" cy="210" r="20"/>
-      <circle cx="250" cy="205" r="18"/>
-    </svg>`
-  },
-  {
-    title: "Peace and Pause",
-    label: "Scene 7",
-    layout: "split",
-    icon: "🌙",
-    body: `
-      <p>Sometimes the world feels loud and busy.</p>
-      <p>The kids learned that quiet time helps everyone think better.</p>
-      <p>Big feelings are easier to handle when people make space for one another.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M130 110 Q160 80 190 110 Q160 140 130 110"/>
-      <circle cx="150" cy="220" r="12"/>
-    </svg>`
-  },
-  {
-    title: "Travel to India",
-    label: "Scene 8",
-    layout: "split",
-    icon: "🛫",
-    body: `
-      <p>The kids prepared for a trip to India.</p>
-      <p>They learned helpful rules about speaking kindly, moving safely, and watching carefully.</p>
-      <p>New places feel easier when you know how to be respectful.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M40 150 L260 150"/>
-      <path d="M120 120 L180 180"/>
-      <path d="M180 120 L120 180"/>
-    </svg>`
-  },
-  {
-    title: "Inscription Mystery",
-    label: "Scene 9",
-    layout: "split",
-    icon: "🪟",
-    body: `
-      <p>Years later, the children noticed a sticker in their play area.</p>
-      <p>It showed a human figure with numbers inside.</p>
-      <p>They wondered if it was a clue about how people work.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="100" y="70" width="100" height="140" rx="10"/>
-      <circle cx="150" cy="115" r="12"/>
-      <line x1="150" y1="127" x2="150" y2="165"/>
-    </svg>`
-  },
-  {
-    title: "The Grandparents Visit",
-    label: "Scene 10",
-    layout: "split",
-    icon: "👵",
-    body: `
-      <p>The grandparents came to visit and brought extra love.</p>
-      <p>There were tasty meals, massages, play, and lots of stories.</p>
-      <p>The kids learned that routines can help life feel smooth and happy.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="95" cy="90" r="14"/>
-      <circle cx="200" cy="90" r="14"/>
-      <path d="M80 115 Q95 125 110 115"/>
-      <path d="M185 115 Q200 125 215 115"/>
-    </svg>`
-  },
-  {
-    title: "Kids United Nations",
-    label: "Scene 11",
-    layout: "split",
-    icon: "🌍",
-    body: `
-      <p>The kids had an idea for the grown-ups.</p>
-      <p>They said children are good at dealing with the unknown.</p>
-      <p>That idea helped many people start thinking in a new way.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="150" cy="145" r="62"/>
-      <circle cx="150" cy="145" r="16"/>
-    </svg>`
-  },
-  {
-    title: "Preparations Begin",
-    label: "Scene 12",
-    layout: "split",
-    icon: "⚙️",
-    body: `
-      <p>Earth needed a plan for a new journey.</p>
-      <p>People worked together to think about light, energy, and farming.</p>
-      <p>The kids helped everyone imagine smart ways to keep life going.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="110" cy="150" r="28"/>
-      <circle cx="190" cy="150" r="28"/>
-      <line x1="138" y1="150" x2="162" y2="150"/>
-    </svg>`
-  },
-  {
-    title: "The Planet Plan",
-    label: "Scene 13",
-    layout: "split",
-    icon: "🪐",
-    body: `
-      <p>Earth’s journey began to take shape.</p>
-      <p>People used sails, motion, and careful thinking to help the planet move.</p>
-      <p>It was a giant plan, but it started with small ideas.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="150" cy="150" r="40"/>
-      <line x1="150" y1="110" x2="150" y2="70"/>
-      <line x1="150" y1="190" x2="150" y2="230"/>
-    </svg>`
-  },
-  {
-    title: "Twinkle to Propulsion",
-    label: "Scene 14",
-    layout: "split",
-    icon: "✨",
-    body: `
-      <p>The kids turned a rhyme into a smart idea.</p>
-      <p>They shared it with scientists, and the scientists listened.</p>
-      <p>Sometimes a poem can open the door to a big discovery.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M40 220 Q150 120 260 220"/>
-      <circle cx="150" cy="150" r="12"/>
-    </svg>`
-  },
-  {
-    title: "Moonshot Slingshot",
-    label: "Scene 15",
-    layout: "split",
-    icon: "🌔",
-    body: `
-      <p>The kids learned about space tricks like slingshots and boosts.</p>
-      <p>They imagined stars, moons, and planets helping one another move.</p>
-      <p>The sky began to feel like a giant teamwork game.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="110" cy="150" r="18"/>
-      <circle cx="200" cy="120" r="28"/>
-      <path d="M70 210 Q150 60 230 210"/>
-    </svg>`
-  },
-  {
-    title: "Are We There Yet?",
-    label: "Scene 16",
-    layout: "split",
-    icon: "🚗",
-    body: `
-      <p>Earth kept moving toward its new home.</p>
-      <p>The kids noticed that light helped farms grow and people feel better.</p>
-      <p>They learned that small changes can make a big difference.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="75" y="150" width="150" height="40" rx="12"/>
-      <circle cx="105" cy="195" r="12"/>
-      <circle cx="195" cy="195" r="12"/>
-    </svg>`
-  },
-  {
-    title: "The Light Solution",
-    label: "Scene 17",
-    layout: "split",
-    icon: "💡",
-    body: `
-      <p>White light in the morning and soft yellow light at night helped people feel calmer.</p>
-      <p>The kids helped everyone understand the pattern.</p>
-      <p>Light became part of the plan for happy living.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="100" cy="140" r="28"/>
-      <circle cx="200" cy="140" r="18"/>
-      <line x1="100" y1="112" x2="100" y2="80"/>
-    </svg>`
-  },
-  {
-    title: "The Dog Therapist",
-    label: "Scene 18",
-    layout: "split",
-    icon: "🐶",
-    body: `
-      <p>Groot the dog helped everyone feel better.</p>
-      <p>He was playful, loving, and always ready to listen.</p>
-      <p>Sometimes the best helper in the universe is a dog with a kind heart.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <ellipse cx="150" cy="170" rx="40" ry="26"/>
-      <circle cx="135" cy="130" r="18"/>
-      <circle cx="124" cy="120" r="8"/>
-      <circle cx="140" cy="120" r="8"/>
-    </svg>`
-  },
-  {
-    title: "The Big Journey Ends",
-    label: "Scene 19",
-    layout: "split",
-    icon: "🌠",
-    body: `
-      <p>The long journey to a new solar home came to an end.</p>
-      <p>People, kids, and families settled in with care.</p>
-      <p>Life kept going because everyone worked together.</p>
-    `,
-    svg: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M30 220 Q150 40 270 220"/>
-      <circle cx="150" cy="130" r="20"/>
-    </svg>`
-  },
-  {
-    title: "What Is a Human?",
-    label: "Signal 1",
-    layout: "framework",
-    icon: "🧠",
-    body: `
-      <p><strong>WHO WE ARE:</strong> Feel. Imagine. Remember. Know who you are.</p>
-      <p>A human uses feelings and ideas to meet the world.</p>
-      <p>That is one part of the HUMS framework.</p>
-    `
-  },
-  {
-    title: "How We Work",
-    label: "Signal 2",
-    layout: "framework",
-    icon: "⚡",
-    body: `
-      <p><strong>HOW WE WORK:</strong> Think. React. Trust the body. Dream.</p>
-      <p>Humans do not only think with their minds.</p>
-      <p>The body helps too.</p>
-    `
-  },
-  {
-    title: "The Five Senses",
-    label: "Signal 3",
-    layout: "framework",
-    icon: "👀",
-    body: `
-      <p><strong>SENSES:</strong> See. Hear. Smell. Taste. Touch.</p>
-      <p>These are the ways humans notice the world.</p>
-      <p>They help us learn, play, and stay safe.</p>
-    `
-  },
-  {
-    title: "What We Do",
-    label: "Signal 4",
-    layout: "framework",
-    icon: "👐",
-    body: `
-      <p><strong>ACTIONS:</strong> Speak. Use hands. Move legs. Pee. Poo. Grow life.</p>
-      <p>Humans do many things with their bodies.</p>
-      <p>Action is part of being alive.</p>
-    `
-  },
-  {
-    title: "Why We Are Here",
-    label: "Signal 5",
-    layout: "framework",
-    icon: "💛",
-    body: `
-      <p><strong>PURPOSE:</strong> Live. Love. Connect.</p>
-      <p>People need meaning, friendship, and care.</p>
-      <p>That is what gives life direction.</p>
-    `
-  },
-  {
-    title: "Keeping Healthy",
-    label: "Signal 6",
-    layout: "framework",
-    icon: "🌬️",
-    body: `
-      <p><strong>HEALTH:</strong> Breathe. Digest. Circulate. Grow. Age.</p>
-      <p>The body has its own amazing systems.</p>
-      <p>They keep us going every day.</p>
-    `
-  },
-  {
-    title: "Us and AI",
-    label: "Bonus",
-    layout: "framework",
-    icon: "🤖",
-    body: `
-      <p>Humans and AI can work together as partners.</p>
-      <p>People bring wisdom, empathy, and imagination.</p>
-      <p>Machines can help with speed, memory, and scale.</p>
-    `
-  },
-  {
-    title: "Us and Organizations",
-    label: "Bonus",
-    layout: "framework",
-    icon: "🏢",
-    body: `
-      <p>Groups and organizations work best when they stay flexible.</p>
-      <p>They need learning, trust, and good communication.</p>
-      <p>That helps them grow and change.</p>
-    `
-  },
-  {
-    title: "Us and Mental Health",
-    label: "Bonus",
-    layout: "framework",
-    icon: "🫶",
-    body: `
-      <p>It is okay to have hard days.</p>
-      <p>People need space, kindness, rest, and support.</p>
-      <p>Healing is part of being human too.</p>
-    `
-  },
-  {
-    title: "Choose Your Own ThinkVenture",
-    label: "Finale",
-    layout: "framework",
-    icon: "🌟",
-    body: `
-      <p>Now the adventure belongs to you.</p>
-      <p>Use what you learned to explore, imagine, and care for others.</p>
-      <p>The story ends, but your thinking journey can keep going.</p>
-    `
+// ─── HELPER: shared SVG drawing functions ─────────────────────────────
+// Each figure function returns SVG path strings
+// dress codes: 'sari', 'kurta', 'kimono', 'hanbok', 'dashiki', 'kente',
+//              'thobe', 'dirndl', 'poncho', 'cheongsam', 'kaftan', 'tunic'
+
+function head(cx, cy, r=14) {
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2d2d2d" stroke-width="1.5"/>`;
+}
+
+function eyes(cx, cy) {
+  return `<circle cx="${cx-5}" cy="${cy+2}" r="2" fill="#2d2d2d" stroke="none"/>
+          <circle cx="${cx+5}" cy="${cy+2}" r="2" fill="#2d2d2d" stroke="none"/>`;
+}
+
+function smile(cx, cy) {
+  return `<path d="M${cx-5} ${cy+8} Q${cx} ${cy+13} ${cx+5} ${cy+8}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>`;
+}
+
+// Dress/torso styles
+function torso_sari(cx, top, bot) {
+  // Sari: wrapped drape with pleats
+  return `<path d="M${cx-14} ${top} C${cx-18} ${top+10} ${cx-18} ${bot-10} ${cx-12} ${bot}
+          L${cx+12} ${bot} C${cx+18} ${bot-10} ${cx+18} ${top+10} ${cx+14} ${top} Z"
+          fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+          <path d="M${cx-14} ${top+8} Q${cx} ${top+4} ${cx+14} ${top+8}" stroke="#2d2d2d" stroke-width="1" fill="none"/>
+          <path d="M${cx-16} ${top+18} Q${cx} ${top+14} ${cx+16} ${top+18}" stroke="#2d2d2d" stroke-width="0.8" fill="none" stroke-dasharray="2 2"/>
+          <line x1="${cx+10}" y1="${top}" x2="${cx+20}" y2="${top-10}" stroke="#2d2d2d" stroke-width="1.2"/>
+          <path d="M${cx+18} ${top-12} Q${cx+24} ${top-18} ${cx+20} ${top-8}" stroke="#2d2d2d" stroke-width="1" fill="none"/>`;
+}
+
+function torso_kurta(cx, top, bot) {
+  // Kurta: knee-length straight-cut tunic, mandarin/band collar, placket down centre, side slits at hem, 3/4 sleeves
+  let mid = top + 50; // hem sits mid-thigh
+  return `
+  <path d="M${cx-14} ${top+2} L${cx-16} ${mid} L${cx-10} ${mid} L${cx-10} ${bot} L${cx+10} ${bot} L${cx+10} ${mid} L${cx+16} ${mid} L${cx+14} ${top+2} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <rect x="${cx-4}" y="${top}" width="8" height="10" rx="2" fill="none" stroke="#2d2d2d" stroke-width="1.2"/>
+  <line x1="${cx}" y1="${top+10}" x2="${cx}" y2="${mid-8}" stroke="#2d2d2d" stroke-width="1"/>
+  <path d="M${cx-14} ${top+10} L${cx-30} ${top+28} L${cx-26} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+14} ${top+10} L${cx+30} ${top+28} L${cx+26} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <line x1="${cx-16}" y1="${mid-8}" x2="${cx-10}" y2="${mid}" stroke="#2d2d2d" stroke-width="1"/>
+  <line x1="${cx+16}" y1="${mid-8}" x2="${cx+10}" y2="${mid}" stroke="#2d2d2d" stroke-width="1"/>`;
+}
+
+function torso_kimono(cx, top, bot) {
+  // Kimono: wide rectangular body, deep V-wrap front, very wide drooping sleeves, obi sash band
+  let obi = top + 35;
+  return `
+  <path d="M${cx-18} ${top+5} L${cx-20} ${bot} L${cx+20} ${bot} L${cx+18} ${top+5} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-18} ${top+5} L${cx-38} ${top+32} L${cx-38} ${top+52} L${cx-18} ${top+42}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+18} ${top+5} L${cx+38} ${top+32} L${cx+38} ${top+52} L${cx+18} ${top+42}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-10} ${top+5} L${cx} ${top+28} L${cx+10} ${top+5}" stroke="#2d2d2d" stroke-width="1.4" fill="none"/>
+  <path d="M${cx-20} ${obi} L${cx+20} ${obi} L${cx+20} ${obi+12} L${cx-20} ${obi+12} Z" fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-20} ${obi+6} L${cx+20} ${obi+6}" stroke="#2d2d2d" stroke-width="0.7"/>`;
+}
+
+function torso_hanbok(cx, top, bot) {
+  // Hanbok: very short cropped jeogori jacket with ribbon ties (goreum), huge bell-shaped chima skirt from armpit
+  let jacketBot = top + 18;
+  return `
+  <path d="M${cx-10} ${top} L${cx-11} ${jacketBot} L${cx+11} ${jacketBot} L${cx+10} ${top} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-10} ${top+4} L${cx-24} ${top+18} L${cx-20} ${top+20}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+10} ${top+4} L${cx+24} ${top+18} L${cx+20} ${top+20}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-3} ${top+2} L${cx-2} ${top+14} Q${cx} ${top+18} ${cx+2} ${top+14} L${cx+3} ${top+2}" stroke="#2d2d2d" stroke-width="1" fill="none"/>
+  <path d="M${cx} ${top+14} L${cx-6} ${jacketBot+4}" stroke="#2d2d2d" stroke-width="1.2"/>
+  <path d="M${cx-22} ${jacketBot} Q${cx-30} ${jacketBot+15} ${cx-28} ${bot} L${cx+28} ${bot} Q${cx+30} ${jacketBot+15} ${cx+22} ${jacketBot} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.5"/>
+  <path d="M${cx-26} ${jacketBot+20} Q${cx} ${jacketBot+14} ${cx+26} ${jacketBot+20}" stroke="#2d2d2d" stroke-width="0.8" fill="none" stroke-dasharray="3 2"/>`;
+}
+
+function torso_dashiki(cx, top, bot) {
+  // Dashiki: boxy short-sleeve top, wide decorated V-neck panel, bold horizontal embroidery chest band
+  return `
+  <path d="M${cx-16} ${top} L${cx-18} ${bot} L${cx+18} ${bot} L${cx+16} ${top} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-16} ${top} L${cx-30} ${top+14} L${cx-30} ${top+30} L${cx-16} ${top+22}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+16} ${top} L${cx+30} ${top+14} L${cx+30} ${top+30} L${cx+16} ${top+22}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-10} ${top} L${cx} ${top+16} L${cx+10} ${top}" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>
+  <path d="M${cx-14} ${top+8} Q${cx} ${top+4} ${cx+14} ${top+8}" stroke="#2d2d2d" stroke-width="1.1" fill="none"/>
+  <path d="M${cx-16} ${top+22} L${cx+16} ${top+22}" stroke="#2d2d2d" stroke-width="1.3"/>
+  <path d="M${cx-16} ${top+26} L${cx+16} ${top+26}" stroke="#2d2d2d" stroke-width="0.8"/>
+  <path d="M${cx-4} ${top+8} L${cx} ${top+16} L${cx+4} ${top+8}" stroke="#2d2d2d" stroke-width="0.9" fill="none" stroke-dasharray="2 1"/>`;
+}
+
+function torso_kente(cx, top, bot) {
+  // Kente: toga-style wrap cloth draped over one shoulder, multiple horizontal woven strip bands visible
+  return `
+  <path d="M${cx+12} ${top-4} Q${cx+18} ${top+5} ${cx+18} ${bot} L${cx-18} ${bot} L${cx-14} ${top+5} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx+12} ${top-4} Q${cx+4} ${top-8} ${cx-14} ${top+5}" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>
+  <path d="M${cx+16} ${top+8} L${cx+30} ${top+14} L${cx+28} ${top+26}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <line x1="${cx-16}" y1="${top+14}" x2="${cx+17}" y2="${top+14}" stroke="#2d2d2d" stroke-width="1"/>
+  <line x1="${cx-17}" y1="${top+22}" x2="${cx+18}" y2="${top+22}" stroke="#2d2d2d" stroke-width="1"/>
+  <line x1="${cx-17}" y1="${top+30}" x2="${cx+18}" y2="${top+30}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <line x1="${cx-17}" y1="${top+38}" x2="${cx+18}" y2="${top+38}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <rect x="${cx-4}" y="${top+16}" width="8" height="6" fill="none" stroke="#2d2d2d" stroke-width="0.7"/>
+  <rect x="${cx+4}" y="${top+32}" width="8" height="6" fill="none" stroke="#2d2d2d" stroke-width="0.7"/>`;
+}
+
+function torso_thobe(cx, top, bot) {
+  // Thobe: full-length straight robe, stiff standing mandarin collar, tiny chest pocket, hidden placket, slim sleeves
+  return `
+  <path d="M${cx-13} ${top} L${cx-14} ${bot} L${cx+14} ${bot} L${cx+13} ${top} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-5} ${top} L${cx-5} ${top+10} L${cx+5} ${top+10} L${cx+5} ${top}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <path d="M${cx-5} ${top} Q${cx} ${top-4} ${cx+5} ${top}" stroke="#2d2d2d" stroke-width="1.1" fill="none"/>
+  <path d="M${cx-13} ${top+6} L${cx-28} ${top+22} L${cx-25} ${top+36} L${cx-13} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+13} ${top+6} L${cx+28} ${top+22} L${cx+25} ${top+36} L${cx+13} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <rect x="${cx+3}" y="${top+16}" width="8" height="6" rx="1" fill="none" stroke="#2d2d2d" stroke-width="0.8"/>
+  <line x1="${cx}" y1="${top+10}" x2="${cx}" y2="${bot-8}" stroke="#2d2d2d" stroke-width="0.7" stroke-dasharray="3 2"/>`;
+}
+
+function torso_dirndl(cx, top, bot) {
+  // Dirndl: fitted square-neck bodice with lacing, puffed sleeve tops, full gathered skirt, contrasting apron panel
+  let bodBot = top + 28;
+  return `
+  <path d="M${cx-14} ${top+4} L${cx-15} ${bodBot} L${cx+15} ${bodBot} L${cx+14} ${top+4} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-14} ${top+4} L${cx+14} ${top+4}" stroke="#2d2d2d" stroke-width="1.3"/>
+  <path d="M${cx-6} ${top+4} L${cx-4} ${top+16}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <path d="M${cx+6} ${top+4} L${cx+4} ${top+16}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <path d="M${cx-4} ${top+4} Q${cx-4} ${top-2} ${cx-10} ${top-2} Q${cx-18} ${top} ${cx-14} ${top+8}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <path d="M${cx+4} ${top+4} Q${cx+4} ${top-2} ${cx+10} ${top-2} Q${cx+18} ${top} ${cx+14} ${top+8}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <path d="M${cx-15} ${bodBot} Q${cx-20} ${bodBot+10} ${cx-20} ${bot} L${cx+20} ${bot} Q${cx+20} ${bodBot+10} ${cx+15} ${bodBot} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-8} ${bodBot} L${cx-8} ${bot} L${cx+8} ${bot} L${cx+8} ${bodBot}" stroke="#2d2d2d" stroke-width="1.1" fill="none"/>
+  <path d="M${cx-18} ${bodBot+14} Q${cx} ${bodBot+10} ${cx+18} ${bodBot+14}" stroke="#2d2d2d" stroke-width="0.8" fill="none" stroke-dasharray="3 2"/>`;
+}
+
+function torso_poncho(cx, top, bot) {
+  // Andean poncho: flat rectangular panel with head-hole slit, hangs wide like a tent, geometric zigzag border bands
+  return `
+  <path d="M${cx-34} ${top+8} L${cx-28} ${bot} L${cx+28} ${bot} L${cx+34} ${top+8} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-8} ${top+8} L${cx-8} ${top} L${cx+8} ${top} L${cx+8} ${top+8}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-34} ${top+14} L${cx-8} ${top+14}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <path d="M${cx+8} ${top+14} L${cx+34} ${top+14}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <path d="M${cx-32} ${top+14} L${cx-28} ${top+20} L${cx-24} ${top+14} L${cx-20} ${top+20} L${cx-16} ${top+14} L${cx-12} ${top+20} L${cx-8} ${top+14}" stroke="#2d2d2d" stroke-width="0.9" fill="none"/>
+  <path d="M${cx+8} ${top+14} L${cx+12} ${top+20} L${cx+16} ${top+14} L${cx+20} ${top+20} L${cx+24} ${top+14} L${cx+28} ${top+20} L${cx+32} ${top+14}" stroke="#2d2d2d" stroke-width="0.9" fill="none"/>
+  <line x1="${cx-28}" y1="${bot-12}" x2="${cx+28}" y2="${bot-12}" stroke="#2d2d2d" stroke-width="1"/>
+  <path d="M${cx-28} ${bot-12} L${cx-24} ${bot-6} L${cx-20} ${bot-12} L${cx-16} ${bot-6} L${cx-12} ${bot-12} L${cx-8} ${bot-6} L${cx-4} ${bot-12} L${cx} ${bot-6} L${cx+4} ${bot-12} L${cx+8} ${bot-6} L${cx+12} ${bot-12} L${cx+16} ${bot-6} L${cx+20} ${bot-12} L${cx+24} ${bot-6} L${cx+28} ${bot-12}" stroke="#2d2d2d" stroke-width="0.9" fill="none"/>`;
+}
+
+function torso_cheongsam(cx, top, bot) {
+  // Cheongsam/qipao: figure-hugging, high stand collar, diagonal frog-button closure right side, side slits at hem
+  return `
+  <path d="M${cx-11} ${top} C${cx-13} ${top+20} ${cx-14} ${bot-20} ${cx-12} ${bot}
+          L${cx+12} ${bot} C${cx+14} ${bot-20} ${cx+13} ${top+20} ${cx+11} ${top} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-4} ${top} L${cx-4} ${top+10} L${cx+4} ${top+10} L${cx+4} ${top}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <path d="M${cx-4} ${top} Q${cx} ${top-5} ${cx+4} ${top}" stroke="#2d2d2d" stroke-width="1" fill="none"/>
+  <path d="M${cx-11} ${top+4} L${cx-26} ${top+18} L${cx-23} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+11} ${top+4} L${cx+26} ${top+18} L${cx+23} ${top+30}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+4} ${top+10} Q${cx+10} ${top+14} ${cx+11} ${top+22}" stroke="#2d2d2d" stroke-width="1.1" fill="none"/>
+  <circle cx="${cx+9}" cy="${top+18}" r="2" fill="none" stroke="#2d2d2d" stroke-width="1"/>
+  <circle cx="${cx+10}" cy="${top+26}" r="2" fill="none" stroke="#2d2d2d" stroke-width="1"/>
+  <circle cx="${cx+11}" cy="${top+34}" r="2" fill="none" stroke="#2d2d2d" stroke-width="1"/>
+  <line x1="${cx-12}" y1="${bot-12}" x2="${cx-6}" y2="${bot}" stroke="#2d2d2d" stroke-width="1.1"/>`;
+}
+
+function torso_kaftan(cx, top, bot) {
+  // Kaftan: floor-length very wide open robe, deep V or round neck, wide bell sleeves, vertical embroidery panel both sides of centre
+  return `
+  <path d="M${cx-14} ${top} L${cx-22} ${bot} L${cx+22} ${bot} L${cx+14} ${top} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <path d="M${cx-14} ${top+6} L${cx-38} ${top+30} L${cx-36} ${top+52} L${cx-18} ${top+40}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+14} ${top+6} L${cx+38} ${top+30} L${cx+36} ${top+52} L${cx+18} ${top+40}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-7} ${top} L${cx} ${top+18} L${cx+7} ${top}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx-5} ${top+8} L${cx-5} ${bot-10}" stroke="#2d2d2d" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <path d="M${cx+5} ${top+8} L${cx+5} ${bot-10}" stroke="#2d2d2d" stroke-width="0.9" stroke-dasharray="4 3"/>
+  <path d="M${cx-12} ${top+16} Q${cx} ${top+12} ${cx+12} ${top+16}" stroke="#2d2d2d" stroke-width="1" fill="none"/>
+  <path d="M${cx-16} ${top+32} Q${cx} ${top+28} ${cx+16} ${top+32}" stroke="#2d2d2d" stroke-width="0.9" fill="none"/>
+  <path d="M${cx-20} ${bot-14} Q${cx} ${bot-18} ${cx+20} ${bot-14}" stroke="#2d2d2d" stroke-width="1" fill="none"/>`;
+}
+
+function torso_dhoti_kanduvaa(cx, top, bot) {
+  // Dhoti-Kanduvaa (Kerala/South India): dhoti = white cloth wrapped at waist into pleated front panel + tucked back
+  // Kanduvaa = upper cloth draped across shoulder. Bare upper torso with sacred thread (yajnopavita) line
+  let waist = top + 18;
+  return `
+  <path d="M${cx-4} ${top} Q${cx-8} ${top+8} ${cx-9} ${waist}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <path d="M${cx+4} ${top} Q${cx+8} ${top+8} ${cx+9} ${waist}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+  <line x1="${cx-9}" y1="${waist}" x2="${cx+9}" y2="${waist}" stroke="#2d2d2d" stroke-width="1"/>
+  <path d="M${cx-5} ${top+2} L${cx+12} ${waist+8}" stroke="#2d2d2d" stroke-width="0.9" stroke-dasharray="3 2"/>
+  <path d="M${cx-9} ${waist} L${cx-14} ${bot} L${cx-2} ${bot} L${cx-2} ${waist+20} L${cx+2} ${waist+20} L${cx+2} ${bot} L${cx+14} ${bot} L${cx+9} ${waist} Z"
+        fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+  <line x1="${cx-2}" y1="${waist}" x2="${cx-2}" y2="${waist+20}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <line x1="${cx+2}" y1="${waist}" x2="${cx+2}" y2="${waist+20}" stroke="#2d2d2d" stroke-width="0.9"/>
+  <path d="M${cx-12} ${waist+8} Q${cx-8} ${waist+4} ${cx-4} ${waist+8} Q${cx} ${waist+14} ${cx+4} ${waist+8}" stroke="#2d2d2d" stroke-width="0.9" fill="none" stroke-dasharray="2 2"/>
+  <path d="M${cx+9} ${waist} Q${cx+22} ${waist-12} ${cx+18} ${top+4}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+  <path d="M${cx+18} ${top+4} Q${cx+24} ${top-4} ${cx+16} ${top-6}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>`;
+}
+
+function torso_tunic(cx, top, bot) {
+  // Plain tunic/shirt, universal fallback
+  return `<path d="M${cx-13} ${top} L${cx-15} ${bot} L${cx+15} ${bot} L${cx+13} ${top} Z"
+          fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+          <path d="M${cx-13} ${top} L${cx-26} ${top+18} L${cx-22} ${top+20}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+          <path d="M${cx+13} ${top} L${cx+26} ${top+18} L${cx+22} ${top+20}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+          <path d="M${cx-6} ${top} Q${cx} ${top+6} ${cx+6} ${top}" stroke="#2d2d2d" stroke-width="1" fill="none"/>`;
+}
+
+// Trousers / legs
+function legs(cx, topY, h=55, wide=false) {
+  let w = wide ? 16 : 12;
+  return `<path d="M${cx-w} ${topY} L${cx-w-3} ${topY+h} L${cx-1} ${topY+h} L${cx} ${topY+h-5} L${cx+1} ${topY+h} L${cx+w+3} ${topY+h} L${cx+w} ${topY} Z"
+          fill="none" stroke="#2d2d2d" stroke-width="1.4"/>`;
+}
+
+// Wide skirt legs
+function skirt_legs(cx, topY, h=55) {
+  return `<path d="M${cx-14} ${topY} Q${cx-22} ${topY+h/2} ${cx-20} ${topY+h} L${cx+20} ${topY+h} Q${cx+22} ${topY+h/2} ${cx+14} ${topY} Z"
+          fill="none" stroke="#2d2d2d" stroke-width="1.4"/>`;
+}
+
+// Feet
+function feet(cx, topY) {
+  return `<path d="M${cx-15} ${topY} Q${cx-20} ${topY+8} ${cx-10} ${topY+8}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>
+          <path d="M${cx+15} ${topY} Q${cx+20} ${topY+8} ${cx+10} ${topY+8}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>`;
+}
+
+// Hair styles
+function hair_bun(cx, cy, r) {
+  return `<path d="M${cx-r} ${cy} Q${cx-r} ${cy-r*1.4} ${cx} ${cy-r*1.5} Q${cx+r} ${cy-r*1.4} ${cx+r} ${cy}" stroke="#2d2d2d" stroke-width="1.4" fill="none"/>
+          <circle cx="${cx}" cy="${cy-r*1.4}" r="5" fill="none" stroke="#2d2d2d" stroke-width="1.2"/>`;
+}
+function hair_long(cx, cy, r) {
+  return `<path d="M${cx-r} ${cy} Q${cx-r*1.3} ${cy-r} ${cx} ${cy-r*1.5} Q${cx+r*1.3} ${cy-r} ${cx+r} ${cy}" stroke="#2d2d2d" stroke-width="1.4" fill="none"/>
+          <path d="M${cx-r} ${cy} L${cx-r-3} ${cy+r*1.5}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+          <path d="M${cx+r} ${cy} L${cx+r+3} ${cy+r*1.5}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>`;
+}
+function hair_afro(cx, cy, r) {
+  return `<path d="M${cx-r*1.3} ${cy+2} Q${cx-r*1.5} ${cy-r} ${cx} ${cy-r*1.8} Q${cx+r*1.5} ${cy-r} ${cx+r*1.3} ${cy+2}" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>`;
+}
+function hair_hijab(cx, cy, r) {
+  return `<path d="M${cx-r*1.2} ${cy+r*0.5} Q${cx-r*1.3} ${cy-r*0.8} ${cx} ${cy-r*1.5} Q${cx+r*1.3} ${cy-r*0.8} ${cx+r*1.2} ${cy+r*0.5}" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>
+          <path d="M${cx-r*1.2} ${cy+r*0.5} Q${cx-r*1.4} ${cy+r*1.5} ${cx+r*1.4} ${cy+r*1.5} Q${cx+r*1.4} ${cy+r*0.5} ${cx+r*1.2} ${cy+r*0.5}" stroke="#2d2d2d" stroke-width="1.3" fill="none"/>`;
+}
+function hair_short(cx, cy, r) {
+  return `<path d="M${cx-r} ${cy+2} Q${cx-r} ${cy-r*1.3} ${cx} ${cy-r*1.4} Q${cx+r} ${cy-r*1.3} ${cx+r} ${cy+2}" stroke="#2d2d2d" stroke-width="1.4" fill="none"/>`;
+}
+function hair_turban(cx, cy, r) {
+  return `<path d="M${cx-r*1.2} ${cy+2} Q${cx-r*1.3} ${cy-r*0.6} ${cx} ${cy-r*1.6} Q${cx+r*1.3} ${cy-r*0.6} ${cx+r*1.2} ${cy+2}" stroke="#2d2d2d" stroke-width="1.5" fill="none"/>
+          <path d="M${cx-r*1.2} ${cy+2} L${cx-r*1.5} ${cy-r*0.2}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+          <path d="M${cx-r} ${cy-r*0.8} Q${cx} ${cy-r*1.2} ${cx+r} ${cy-r*0.8}" stroke="#2d2d2d" stroke-width="1" fill="none"/>`;
+}
+function hair_braids(cx, cy, r) {
+  return `<path d="M${cx-r} ${cy+2} Q${cx-r*1.2} ${cy-r} ${cx} ${cy-r*1.5} Q${cx+r*1.2} ${cy-r} ${cx+r} ${cy+2}" stroke="#2d2d2d" stroke-width="1.4" fill="none"/>
+          <line x1="${cx-r*0.5}" y1="${cy-r*0.5}" x2="${cx-r*0.3}" y2="${cy+r*1.2}" stroke="#2d2d2d" stroke-width="1" stroke-dasharray="3 2"/>
+          <line x1="${cx+r*0.5}" y1="${cy-r*0.5}" x2="${cx+r*0.3}" y2="${cy+r*1.2}" stroke="#2d2d2d" stroke-width="1" stroke-dasharray="3 2"/>`;
+}
+
+// Groot the ShiTzu
+function groot(cx, cy, scale=1) {
+  let s = scale;
+  return `<ellipse cx="${cx}" cy="${cy+5*s}" rx="${22*s}" ry="${14*s}" fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+          <circle cx="${cx-8*s}" cy="${cy-8*s}" r="${12*s}" fill="none" stroke="#2d2d2d" stroke-width="1.4"/>
+          <ellipse cx="${cx-14*s}" cy="${cy-14*s}" rx="${5*s}" ry="${7*s}" fill="none" stroke="#2d2d2d" stroke-width="1.2"/>
+          <circle cx="${cx-11*s}" cy="${cy-10*s}" r="${2.5*s}" fill="#2d2d2d" stroke="none"/>
+          <path d="M${cx-14*s} ${cy-4*s} Q${cx-8*s} ${cy} ${cx-4*s} ${cy-4*s}" stroke="#2d2d2d" stroke-width="1" fill="none"/>
+          <path d="M${cx+5*s} ${cy-2*s} Q${cx+18*s} ${cy-12*s} ${cx+22*s} ${cy-4*s} Q${cx+18*s} ${cy+4*s} ${cx+12*s} ${cy+2*s}" stroke="#2d2d2d" stroke-width="1.2" fill="none"/>
+          <line x1="${cx-12*s}" y1="${cy+18*s}" x2="${cx-14*s}" y2="${cy+32*s}" stroke="#2d2d2d" stroke-width="1.2"/>
+          <line x1="${cx-4*s}" y1="${cy+18*s}" x2="${cx-4*s}" y2="${cy+32*s}" stroke="#2d2d2d" stroke-width="1.2"/>
+          <line x1="${cx+6*s}" y1="${cy+18*s}" x2="${cx+6*s}" y2="${cy+32*s}" stroke="#2d2d2d" stroke-width="1.2"/>
+          <line x1="${cx+14*s}" y1="${cy+17*s}" x2="${cx+16*s}" y2="${cy+30*s}" stroke="#2d2d2d" stroke-width="1.2"/>
+          <path d="M${cx-8*s} ${cy-3*s} Q${cx-2*s} ${cy-6*s} ${cx+2*s} ${cy-3*s}" stroke="#2d2d2d" stroke-width="0.9" fill="none"/>`;
+}
+
+// Full figure builder: dress, hair, legs
+function figure(cx, cy, dress, hairStyle, legsType='trousers', r=14) {
+  let headH = head(cx, cy, r);
+  let eyesH = eyes(cx, cy);
+  let smileH = smile(cx, cy);
+  let torso_top = cy + r;
+  let torso_bot = torso_top + 50;
+  let legs_top = torso_bot;
+  let legs_h = 55;
+  let feetY = legs_top + legs_h;
+
+  let torsoH = '';
+  switch(dress) {
+    case 'sari': torsoH = torso_sari(cx, torso_top, torso_bot); break;
+    case 'kurta': torsoH = torso_kurta(cx, torso_top, torso_bot); break;
+    case 'kimono': torsoH = torso_kimono(cx, torso_top, torso_bot); break;
+    case 'hanbok': torsoH = torso_hanbok(cx, torso_top, torso_bot); break;
+    case 'dashiki': torsoH = torso_dashiki(cx, torso_top, torso_bot); break;
+    case 'kente': torsoH = torso_kente(cx, torso_top, torso_bot); break;
+    case 'thobe': torsoH = torso_thobe(cx, torso_top, torso_bot); break;
+    case 'dirndl': torsoH = torso_dirndl(cx, torso_top, torso_bot); break;
+    case 'poncho': torsoH = torso_poncho(cx, torso_top, torso_bot); break;
+    case 'cheongsam': torsoH = torso_cheongsam(cx, torso_top, torso_bot); break;
+    case 'kaftan': torsoH = torso_kaftan(cx, torso_top, torso_bot); break;
+    case 'dhoti_kanduvaa': torsoH = torso_dhoti_kanduvaa(cx, torso_top, torso_bot); break;
+    default: torsoH = torso_tunic(cx, torso_top, torso_bot);
   }
+
+  let hairH = '';
+  switch(hairStyle) {
+    case 'bun': hairH = hair_bun(cx, cy, r); break;
+    case 'long': hairH = hair_long(cx, cy, r); break;
+    case 'afro': hairH = hair_afro(cx, cy, r); break;
+    case 'hijab': hairH = hair_hijab(cx, cy, r); break;
+    case 'short': hairH = hair_short(cx, cy, r); break;
+    case 'turban': hairH = hair_turban(cx, cy, r); break;
+    case 'braids': hairH = hair_braids(cx, cy, r); break;
+    default: hairH = hair_short(cx, cy, r);
+  }
+
+  let legsH = '';
+  if (legsType === 'skirt') legsH = skirt_legs(cx, legs_top, legs_h);
+  else if (legsType === 'wide') legsH = legs(cx, legs_top, legs_h, true);
+  else legsH = legs(cx, legs_top, legs_h, false);
+
+  let feetH = feet(cx, feetY);
+
+  return headH + hairH + eyesH + smileH + torsoH + legsH + feetH;
+}
+
+// ─── SVG ILLUSTRATIONS ────────────────────────────────────────────────
+const svgs = {
+
+cover: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="150" cy="128" r="52" stroke-width="2"/>
+  <line x1="150" y1="68" x2="150" y2="54"/><line x1="150" y1="188" x2="150" y2="202"/>
+  <line x1="90" y1="128" x2="76" y2="128"/><line x1="210" y1="128" x2="224" y2="128"/>
+  <line x1="113" y1="91" x2="103" y2="81"/><line x1="187" y1="165" x2="197" y2="175"/>
+  <line x1="187" y1="91" x2="197" y2="81"/><line x1="113" y1="165" x2="103" y2="175"/>
+  <circle cx="138" cy="120" r="6" fill="#2d2d2d" stroke="none"/>
+  <circle cx="162" cy="120" r="6" fill="#2d2d2d" stroke="none"/>
+  <path d="M136 140 Q150 152 164 140" stroke-width="2"/>
+  <ellipse cx="150" cy="128" rx="112" ry="112" stroke-dasharray="6 4" stroke="#aaa" stroke-width="1"/>
+  <circle cx="262" cy="128" r="14"/>
+  <path d="M256 122 Q262 114 268 122 Q262 130 256 122"/>
+  <circle cx="40" cy="40" r="2.5" fill="#2d2d2d" stroke="none"/><circle cx="272" cy="58" r="2" fill="#2d2d2d" stroke="none"/>
+  <circle cx="28" cy="200" r="2.5" fill="#2d2d2d" stroke="none"/><circle cx="280" cy="232" r="2" fill="#2d2d2d" stroke="none"/>
+  <path d="M118 282 Q133 268 150 282 Q167 296 182 282 Q167 268 150 282 Q133 296 118 282" stroke-width="1.8"/>
+</svg>`,
+
+prologue: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Indian father (kurta + turban) reading to child (hanbok) -->
+  ${figure(88, 65, 'kurta', 'turban')}
+  <!-- Book in hands -->
+  <rect x="102" y="130" width="38" height="28" rx="2"/><line x1="121" y1="130" x2="121" y2="158"/>
+  <line x1="108" y1="140" x2="118" y2="140"/><line x1="108" y1="147" x2="118" y2="147"/>
+  <line x1="124" y1="140" x2="134" y2="140"/><line x1="124" y1="147" x2="134" y2="147"/>
+  <!-- Korean child in hanbok sitting -->
+  ${figure(195, 120, 'hanbok', 'bun', 'skirt', 12)}
+  <!-- Stars -->
+  <circle cx="240" cy="30" r="3" fill="#2d2d2d" stroke="none"/>
+  <circle cx="260" cy="48" r="2" fill="#2d2d2d" stroke="none"/>
+  <circle cx="215" cy="50" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <!-- HUMS circle -->
+  <circle cx="150" cy="272" r="20" stroke-dasharray="4 3"/>
+  <circle cx="150" cy="272" r="10"/>
+</svg>`,
+
+happypath: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Darshan (South Asian, kurta) and Sarthan (younger, dashiki) with Groot -->
+  ${figure(80, 55, 'kurta', 'short')}
+  ${figure(178, 65, 'dashiki', 'short', 'trousers', 12)}
+  ${groot(248, 195, 0.9)}
+  <!-- Woods -->
+  <line x1="22" y1="230" x2="22" y2="120"/><path d="M5 152 Q22 118 39 152"/><path d="M5 130 Q22 96 39 130"/>
+  <line x1="268" y1="230" x2="268" y2="128"/><path d="M252 158 Q268 126 284 158"/>
+  <line x1="10" y1="230" x2="288" y2="230"/>
+</svg>`,
+
+sunsetsetup: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- BabLee (Indian, poncho-style scientist) with telescope; Kanna (sari) -->
+  ${figure(68, 48, 'poncho', 'short')}
+  <!-- Telescope arm extend -->
+  <line x1="96" y1="112" x2="140" y2="100"/>
+  <rect x="140" y="92" width="24" height="14" rx="3"/>
+  <!-- Kanna in sari watching -->
+  ${figure(215, 52, 'sari', 'bun')}
+  <!-- Sun normal (left) -->
+  <circle cx="62" cy="218" r="22"/>
+  <line x1="62" y1="188" x2="62" y2="180"/><line x1="62" y1="248" x2="62" y2="256"/>
+  <line x1="32" y1="218" x2="24" y2="218"/><line x1="92" y1="218" x2="100" y2="218"/>
+  <!-- Panel divider -->
+  <line x1="128" y1="188" x2="128" y2="272" stroke="#ccc" stroke-dasharray="3 2"/>
+  <!-- Disturbed sun (right) -->
+  <circle cx="200" cy="218" r="28" stroke-width="2"/>
+  <path d="M200 182 Q212 174 207 188"/><path d="M228 196 Q240 188 234 202"/>
+  <path d="M224 232 Q238 242 228 246"/>
+  <!-- Tiny blackholes -->
+  <circle cx="162" cy="208" r="3.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="152" cy="222" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="168" cy="232" r="3" fill="#2d2d2d" stroke="none"/>
+  <!-- Arrow -->
+  <path d="M132 218 L148 218"/><polygon points="148,214 156,218 148,222" fill="#2d2d2d" stroke="none"/>
+</svg>`,
+
+seers: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Darshan (kurta) and Sarthan (dashiki) discover stone with HUMS motif -->
+  ${figure(68, 60, 'kurta', 'short')}
+  ${figure(145, 70, 'dashiki', 'short', 'trousers', 12)}
+  <!-- Pointing arm -->
+  <line x1="88" y1="128" x2="205" y2="155"/>
+  <!-- Ancient stone -->
+  <ellipse cx="240" cy="178" rx="48" ry="62"/>
+  <!-- Eye carved -->
+  <ellipse cx="240" cy="155" rx="22" ry="12"/>
+  <circle cx="240" cy="155" r="7" fill="#2d2d2d" stroke="none"/>
+  <circle cx="244" cy="151" r="2.5" fill="white" stroke="none"/>
+  <!-- Human figure carved in stone -->
+  <circle cx="240" cy="185" r="9"/>
+  <line x1="240" y1="194" x2="240" y2="214"/>
+  <line x1="240" y1="202" x2="228" y2="210"/>
+  <line x1="240" y1="202" x2="252" y2="210"/>
+  <line x1="240" y1="214" x2="233" y2="228"/>
+  <line x1="240" y1="214" x2="247" y2="228"/>
+  <!-- Tree -->
+  <line x1="20" y1="300" x2="20" y2="200"/><circle cx="20" cy="184" r="24" fill="none"/>
+</svg>`,
+
+kids: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Cave scene: Darshan (kurta), Sarthan (smaller, hanbok), Groot -->
+  ${figure(82, 168, 'kurta', 'short')}
+  ${figure(140, 178, 'hanbok', 'bun', 'skirt', 11)}
+  ${groot(38, 238, 0.75)}
+  <!-- Cave mouth -->
+  <path d="M155 280 Q155 188 178 172 Q205 155 228 172 Q250 190 252 280"/>
+  <path d="M165 280 Q165 198 182 183 Q205 166 228 183 Q244 198 244 280"/>
+  <!-- Bull painting inside cave -->
+  <ellipse cx="205" cy="222" rx="22" ry="13"/>
+  <circle cx="187" cy="213" r="9"/>
+  <path d="M181 208 Q178 200 176 205"/>
+  <path d="M193 208 Q196 200 198 205"/>
+  <line x1="196" y1="232" x2="193" y2="248"/>
+  <line x1="205" y1="235" x2="204" y2="250"/>
+  <line x1="214" y1="233" x2="213" y2="248"/>
+  <line x1="221" y1="229" x2="222" y2="244"/>
+  <!-- Sun-eye above bull -->
+  <circle cx="205" cy="200" r="9"/>
+  <circle cx="205" cy="200" r="3.5" fill="#2d2d2d" stroke="none"/>
+  <line x1="205" y1="188" x2="205" y2="183"/>
+  <line x1="215" y1="193" x2="219" y2="189"/>
+  <line x1="195" y1="193" x2="191" y2="189"/>
+  <!-- Trees background -->
+  <line x1="270" y1="280" x2="270" y2="200"/><circle cx="270" cy="183" r="20" fill="none"/>
+</svg>`,
+
+foodsight: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Darshan (kurta) + Sarthan (poncho, Andean) reaching for mangos -->
+  ${figure(72, 168, 'kurta', 'short')}
+  ${figure(152, 172, 'poncho', 'short', 'trousers', 11)}
+  <!-- Arms reaching up -->
+  <line x1="92" y1="228" x2="105" y2="205"/>
+  <line x1="170" y1="232" x2="165" y2="208"/>
+  <!-- Mango tree trunk -->
+  <line x1="218" y1="300" x2="218" y2="210"/>
+  <line x1="218" y1="230" x2="192" y2="210"/>
+  <line x1="218" y1="224" x2="242" y2="204"/>
+  <!-- Foliage -->
+  <ellipse cx="218" cy="182" rx="55" ry="38"/>
+  <ellipse cx="178" cy="195" rx="28" ry="22"/>
+  <ellipse cx="256" cy="192" rx="28" ry="22"/>
+  <!-- Mangos -->
+  <ellipse cx="196" cy="172" rx="9" ry="11"/>
+  <ellipse cx="232" cy="168" rx="9" ry="12"/>
+  <ellipse cx="218" cy="158" rx="8" ry="10"/>
+  <ellipse cx="255" cy="182" rx="7" ry="9"/>
+  <!-- Sun through branches -->
+  <circle cx="258" cy="72" r="26" stroke-width="2"/>
+  <line x1="258" y1="38" x2="258" y2="28"/>
+  <line x1="278" y1="44" x2="286" y2="36"/>
+  <line x1="288" y1="64" x2="298" y2="60"/>
+  <line x1="280" y1="90" x2="290" y2="96"/>
+  <line x1="238" y1="90" x2="230" y2="96"/>
+  <line x1="228" y1="64" x2="218" y2="60"/>
+</svg>`,
+
+seasons: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Autumn: Darshan (kurta) + Groot noticing sticks; Winter: Sarthan (thobe, Arab) noticing shrew -->
+  <!-- Autumn tree -->
+  <line x1="72" y1="280" x2="72" y2="175"/>
+  <path d="M35 182 Q72 145 110 182 Q95 205 72 200 Q50 205 35 182"/>
+  <!-- Falling leaves -->
+  <ellipse cx="35" cy="200" rx="7" ry="4" transform="rotate(-30 35 200)"/>
+  <ellipse cx="20" cy="218" rx="6" ry="3.5" transform="rotate(20 20 218)"/>
+  <ellipse cx="112" cy="205" rx="7" ry="4" transform="rotate(-15 112 205)"/>
+  <ellipse cx="98" cy="222" rx="6" ry="3.5" transform="rotate(25 98 222)"/>
+  <!-- Extra sticks -->
+  <line x1="28" y1="268" x2="58" y2="266"/>
+  <line x1="40" y1="274" x2="72" y2="271"/>
+  <!-- Darshan looking at sticks -->
+  ${figure(105, 198, 'kurta', 'short', 'trousers', 11)}
+  ${groot(48, 255, 0.7)}
+  <!-- Panel divider -->
+  <line x1="155" y1="130" x2="155" y2="280" stroke="#ccc" stroke-dasharray="3 2"/>
+  <!-- Winter snowflakes -->
+  <line x1="222" y1="90" x2="222" y2="130"/><line x1="202" y1="110" x2="242" y2="110"/>
+  <line x1="208" y1="96" x2="236" y2="124"/><line x1="236" y1="96" x2="208" y2="124"/>
+  <circle cx="222" cy="90" r="3.5" fill="#2d2d2d" stroke="none"/><circle cx="222" cy="130" r="3.5" fill="#2d2d2d" stroke="none"/>
+  <!-- Sarthan in thobe watching shrew -->
+  ${figure(220, 168, 'thobe', 'short', 'wide', 11)}
+  <!-- Shrew -->
+  <ellipse cx="195" cy="248" rx="22" ry="13"/>
+  <ellipse cx="176" cy="240" rx="10" ry="11"/>
+  <circle cx="166" cy="236" r="5.5"/>
+  <path d="M160 239 Q162 233 167 237"/>
+  <line x1="185" y1="260" x2="182" y2="272"/>
+  <line x1="195" y1="261" x2="194" y2="274"/>
+  <line x1="205" y1="260" x2="206" y2="272"/>
+</svg>`,
+
+festivals: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Diwali/Xmas/NYE: Kanna (sari), Darshan (kurta), Sarthan (kimono, for festive dress) -->
+  <!-- Diwali diyas -->
+  <path d="M18 210 Q28 192 38 210 Q33 222 28 220 Q20 222 18 210"/>
+  <path d="M52 214 Q62 196 72 214 Q67 226 62 224 Q54 226 52 214"/>
+  <path d="M86 212 Q96 194 106 212 Q101 224 96 222 Q88 224 86 212"/>
+  <path d="M28 192 Q30 184 32 192"/><path d="M62 196 Q64 188 66 196"/><path d="M96 194 Q98 186 100 194"/>
+  <!-- Christmas lights string -->
+  <path d="M138 72 Q158 82 178 72 Q198 62 218 72 Q238 82 258 72" fill="none"/>
+  <circle cx="148" cy="88" r="5.5"/><line x1="148" y1="80" x2="148" y2="83"/>
+  <circle cx="173" cy="83" r="5.5"/><line x1="173" y1="75" x2="173" y2="78"/>
+  <circle cx="198" cy="80" r="5.5"/><line x1="198" y1="72" x2="198" y2="75"/>
+  <circle cx="223" cy="86" r="5.5"/><line x1="223" y1="78" x2="223" y2="81"/>
+  <!-- NYE ball -->
+  <line x1="155" y1="25" x2="155" y2="50"/>
+  <circle cx="155" cy="62" r="20"/>
+  <line x1="148" y1="56" x2="162" y2="68"/><line x1="162" y1="56" x2="148" y2="68"/>
+  <!-- Kanna in sari -->
+  ${figure(68, 145, 'sari', 'bun', 'skirt')}
+  <!-- Darshan in kurta -->
+  ${figure(148, 145, 'kurta', 'short')}
+  <!-- Sarthan in kimono -->
+  ${figure(228, 150, 'kimono', 'bun', 'skirt', 11)}
+</svg>`,
+
+peacepause: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Noisy side: BabLee (poncho) + guests; Quiet side: Sarthan meditating (kimono) -->
+  <!-- Noisy left: music notes, movement -->
+  <text x="15" y="72" font-size="14" fill="#2d2d2d" font-family="serif" stroke="none">♪</text>
+  <text x="48" y="58" font-size="12" fill="#2d2d2d" font-family="serif" stroke="none">♫</text>
+  ${figure(62, 55, 'poncho', 'short')}
+  <!-- Guest in kente -->
+  ${figure(128, 62, 'kente', 'afro', 'trousers', 11)}
+  <!-- Divider -->
+  <line x1="168" y1="40" x2="168" y2="280" stroke="#ddd" stroke-dasharray="5 3"/>
+  <!-- Quiet side: Sarthan meditating -->
+  <circle cx="238" cy="188" r="15"/>
+  ${hair_bun(238, 188, 15)}
+  <!-- Meditation cross-legged -->
+  <path d="M210 228 Q222 210 238 208 Q254 210 266 228"/>
+  <path d="M210 228 Q222 240 238 242 Q254 240 266 228"/>
+  <line x1="238" y1="203" x2="238" y2="226"/>
+  <line x1="238" y1="215" x2="218" y2="226"/>
+  <line x1="238" y1="215" x2="258" y2="226"/>
+  <!-- Kimono texture hint on Sarthan -->
+  <path d="M218 208 L232 205 L238 215"/><path d="M258 208 L244 205 L238 215"/>
+  <!-- Senses icons floating gently -->
+  <circle cx="282" cy="155" r="9"/>
+  <path d="M276 152 Q282 147 288 152 Q282 159 276 152"/><circle cx="282" cy="153" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <!-- Heart -->
+  <path d="M238 148 Q242 140 248 144 Q253 148 248 156 Q243 162 238 166 Q233 162 228 156 Q223 148 228 144 Q234 140 238 148" stroke-width="1.4"/>
+</svg>`,
+
+india: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- D&S in India gear (both in kurta + Sarthan in dhoti style) with 5 action bucket icons -->
+  ${figure(55, 50, 'kurta', 'turban')}
+  ${figure(138, 58, 'kurta', 'short', 'wide', 12)}
+  <!-- Plane hint top right -->
+  <path d="M200 35 Q238 18 272 28 Q280 32 275 38"/>
+  <path d="M272 28 L260 18 L256 28"/><path d="M272 28 L268 40"/>
+  <!-- 5 icon boxes -->
+  <!-- 1 Speech -->
+  <rect x="178" y="68" width="50" height="32" rx="3"/>
+  <path d="M178 68 L172 90 L182 88 Z"/>
+  <text x="188" y="88" font-size="8" fill="#2d2d2d" stroke="none" font-family="serif">Speak</text>
+  <!-- 2 Hand -->
+  <rect x="238" y="68" width="50" height="32" rx="3"/>
+  <text x="242" y="82" font-size="7.5" fill="#2d2d2d" stroke="none" font-family="serif">Right</text>
+  <text x="244" y="93" font-size="7.5" fill="#2d2d2d" stroke="none" font-family="serif">Hand</text>
+  <!-- 3 Walk/move -->
+  <rect x="178" y="112" width="50" height="32" rx="3"/>
+  <text x="186" y="132" font-size="7.5" fill="#2d2d2d" stroke="none" font-family="serif">Move</text>
+  <!-- 4 Water drop -->
+  <rect x="238" y="112" width="50" height="32" rx="3"/>
+  <path d="M260 120 Q263 113 266 120 Q266 128 260 130 Q254 128 254 120 Q257 113 260 120" stroke="#2d2d2d" stroke-width="1.2"/>
+  <!-- 5 Groot dog distance -->
+  <rect x="178" y="156" width="110" height="32" rx="3"/>
+  <text x="185" y="176" font-size="7.5" fill="#2d2d2d" stroke="none" font-family="serif">Keep distance (dogs)</text>
+  <!-- Chai + snack -->
+  <path d="M58" y="222" font-size="0"/>
+  <rect x="52" y="240" width="22" height="28" rx="3"/>
+  <path d="M52 246 Q42 252 44 264 Q52 268 52 264"/>
+  <text x="56" y="258" font-size="6.5" fill="#555" stroke="none" font-family="serif">chai</text>
+</svg>`,
+
+inscription: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Sunroom: east/west windows, D&S (kurta + hanbok) looking at 445653 stickers -->
+  <!-- Room perspective floor -->
+  <path d="M20 280 L150 238 L280 280"/>
+  <!-- Left window (East) -->
+  <rect x="22" y="78" width="96" height="118" rx="3"/>
+  <line x1="70" y1="78" x2="70" y2="196"/><line x1="22" y1="137" x2="118" y2="137"/>
+  <!-- Human sticker East -->
+  <circle cx="46" cy="100" r="9"/>
+  <line x1="46" y1="109" x2="46" y2="130"/><line x1="46" y1="117" x2="35" y2="124"/><line x1="46" y1="117" x2="57" y2="124"/>
+  <line x1="46" y1="130" x2="39" y2="144"/><line x1="46" y1="130" x2="53" y2="144"/>
+  <text x="30" y="168" font-size="8" fill="#2d2d2d" font-family="monospace" stroke="none">445653</text>
+  <!-- Right window (West) -->
+  <rect x="182" y="78" width="96" height="118" rx="3"/>
+  <line x1="230" y1="78" x2="230" y2="196"/><line x1="182" y1="137" x2="278" y2="137"/>
+  <!-- Human sticker West -->
+  <circle cx="254" cy="100" r="9"/>
+  <line x1="254" y1="109" x2="254" y2="130"/><line x1="254" y1="117" x2="243" y2="124"/><line x1="254" y1="117" x2="265" y2="124"/>
+  <line x1="254" y1="130" x2="247" y2="144"/><line x1="254" y1="130" x2="261" y2="144"/>
+  <text x="238" y="168" font-size="8" fill="#2d2d2d" font-family="monospace" stroke="none">445653</text>
+  <!-- Darshan (kurta) looking left -->
+  ${figure(112, 198, 'kurta', 'short', 'trousers', 12)}
+  <!-- Sarthan (hanbok) looking right -->
+  ${figure(175, 205, 'hanbok', 'bun', 'skirt', 10)}
+  <!-- Sunbeam lines -->
+  <line x1="22" y1="95" x2="10" y2="88" stroke="#aaa" stroke-width="1"/>
+  <line x1="278" y1="95" x2="290" y2="88" stroke="#aaa" stroke-width="1"/>
+</svg>`,
+
+gpus: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Grandma (sari/Indian) + Grandpa (kurta) visiting; D&S learning 6 health flows -->
+  ${figure(55, 48, 'sari', 'bun', 'skirt')}
+  ${figure(130, 48, 'dhoti_kanduvaa', 'short')}
+  <!-- Cane for grandpa -->
+  <path d="M118" y="118" font-size="0"/>
+  <line x1="112" y1="128" x2="108" y2="198"/>
+  <path d="M102 196 Q108 204 114 198"/>
+  <!-- D&S smaller below -->
+  ${figure(62, 198, 'dashiki', 'afro', 'trousers', 10)}
+  ${figure(120, 205, 'kimono', 'bun', 'skirt', 9)}
+  <!-- 6 flow labels + icons right side -->
+  <text x="185" y="65" font-size="9.5" fill="#2d6a4f" stroke="none" font-family="serif" font-weight="bold">6 Flows</text>
+  <path d="M185 82 Q195 72 205 82 Q195 92 185 82"/><text x="210" y="87" font-size="8" fill="#555" stroke="none" font-family="serif">Breathe</text>
+  <path d="M185 108 Q192 98 200 104 Q206 114 200 120 Q192 116 185 108"/><text x="210" y="118" font-size="8" fill="#555" stroke="none" font-family="serif">Digest</text>
+  <path d="M185 138 Q190 130 198 132 Q205 137 202 145 Q196 150 190 145 Q185 142 185 138"/><text x="210" y="148" font-size="8" fill="#555" stroke="none" font-family="serif">Circulate</text>
+  <path d="M192 168 L202 168 L197 180 L206 180 L190 202 L196 188 L186 188 Z" fill="#2d2d2d" stroke="none"/><text x="210" y="182" font-size="8" fill="#555" stroke="none" font-family="serif">Release</text>
+  <line x1="197" y1="218" x2="197" y2="198"/><path d="M187 204 Q197 196 207 204"/><text x="210" y="218" font-size="8" fill="#555" stroke="none" font-family="serif">Grow</text>
+  <circle cx="197" cy="248" r="9"/><path d="M190 262 Q197 255 204 262"/><text x="210" y="252" font-size="8" fill="#555" stroke="none" font-family="serif">Age</text>
+</svg>`,
+
+kidsun: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Darshan (kurta) at podium, UN delegates: thobe, kente, cheongsam, dirndl -->
+  <!-- Podium -->
+  <rect x="112" y="148" width="76" height="52" rx="3"/>
+  <path d="M112 148 L90 188 L210 188 L188 148"/>
+  <!-- Darshan at podium -->
+  ${figure(150, 115, 'kurta', 'turban', 'trousers', 14)}
+  <!-- Board -->
+  <rect x="50" y="58" width="68" height="52" rx="2"/>
+  <text x="65" y="82" font-size="12" fill="#2d2d2d" stroke="none" font-family="serif">27</text>
+  <text x="56" y="100" font-size="7.5" fill="#555" stroke="none" font-family="serif">Signals</text>
+  <line x1="84" y1="110" x2="84" y2="145"/>
+  <!-- Delegates: diverse row -->
+  ${figure(28, 208, 'thobe', 'short', 'wide', 9)}
+  ${figure(72, 208, 'kente', 'afro', 'trousers', 9)}
+  ${figure(228, 208, 'cheongsam', 'bun', 'trousers', 9)}
+  ${figure(268, 208, 'dirndl', 'bun', 'skirt', 9)}
+  <!-- Earth globe -->
+  <circle cx="240" cy="95" r="28"/>
+  <ellipse cx="240" cy="95" rx="28" ry="9"/>
+  <path d="M224 72 Q240 64 256 72"/>
+  <path d="M218 95 Q240 87 262 95"/>
+  <line x1="240" y1="123" x2="240" y2="145"/>
+  <line x1="225" y1="145" x2="255" y2="145"/>
+</svg>`,
+
+preparations: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Earth + solar sail; D&S (now teens, kurta + kaftan) planning with group -->
+  ${figure(38, 165, 'kurta', 'short')}
+  ${figure(108, 165, 'kaftan', 'hijab', 'skirt')}
+  ${figure(72, 168, 'dashiki', 'braids', 'trousers', 11)}
+  <!-- Earth -->
+  <circle cx="200" cy="148" r="55"/>
+  <ellipse cx="200" cy="148" rx="55" ry="18"/>
+  <path d="M178 105 Q192 92 208 100 Q220 114 210 124 Q196 128 183 118 Q173 110 178 105"/>
+  <path d="M163 142 Q178 134 190 142 Q196 152 186 158 Q172 156 163 142"/>
+  <!-- Volcanoes -->
+  <path d="M218 162 L210 142 L226 142 Z"/><path d="M235 167 L228 150 L242 150 Z"/>
+  <!-- Bioluminescence hint -->
+  <circle cx="200" cy="148" r="62" stroke-dasharray="4 3" stroke="#888"/>
+  <!-- Solar sail sketch -->
+  <path d="M255 72 L295 42 L302 155 L255 138 Z" stroke-width="1.5"/>
+  <line x1="255" y1="72" x2="255" y2="138"/>
+  <!-- Supernova burst -->
+  <circle cx="275" cy="25" r="12"/>
+  <line x1="275" y1="8" x2="275" y2="2"/>
+  <line x1="289" y1="14" x2="294" y2="8"/>
+  <line x1="295" y1="28" x2="302" y2="26"/>
+  <line x1="261" y1="14" x2="256" y2="8"/>
+</svg>`,
+
+sunsignals: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Solar sail + Earth moving; team in diverse dress observing -->
+  <!-- Sun left -->
+  <path d="M0 140 Q18 88 10 45"/>
+  <path d="M0 140 Q14 168 6 210"/>
+  <!-- Solar wind -->
+  <line x1="16" y1="88" x2="72" y2="98" stroke-dasharray="5 3"/>
+  <line x1="12" y1="130" x2="68" y2="134" stroke-dasharray="5 3"/>
+  <line x1="16" y1="170" x2="70" y2="162" stroke-dasharray="5 3"/>
+  <!-- Sails -->
+  <path d="M72 60 L122 28 L132 135 L72 122 Z"/>
+  <line x1="72" y1="60" x2="72" y2="122"/>
+  <path d="M72 142 L122 132 L132 228 L72 206 Z"/>
+  <line x1="72" y1="142" x2="72" y2="206"/>
+  <!-- Arrows -->
+  <path d="M134 94 L152 94"/><polygon points="152,90 160,94 152,98" fill="#2d2d2d" stroke="none"/>
+  <path d="M134 175 L152 175"/><polygon points="152,171 160,175 152,179" fill="#2d2d2d" stroke="none"/>
+  <!-- Earth -->
+  <circle cx="218" cy="148" r="48"/>
+  <ellipse cx="218" cy="148" rx="48" ry="15"/>
+  <path d="M200 110 Q212 101 226 107 Q236 120 226 130 Q212 134 202 124 Q195 116 200 110"/>
+  <!-- Observer team at bottom: global diversity -->
+  ${figure(35, 230, 'thobe', 'short', 'wide', 9)}
+  ${figure(72, 235, 'cheongsam', 'bun', 'trousers', 9)}
+  ${figure(110, 230, 'dirndl', 'long', 'skirt', 9)}
+</svg>`,
+
+twinkle: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Scientist Humboldt (poncho, Andean) struck by insight; D&S delivering poem -->
+  <!-- Humboldt at desk -->
+  <rect x="52" y="158" width="96" height="62" rx="3"/>
+  ${figure(95, 118, 'poncho', 'short')}
+  <!-- Arms on desk -->
+  <line x1="78" y1="180" x2="62" y2="178"/>
+  <line x1="112" y1="178" x2="148" y2="175"/>
+  <!-- Light bulb idea -->
+  <circle cx="130" cy="88" r="18"/>
+  <path d="M119 98 Q113 114 130 118 Q147 114 141 98"/>
+  <line x1="130" y1="118" x2="130" y2="128"/>
+  <path d="M122 107 L138 107"/>
+  <line x1="130" y1="65" x2="130" y2="55"/>
+  <line x1="148" y1="72" x2="156" y2="64"/>
+  <line x1="112" y1="72" x2="104" y2="64"/>
+  <!-- D (kurta) + S (kimono) with poem -->
+  ${figure(215, 145, 'kurta', 'short', 'trousers', 11)}
+  ${figure(262, 150, 'kimono', 'bun', 'skirt', 10)}
+  <!-- Poem page -->
+  <rect x="178" y="200" width="35" height="28" rx="2"/>
+  <line x1="183" y1="208" x2="206" y2="208"/>
+  <line x1="183" y1="214" x2="206" y2="214"/>
+  <line x1="183" y1="220" x2="200" y2="220"/>
+  <text x="181" y="236" font-size="6.5" fill="#555" stroke="none" font-family="serif">D&amp;S Poem</text>
+  <!-- Stars + HUM text -->
+  <circle cx="255" cy="55" r="4" fill="#2d2d2d" stroke="none"/>
+  <circle cx="278" cy="38" r="3" fill="#2d2d2d" stroke="none"/>
+  <circle cx="265" cy="82" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <text x="230" y="110" font-size="10" fill="#2d2d2d" stroke="none" font-family="serif" font-style="italic">Hum~</text>
+</svg>`,
+
+moonshot: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- D&S (now older) + Maori R&A sisters in slingshot scene -->
+  ${figure(32, 185, 'kurta', 'short')}
+  ${figure(78, 182, 'dashiki', 'braids', 'trousers', 11)}
+  <!-- R&A Maori sisters (kaftan) -->
+  ${figure(205, 185, 'kaftan', 'long')}
+  ${figure(255, 182, 'kaftan', 'long', 'skirt', 11)}
+  <!-- Y-shaped slingshot -->
+  <path d="M52 162 Q60 150 70 158"/>
+  <line x1="60" y1="155" x2="62" y2="138"/>
+  <circle cx="62" cy="132" r="5"/>
+  <!-- Slingshot arc to stars -->
+  <path d="M62 132 Q110 80 165 68 Q205 60 240 76 Q268 88 270 115 Q272 145 252 155 Q228 162 205 148" stroke-dasharray="6 3"/>
+  <!-- Blue Giant -->
+  <circle cx="168" cy="62" r="20"/>
+  <text x="157" y="60" font-size="7" fill="#2d2d2d" stroke="none" font-family="serif">Blue</text>
+  <text x="155" y="70" font-size="7" fill="#2d2d2d" stroke="none" font-family="serif">Giant</text>
+  <!-- Red Dwarf -->
+  <circle cx="258" cy="118" r="16"/>
+  <text x="245" y="116" font-size="7" fill="#2d2d2d" stroke="none" font-family="serif">Red</text>
+  <text x="243" y="126" font-size="7" fill="#2d2d2d" stroke="none" font-family="serif">Dwarf</text>
+  <!-- Yellow Dwarf destination -->
+  <circle cx="198" cy="248" r="26" stroke-width="2.5"/>
+  <line x1="198" y1="214" x2="198" y2="206"/>
+  <line x1="218" y1="220" x2="225" y2="213"/>
+  <line x1="226" y1="238" x2="233" y2="235"/>
+  <line x1="216" y1="258" x2="222" y2="264"/>
+  <line x1="178" y1="258" x2="172" y2="264"/>
+  <line x1="170" y1="238" x2="163" y2="235"/>
+  <text x="188" y="252" font-size="8.5" fill="#2d2d2d" stroke="none" font-family="serif">Home!</text>
+</svg>`,
+
+areweyet: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Traveling Earth with light zones; farmer (thobe) with balloon+prism; D&S observing -->
+  <!-- Earth -->
+  <circle cx="150" cy="135" r="75"/>
+  <!-- Day/night divide -->
+  <path d="M150 60 Q165 95 165 135 Q165 175 150 210" stroke-width="2.5"/>
+  <!-- Day side rays -->
+  <line x1="95" y1="78" x2="82" y2="68"/>
+  <line x1="78" y1="115" x2="62" y2="110"/>
+  <line x1="80" y1="155" x2="64" y2="155"/>
+  <!-- Night stars right -->
+  <circle cx="192" cy="88" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="208" cy="112" r="2" fill="#2d2d2d" stroke="none"/>
+  <circle cx="205" cy="145" r="2" fill="#2d2d2d" stroke="none"/>
+  <!-- Farmer (thobe) with balloon + prism on earth surface -->
+  ${figure(105, 178, 'thobe', 'short', 'wide', 10)}
+  <!-- Balloon above farmer -->
+  <ellipse cx="104" cy="142" rx="13" ry="17"/>
+  <line x1="104" y1="159" x2="104" y2="174"/>
+  <!-- Prism on ground -->
+  <polygon points="90,194 104,218 78,218"/>
+  <!-- Rainbow from prism -->
+  <path d="M75 212 Q60 220 48 215" stroke-dasharray="2 1" stroke-width="1"/>
+  <path d="M74 218 Q58 228 46 222" stroke-dasharray="2 1" stroke-width="1"/>
+  <!-- D (kurta) + S (dirndl, for variety) observing from below -->
+  ${figure(42, 242, 'kurta', 'short', 'trousers', 10)}
+  ${figure(82, 245, 'dirndl', 'bun', 'skirt', 10)}
+  <!-- Clipboard -->
+  <rect x="210" y="205" width="52" height="58" rx="2"/>
+  <line x1="224" y1="218" x2="254" y2="218"/>
+  <line x1="224" y1="227" x2="254" y2="227"/>
+  <line x1="224" y1="236" x2="248" y2="236"/>
+</svg>`,
+
+groot: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Groot hero portrait; diverse children reaching to pet -->
+  <!-- Groot large central -->
+  ${groot(150, 118, 1.3)}
+  <!-- Heart -->
+  <path d="M150 45 Q155 36 162 40 Q168 45 162 54 Q156 60 150 65 Q144 60 138 54 Q132 45 138 40 Q145 36 150 45" stroke-width="1.5"/>
+  <!-- Child 1: South Asian sari -->
+  ${figure(32, 208, 'sari', 'bun', 'skirt', 10)}
+  <!-- Child 2: West African kente -->
+  ${figure(78, 205, 'kente', 'afro', 'trousers', 10)}
+  <!-- Child 3: East Asian cheongsam -->
+  ${figure(222, 205, 'cheongsam', 'bun', 'trousers', 10)}
+  <!-- Child 4: Middle Eastern thobe -->
+  ${figure(268, 208, 'thobe', 'short', 'wide', 10)}
+  <!-- Arms reaching toward Groot -->
+  <line x1="52" y1="228" x2="90" y2="220"/>
+  <line x1="92" y1="228" x2="120" y2="222"/>
+  <line x1="238" y1="228" x2="200" y2="222"/>
+  <line x1="278" y1="228" x2="240" y2="220"/>
+</svg>`,
+
+affirm: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- New sun; Earth arrived; global celebration with diverse figures -->
+  <!-- New yellow star -->
+  <circle cx="150" cy="105" r="40" stroke-width="2.5"/>
+  <line x1="150" y1="57" x2="150" y2="45"/>
+  <line x1="178" y1="65" x2="186" y2="55"/>
+  <line x1="190" y1="93" x2="202" y2="88"/>
+  <line x1="188" y1="122" x2="200" y2="127"/>
+  <line x1="172" y1="145" x2="178" y2="155"/>
+  <line x1="128" y1="145" x2="122" y2="155"/>
+  <line x1="112" y1="122" x2="100" y2="127"/>
+  <line x1="110" y1="93" x2="98" y2="88"/>
+  <line x1="122" y1="65" x2="114" y2="55"/>
+  <!-- Sun face happy -->
+  <circle cx="138" cy="98" r="5.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="162" cy="98" r="5.5" fill="#2d2d2d" stroke="none"/>
+  <path d="M136 115 Q150 126 164 115" stroke-width="2"/>
+  <!-- Earth in orbit -->
+  <ellipse cx="150" cy="105" rx="102" ry="102" stroke-dasharray="5 3" stroke="#bbb" stroke-width="1"/>
+  <circle cx="252" cy="105" r="22"/>
+  <path d="M243 93 Q252 85 261 93 Q263 105 255 112 Q246 115 240 108 Q237 100 243 93"/>
+  <!-- Celebration figures: global ring -->
+  ${figure(28, 210, 'sari', 'bun', 'skirt', 9)}
+  ${figure(68, 205, 'kente', 'afro', 'trousers', 9)}
+  ${figure(110, 208, 'poncho', 'short', 'wide', 9)}
+  ${figure(192, 208, 'cheongsam', 'bun', 'trousers', 9)}
+  ${figure(235, 205, 'thobe', 'short', 'wide', 9)}
+  ${figure(272, 210, 'dirndl', 'long', 'skirt', 9)}
+  <!-- Groot at center bottom -->
+  ${groot(150, 255, 0.75)}
+</svg>`,
+
+littlestory: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- A human in kurta with all 6 systems annotated; child in hanbok beside -->
+  ${figure(120, 45, 'kurta', 'short')}
+  ${figure(195, 55, 'hanbok', 'bun', 'skirt', 11)}
+  <!-- Organ hints inside torso -->
+  <!-- Heart -->
+  <path d="M112 100 Q116 92 122 96 Q127 100 122 108 Q117 114 112 108 Q107 104 107 96 Q112 92 112 100" stroke-width="1.2"/>
+  <!-- Lungs hint -->
+  <path d="M100 108 Q96 100 100 95 Q105 90 108 96" stroke-width="1"/>
+  <path d="M128 108 Q132 100 128 95 Q123 90 120 96" stroke-width="1"/>
+  <!-- Brain dot -->
+  <path d="M110 54 Q120 44 130 54 Q135 62 120 65 Q105 62 110 54" stroke-width="1.2"/>
+  <!-- Labels -->
+  <text x="148" y="52" font-size="7" fill="#2d6a4f" stroke="none" font-family="serif">Who We Are</text>
+  <text x="148" y="82" font-size="7" fill="#c77a1a" stroke="none" font-family="serif">How We Work</text>
+  <text x="20" y="108" font-size="7" fill="#1a4c8a" stroke="none" font-family="serif">Senses</text>
+  <text x="148" y="122" font-size="7" fill="#1a7a6e" stroke="none" font-family="serif">Health</text>
+  <text x="148" y="160" font-size="7" fill="#6b3a8a" stroke="none" font-family="serif">Actions</text>
+  <text x="20" y="220" font-size="7" fill="#c0392b" stroke="none" font-family="serif">Live Love</text>
+  <text x="20" y="230" font-size="7" fill="#c0392b" stroke="none" font-family="serif">Connect</text>
+  <!-- Connection lines -->
+  <line x1="146" y1="50" x2="132" y2="55" stroke="#ccc" stroke-width="0.8"/>
+  <line x1="146" y1="80" x2="132" y2="85" stroke="#ccc" stroke-width="0.8"/>
+  <line x1="50" y1="106" x2="90" y2="106" stroke="#ccc" stroke-width="0.8"/>
+  <line x1="146" y1="120" x2="132" y2="115" stroke="#ccc" stroke-width="0.8"/>
+  <line x1="146" y1="158" x2="136" y2="152" stroke="#ccc" stroke-width="0.8"/>
+  <line x1="50" y1="218" x2="90" y2="195" stroke="#ccc" stroke-width="0.8"/>
+</svg>`,
+
+framework1: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 6 bucket radial; small diverse figure at center -->
+  ${figure(150, 108, 'kaftan', 'hijab', 'wide', 14)}
+  <!-- 6 radiating bucket boxes -->
+  <line x1="150" y1="90" x2="150" y2="52"/>
+  <rect x="112" y="32" width="76" height="22" rx="3"/>
+  <text x="122" y="48" font-size="8" fill="#2d6a4f" stroke="none" font-family="serif" font-weight="bold">Who We Are</text>
+  <line x1="172" y1="100" x2="208" y2="68"/>
+  <rect x="200" y="50" width="72" height="22" rx="3"/>
+  <text x="204" y="66" font-size="7.5" fill="#c77a1a" stroke="none" font-family="serif" font-weight="bold">How We Work</text>
+  <line x1="178" y1="140" x2="215" y2="162"/>
+  <rect x="208" y="156" width="60" height="22" rx="3"/>
+  <text x="216" y="172" font-size="7.5" fill="#6b3a8a" stroke="none" font-family="serif" font-weight="bold">Actions</text>
+  <line x1="150" y1="170" x2="150" y2="205"/>
+  <rect x="106" y="204" width="88" height="22" rx="3"/>
+  <text x="113" y="220" font-size="7.5" fill="#c0392b" stroke="none" font-family="serif" font-weight="bold">Purposes</text>
+  <line x1="128" y1="140" x2="92" y2="162"/>
+  <rect x="28" y="156" width="62" height="22" rx="3"/>
+  <text x="36" y="172" font-size="7.5" fill="#1a4c8a" stroke="none" font-family="serif" font-weight="bold">Senses</text>
+  <line x1="130" y1="100" x2="96" y2="68"/>
+  <rect x="22" y="50" width="66" height="22" rx="3"/>
+  <text x="28" y="66" font-size="7.5" fill="#1a7a6e" stroke="none" font-family="serif" font-weight="bold">Health</text>
+</svg>`,
+
+framework2: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 27 signals as guide to unknowns; 3 children of different origins around center -->
+  <circle cx="150" cy="118" r="32"/>
+  ${figure(150, 98, 'poncho', 'short', 'wide', 14)}
+  <!-- HUMS US -->
+  <path d="M126 120 Q136 110 150 120 Q164 130 174 120 Q164 110 150 120 Q136 130 126 120" stroke-width="2"/>
+  <text x="138" y="125" font-size="7.5" fill="#c0392b" stroke="none" font-family="serif">27</text>
+  <!-- 6 arrows to unknowns -->
+  <line x1="150" y1="86" x2="150" y2="46" stroke-dasharray="4 2"/>
+  <text x="118" y="40" font-size="7" fill="#555" stroke="none" font-family="serif">New school?</text>
+  <line x1="172" y1="96" x2="210" y2="65" stroke-dasharray="4 2"/>
+  <text x="208" y="62" font-size="7" fill="#555" stroke="none" font-family="serif">New place?</text>
+  <line x1="178" y1="128" x2="218" y2="150" stroke-dasharray="4 2"/>
+  <text x="215" y="165" font-size="7" fill="#555" stroke="none" font-family="serif">New star?</text>
+  <line x1="150" y1="150" x2="150" y2="188" stroke-dasharray="4 2"/>
+  <text x="115" y="200" font-size="7" fill="#555" stroke="none" font-family="serif">New planet?</text>
+  <line x1="128" y1="128" x2="88" y2="150" stroke-dasharray="4 2"/>
+  <text x="20" y="165" font-size="7" fill="#555" stroke="none" font-family="serif">New people?</text>
+  <line x1="128" y1="96" x2="90" y2="65" stroke-dasharray="4 2"/>
+  <text x="18" y="62" font-size="7" fill="#555" stroke="none" font-family="serif">Change?</text>
+  <!-- 3 diverse children below -->
+  ${figure(55, 228, 'kente', 'afro', 'trousers', 9)}
+  ${figure(150, 225, 'cheongsam', 'bun', 'trousers', 9)}
+  ${figure(245, 228, 'dirndl', 'long', 'skirt', 9)}
+</svg>`,
+
+aipartner: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Human (kaftan/Middle Eastern) + AI Robot; global figures observing -->
+  <!-- Human in kaftan -->
+  ${figure(72, 60, 'kaftan', 'hijab', 'skirt')}
+  <!-- AI Robot right -->
+  <rect x="188" y="52" width="46" height="46" rx="6"/>
+  <rect x="196" y="60" width="11" height="11" rx="2"/><rect x="215" y="60" width="11" height="11" rx="2"/>
+  <path d="M197 86 Q211 94 225 86"/>
+  <line x1="211" y1="52" x2="211" y2="42"/><circle cx="211" cy="38" r="5"/>
+  <line x1="188" y1="98" x2="173" y2="120"/>
+  <line x1="234" y1="98" x2="249" y2="120"/>
+  <line x1="198" y1="152" x2="195" y2="195"/>
+  <line x1="224" y1="152" x2="227" y2="195"/>
+  <!-- Legs robot -->
+  <path d="M190 195 L185 240 L202 240 L205 195"/>
+  <path d="M222 195 L218 240 L234 240 L237 195"/>
+  <!-- Handshake / HUMS loop in middle -->
+  <path d="M118 130 Q130 120 150 130 Q170 140 182 130 Q170 120 150 130 Q130 140 118 130" stroke-width="2.5"/>
+  <!-- Handshake -->
+  <path d="M112 133 Q130 145 150 143 Q170 145 188 133"/>
+  <!-- Observer figures: sari + kente small -->
+  ${figure(28, 218, 'sari', 'bun', 'skirt', 9)}
+  ${figure(265, 218, 'kente', 'afro', 'trousers', 9)}
+  <!-- Heart -->
+  <path d="M58 42 Q62 34 68 38 Q73 42 68 50 Q63 56 58 50 Q53 46 53 38 Q58 34 58 42" stroke-width="1.3"/>
+</svg>`,
+
+orgtransform: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Person (thobe) + transformation wheel; team: kurta, dirndl, cheongsam -->
+  ${figure(55, 52, 'thobe', 'short', 'wide')}
+  <!-- Org wheel -->
+  <circle cx="200" cy="135" r="62"/>
+  <circle cx="200" cy="135" r="42"/>
+  <!-- Spokes -->
+  <line x1="200" y1="73" x2="200" y2="93"/><line x1="244" y1="91" x2="230" y2="105"/>
+  <line x1="260" y1="135" x2="240" y2="135"/><line x1="244" y1="179" x2="230" y2="165"/>
+  <line x1="200" y1="197" x2="200" y2="177"/><line x1="156" y1="179" x2="170" y2="165"/>
+  <line x1="140" y1="135" x2="160" y2="135"/><line x1="156" y1="91" x2="170" y2="105"/>
+  <!-- Labels -->
+  <text x="188" y="84" font-size="6.5" fill="#555" stroke="none" font-family="serif">Sense</text>
+  <text x="232" y="104" font-size="6.5" fill="#555" stroke="none" font-family="serif">Think</text>
+  <text x="244" y="140" font-size="6.5" fill="#555" stroke="none" font-family="serif">Act</text>
+  <text x="232" y="172" font-size="6.5" fill="#555" stroke="none" font-family="serif">Purge</text>
+  <text x="188" y="194" font-size="6.5" fill="#555" stroke="none" font-family="serif">Grow</text>
+  <text x="140" y="172" font-size="6.5" fill="#555" stroke="none" font-family="serif">Dream</text>
+  <text x="128" y="140" font-size="6.5" fill="#555" stroke="none" font-family="serif">Live</text>
+  <text x="144" y="104" font-size="6.5" fill="#555" stroke="none" font-family="serif">Connect</text>
+  <!-- Double arrow -->
+  <path d="M86 130 Q118 105 140 115"/>
+  <!-- Team figures at bottom -->
+  ${figure(38, 228, 'kurta', 'turban', 'trousers', 9)}
+  ${figure(78, 228, 'dirndl', 'long', 'skirt', 9)}
+  ${figure(118, 228, 'cheongsam', 'bun', 'trousers', 9)}
+</svg>`,
+
+mentalhealth: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Gentle support: kente figure supporting sari figure; community circle of diverse people -->
+  <!-- Supported person (sari) - drooping posture -->
+  ${figure(82, 88, 'sari', 'bun', 'skirt')}
+  <!-- Supporter (kente) reaching hand -->
+  ${figure(198, 82, 'kente', 'afro', 'trousers')}
+  <!-- Reaching arm to middle -->
+  <line x1="174" y1="150" x2="128" y2="158"/>
+  <!-- Heart bridge -->
+  <path d="M150 128 Q154 120 160 124 Q165 128 160 136 Q155 142 150 146 Q145 142 140 136 Q135 128 140 124 Q146 120 150 128" stroke-width="1.4"/>
+  <!-- Community circle at bottom: 5 diverse seated figures -->
+  ${figure(38, 235, 'poncho', 'short', 'trousers', 8)}
+  ${figure(80, 232, 'kimono', 'bun', 'skirt', 8)}
+  ${figure(150, 230, 'dashiki', 'afro', 'trousers', 9)}
+  ${figure(220, 232, 'dirndl', 'long', 'skirt', 8)}
+  ${figure(262, 235, 'thobe', 'short', 'wide', 8)}
+  <!-- Community arc -->
+  <path d="M22 265 Q150 245 278 265" stroke-dasharray="4 3" stroke="#aaa"/>
+  <!-- Senses floating gently left -->
+  <path d="M35 105 Q42 98 49 105 Q42 112 35 105"/><circle cx="42" cy="106" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <path d="M28 128 Q34 122 40 128 Q34 134 28 128"/>
+</svg>`,
+
+thinkventure: `<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#2d2d2d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Child (hanbok, Korean) with pencil; open HUMS template; global kids peeking -->
+  ${figure(68, 72, 'hanbok', 'bun', 'skirt')}
+  <!-- Arm extending with pencil to template -->
+  <line x1="88" y1="145" x2="145" y2="132"/>
+  <line x1="142" y1="130" x2="150" y2="140" stroke-width="2.5"/>
+  <!-- Large open template -->
+  <rect x="148" y="52" width="130" height="162" rx="4"/>
+  <!-- US infinity in template -->
+  <path d="M192 130 Q202 120 212 130 Q222 140 232 130 Q222 120 212 130 Q202 140 192 130" stroke-width="1.8"/>
+  <!-- 6 blank bucket outlines in template -->
+  <rect x="156" y="62" width="42" height="16" rx="2" stroke-dasharray="3 2"/>
+  <rect x="222" y="72" width="42" height="16" rx="2" stroke-dasharray="3 2"/>
+  <rect x="228" y="108" width="40" height="16" rx="2" stroke-dasharray="3 2"/>
+  <rect x="156" y="178" width="42" height="16" rx="2" stroke-dasharray="3 2"/>
+  <rect x="156" y="108" width="40" height="16" rx="2" stroke-dasharray="3 2"/>
+  <rect x="156" y="145" width="42" height="16" rx="2" stroke-dasharray="3 2"/>
+  <!-- Us and ___ label -->
+  <text x="158" y="210" font-size="8.5" fill="#555" stroke="none" font-family="serif" font-style="italic">Us and ___?</text>
+  <!-- Global kids peeking from corners -->
+  <!-- Top-left (dashiki) -->
+  ${figure(22, 25, 'dashiki', 'afro', 'trousers', 8)}
+  <!-- Bottom-right (kaftan) -->
+  ${figure(268, 255, 'kaftan', 'hijab', 'skirt', 8)}
+  <!-- Groot tiny bottom-left -->
+  ${groot(32, 258, 0.55)}
+  <!-- Stars possibility -->
+  <circle cx="32" cy="30" r="3.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="55" cy="18" r="2.5" fill="#2d2d2d" stroke="none"/>
+  <circle cx="20" cy="55" r="2" fill="#2d2d2d" stroke="none"/>
+</svg>`
+};
+
+// ─── SLIDE DATA ────────────────────────────────────────────────────────
+const D = (flag, name) => ({ flag, name });
+
+const slides = [
+  { layout:'cover', svgKey:'cover', title:'Signals: Life After Sun',
+    body:`<p>A SciFi Coloring Adventure for <em>All Ages and All Minds</em></p><p>6 Buckets · 27 Signals · One Journey</p>` },
+
+  { layout:'split', svgKey:'prologue', label:'Prologue',
+    title:'Prologue',
+    dress: D('🇮🇳🇰🇷','Kurta · Hanbok'),
+    body:`<p>Kiddos, "prologue" is just a fancy way of saying: here's what this story is all about. If you'd rather jump straight into the adventure, go right ahead!</p>
+<p>Parents, since you chose to read on, I'd love to share the origin of this book and its purpose. Raising Sudhtia and my two sons has been the most fascinating adventure of my life—full of all the 9 types of emotions, with joy leading the way!</p>
+<p>What stayed with me most was the rapt audience I had in my kiddos for my goofy stories. Then AI arrived in my late 50s—an exciting nudge to discover new ways to navigate and create. That's when I truly understood the power of childhood! This spark became a 6-bucket, 27-things framework for me: a human-based fractal view of the universe.</p>
+<p>To share this framework in a way that can serve as many of my fellow Homo-sapiens as possible, I decided to write this book—a blend of my passions and my limitations. Passion for SciFi and Philosophy. And a preference for shorter, lively reads over long, extremely long-form books. Hence the book in your hands. Come along—enjoy!!</p>` },
+
+  { layout:'split', svgKey:'happypath', label:'About This Book',
+    title:'The Happy Path Story That Moved The Earth!',
+    dress: D('🇨🇳🌍','Cheongsam · Dashiki'),
+    body:`<p>Kiddos, this is a coloring adventure, based on stories from my own two kids' childhood and the great dog Groot!</p>
+<p>Have fun coloring each page and ask at least one friend or guardians to color with you!</p>
+<p>I mean if you have a way, have your pets put their paw prints on the art work too!!</p>
+<p>Guardians, on insights pages, feel free to scratch any of the writeups and pen in your insights. Make them your playbooks!!</p>
+<p>Note: The Artry and Artery of this SciFiFunVenture by Bablee and Kanna.</p>` },
+
+  { layout:'split', svgKey:'sunsetsetup', label:'Chapter 1',
+    title:'Sun sunset, the story setup',
+    dress: D('🇵🇪🇮🇳','Poncho · Sari'),
+    body:`<p>My name is BabLee. A few years ago, I was doing some backyard Astronomy. I noticed an anomaly and after talking to my professional Astronomy friends, I realized what was about to happen.</p>
+<p>A quiet swarm of tiny, invisible space primordial blackholes drifted toward our Solar System and eventually passed right through the Sun. The Sun flickered and flared a little brighter and would eventually lose some layers and grow like a Red Giant. Enough to effect life on the Earth. Eventually, a few centuries or more, later Sun would heal this wound and be back as life sustainer. Our story unfolds in this in between time, first part of it, leaving Solar System and settling in a new Solar Home.</p>
+<p>Here on Earth, mine and Kanna (my wife) (B&K from now on) two kids, ages 13 and 6, figure out that an out-of-the-box solution may be how they can help the adults. They begin their journey by trying to understand their dog, Groot, and the freezemegadon their city has just experienced.</p>
+<p>Now let's get some healthy cookies and warm milk and dive into the story</p>` },
+
+  { layout:'split', svgKey:'seers', label:'Chapter 2',
+    title:'Summary of seers message is seen',
+    dress: D('🇯🇵🇩🇪','Kimono · Dirndl'),
+    body:`<p>We, B&K, act like woods people living in a Metropolis. We finally found a piece of heaven in a septic tank support community with a bunch of woods. Ask your parents, a septic tank community is not a very attractive option for the Big Real Estate Companies. The woods behind were small to us but big to kids. Enough their realized to play ball and play bow and arrows!</p>
+<p>Playing through the woods, dreaming of a building a Tree House, they discover an ancient motif of humans trying to understand the cosmos. They think of using this motif as a way to understand all the unknowns children live through – like visiting new places or moving to new schools.</p>
+<p>Later they use this journey's in unknown to help adults plant Earth's unknown journey to a new home star.</p>
+<p>They figure out the motifs they saw talked about six buckets of 27 signals.</p>
+<p>Preview of our adventure!! The kids propose an initial plan to the adults based on this 6 and 27. The solution gets built. Earth begins its journey to a new star. It takes two decades to get there. By then, they are adults. Once again, they use the 27 signals to settle in—this time without disturbing the other planets inhabiting the new solar system.</p>
+<p>Return journey is a future book!</p>
+<p><em>Guardians: You may want to look the first image in the workbook section of this book</em></p>` },
+
+  { layout:'split', svgKey:'kids', label:'Chapter 3',
+    title:'The Kids, the journey, the finds',
+    dress: D('🇸🇦🇰🇷','Thobe · Hanbok'),
+    body:`<p>As, The Father, I had the joy of sharing tree climbing, paper boat making, sleeping on trees, with D&S. This made them self-driven adventurers.</p>
+<p>Darshan (the older sibling; Sanskrit meaning "to perceive") and Sarthan (the younger sibling; Sanskrit meaning "purpose," or in this case, adjusting one's purpose after insightful perceiving) are one day on a journey into the woods. There, they see a carving of a human under a watchful eye. Wondering what it is, they continue roaming through the woods with their dog Groot, a small ShiTzu with a big personality.</p>
+<p>As they wander—chatting about when the call for dinner might come—they notice another interesting painting at the entrance to a cave. This time, it is a bull with an eye hovering above it. One thing is different, though: radiant lines surround the eye, as if the Sun itself has been given an eye.</p>` },
+
+  { layout:'split', svgKey:'foodsight', label:'Chapter 4',
+    title:'Food and far sight',
+    dress: D('🇮🇳🇵🇪','Kurta · Poncho'),
+    body:`<p>As you and I watch, D&S's journey, one idea. If you take milk, add Alfanso Mango pump, churn it, and cool it, that is a childhood maker! If you prefer some well broken nut chunks, and you can a shake you can bite into, like chocolate milk share with chocolate chunks! Back to my boys adventure story we were watching, er reading!</p>
+<p>Around the same time, they spot a mango tree heavy with delicious, ready-to-chow mangos—yellow ones and some green ones too. As they reach out to pluck a few, they see the Sun shining through the branches. The sight mesmerizes them. They remember something their father once told them, an ancient rhyme:</p>
+<p><em>All work in Sun.<br>Sun works in All.<br>Sun is cool.<br>Be cool like Sun and see All.</em></p>
+<p>"Interesting," they think.</p>` },
+
+  { layout:'split', svgKey:'seasons', label:'Chapter 5',
+    title:'Seasons and animal seers!',
+    dress: D('🇨🇳🇬🇭','Cheongsam · Kente'),
+    body:`<p>Over the years, as a very-part time, very-small zoo manager, 1 turtle, 1 bearded dragon, 2 frogs, lots of fish, snails, shrimps, etc., most of them adopted by one of my boys, I learnt a lot about the miracle that are animals around us. I have no doubt, biomimicry we do today for the mechanical can do much deeper into co-existence and even learning how to be the rulers of the house without doing much, just ask Dogs and Cats!! Back to our story…..</p>
+<p>Weeks go by. Leaves begin calling it a day. Bears crawl into dens. Birds start cawing as they prepare to migrate. Snowplows begin gearing up for their showtime. The rhythm of the seasons unfolds just as it always has.</p>
+<p>One difference, though, begins to stand out. As the boys notice more sticks to throw for their Dog, The Great Groot, they also notice that more trees seem to be letting go of their growing branches. Why, they wonder, are the trees conserving more? Do they know something humans don't?</p>
+<p>They also see shrews with even smaller heads and again wonder what these creatures know that humans don't—or at least, what isn't being talked about on social media or the news their parents doom scroll.</p>` },
+
+  { layout:'split', svgKey:'festivals', label:'Chapter 6',
+    title:'Festivals and feasts',
+    dress: D('🇮🇳🇯🇵','Sari · Kurta · Kimono'),
+    body:`<p>Living away from India, is a special challenge for Festivals and Feasts. So, B&K, that is us, created some small happiness rituals/memories. So now D&S got the taste of it. Let's see how this played out in our story.</p>
+<p>As November arrives, they forget all about these strange observations and dive headfirst into the fall and winter festival season. Diwali fireworks, popping dance, and sweets give way to Christmas lights and Frank Sinatra. "Fun times are here," they say, while also wondering which new superhero movies will come out over winter break.</p>
+<p>It's December 31st—a beautiful, star-studded night. Meteorologists predict a snowstorm is on the way. As they wait for the Ball at New Year's in New York to drop, surrounded by excited chatter at their pipestem get-together, the D&S brothers notice something else: a full overload of the five senses (see, hear, smell, taste, touch) at work.</p>` },
+
+  { layout:'split', svgKey:'peacepause', label:'Chapter 7',
+    title:'Peace pause',
+    dress: D('🇩🇪🌺','Dirndl · Kaftan'),
+    body:`<p>Parents see-through to see kids through! (sorry could not resist some word pun). Kids though are in the scene. So keeping ears open to what kids need is what guided us parents. Now you know seer, seeing and scene, lets to to the next scene!!</p>
+<p>There is constant movement to track, nonstop Bollywood music, people patting each other on the back. On the other side are incredible, multilayered aromas—and frankly, a delicious overload of food, especially specially made gluten-free gulab jamuns!!</p>
+<p>So Darshan makes some space for Sarthan to have a little quiet time. In doing so, both brothers click into a new understanding: <em>balancing who you are with what your five senses take in.</em> Great growth for the year, wouldn't you say?</p>` },
+
+  { layout:'split', svgKey:'india', label:'Chapter 8',
+    title:'Indian insights when in India',
+    dress: D('🇮🇳','Kurta · Turban'),
+    body:`<p>Spice tolerance, noise tolerance, cheek pinching tolerance, 'do you know me, do you remember me' handling; may little things parents like us become aware of to make sure our sons enjoyed their visits to India. Now let's see them in the scene to India.</p>
+<p>A year and a half goes by after the snowstorm. D&S prepare to travel to India and saddle up for a safari of places, people, percussion, and papadams. Their parents give them a long list of action tips—too many, they think—so they grab some chalk, cheese dosas, and mango milkshakes and sort the advice into five action buckets:</p>
+<p>Talk with respect (<strong>speech</strong>)<br>Use your right hand (<strong>manipulate objects</strong>)<br>Watch traffic when walking (<strong>move</strong>)<br>Get used to water, since that's how restrooms are cleaned in India (<strong>p&p</strong>), a different type of sanitization!<br>And keep your distance when dogs are sniffing each other - whatever that meant (<strong>progeny</strong>).</p>` },
+
+  { layout:'split', svgKey:'inscription', label:'Chapter 9',
+    title:'Inscription inception!!',
+    dress: D('🇵🇪🇰🇷','Poncho · Hanbok'),
+    body:`<p>This part is truly made up for this book, we did not do this but we, actually Kanna put up superhero curtains because our sons wanted to keep their heros seen! Ok, lets go to their play area!!</p>
+<p>Years later, they realize their parents had stickers on both the east- and west-facing windows of the sunroom—their favorite play area in all seasons. The stickers showed a human figure with "<strong>445653</strong>" scribbled inside, why and what they wondered.</p>
+<p><em>(secret: one of the 5 is clue for the 5 senses ;)</em></p>` },
+
+  { layout:'split', svgKey:'gpus', label:'Chapter 10',
+    title:'The GPUs!!',
+    dress: D('🇮🇳','Sari · Dhoti-Kanduvaa'),
+    body:`<p>Well, Sarthana came up with Parental Unit as a moniker to get our attention. And techie here, extended it to GPU, the Grand Parental Unit. In this part of the story, R&S GPU passed away years early, so I was a relay, until D&S got to spend a lot more time in India, connecting to their generation people on their own. This part we will spectate in the second book, The Kids Of The Cosmos!! Anywyas, lets get back into our story. By the way, did you color at least bit on the previous pages, you will get to catch the 'easter eggs' hidden in them!!</p>
+<p>Another year passes with school and routines. Summer arrives, and A&T—the GPU, or Grand Parental Unit, as Sarthan calls them—come to visit. That means brioche bread dipped in the secret French-toast mixture of eggs, sugar, and who-knows-what-else that A has perfected over the years. Combined with T's legendary massage skills, the stage is set for playing hard and sleeping fast.</p>
+<p>They also come to understand something their R&S GPU, who has since passed away, once meant: if you want to flow (you've got six flows)—be slow if need be but don't stop flow. <strong>Breathe</strong> the day in. Move to <strong>digest</strong> food well. Get the blood happily <strong>pumping</strong>. Hold not; <strong>release</strong> (yes, they wrote "poop, pee, and fart" as the solid, liquid, and gas of the universe). <strong>Burp</strong> things out on short evening walks with A&T after dinner. And finally, play and flex—adjusting routines as needed, especially as A&T age. Yes, <strong>aging happens</strong> to all.</p>` },
+
+  { layout:'split', svgKey:'kidsun', label:'Chapter 11',
+    title:'Kids @ UN',
+    dress: D('🌍','Kurta · Kente · Thobe · Cheongsam · Dirndl'),
+    body:`<p>Ok, this is a bridge that has no really occurred in the World, but I think it is high time we grownups top assuming we know what you would need in the World when you grow up. Ok, lets see how you can shape the world you will live I longer than us!!</p>
+<p>As they grow older by an year, D and S talk one day about "o wows and o woes" of growing up. Darshan says, "Kids are specialists at dealing with the unknown." Sartha said, "been there done that." They talk about their toolkit for learning the unknown—the 27 "thingys," as they call them. Little do they know this is exactly what they will one day remind the grown-ups at the UN.</p>
+<p>A short while goes by, eventually that is what they see happen, the UN learns of the thingys (see first picture in the coloring section).</p>
+<p>As D&S share the strategy of 27 for navigating the unknown, the adults dig back into their own childhoods to rediscover that same adaptability they once had. They also remember the unfettered thinking and imagination of kids.</p>
+<p>The UN then created six teams and 27 sub-teams to rehome Earth.</p>` },
+
+  { layout:'split', svgKey:'preparations', label:'Chapter 12',
+    title:'Preparations begin!!',
+    dress: D('🇸🇦🇨🇳🧕','Thobe · Cheongsam · Kaftan+Hijab'),
+    body:`<p>By the way, here is where how you learn the world makes you the wiser ones and this concept becomes the actual hero of the story!! What this means is don't hesitate to tell grown ups around you how you see things, let me then decide to learn if they choose to. Shall we go back to the story!!</p>
+<p>Preparations begin for the sensory changes of deep space, the shifts in Earth's circulatory systems, and reliance on the planet's core as the primary energy source.</p>
+<p>When D&S and their friends mention bioluminescence as a source of light, they unknowingly begin solving a major problem: the absence of the Sun once Earth leaves the solar system. Energy from a supernova propels the sails, pushing against metal structures—including Earth's core.</p>
+<p>Returning to bioluminescence, adults look to the Ring of Fire volcanoes and realize they can create a low but sustainable light source for photosynthesis. Localized farming near volcanoes could work—and volcanic soil is rich.</p>
+<p>As the journey begins, D&S rephrase an old song and create a limerick for the cosmic road trip:</p>
+<p><em>"Twinkle, twinkle, twinkle Hum,<br>How we wondered where you're from…"</em></p>` },
+
+  { layout:'split', svgKey:'sunsignals', label:'Chapter 13',
+    title:'Sun signals, Earth moves, how though?',
+    dress: D('🇬🇭🇰🇷🇩🇪','Kente · Hanbok · Dirndl'),
+    body:`<p>One idea here. If you did not have a chance to fly a kite, try it, it is one of the funnest things to do, that technology or video games are not strong enough to create for you. If nothing else, take a plastic grocery bag, tie like a foot long string to each of the handles, then tie the other end of the strings together. Then ties like a 10 foot string to it, then hold the other end of the string, then, check to make sure there are vehicles around you and ground is good, and run a bit, the bag will ballon up and lift up higher than you! Viola, a bag balloon kite!! Ok come back inside and lets get to the story.</p>
+<p>Eventually, Earth itself is to be moved. How? Two massive solar sails are built, pushed by the Sun's winds, they then magnetically repelled oppositely magnetized (to the sails) steel structures on Earth. Viola, the ageold sailing of seas using winds is the wisdom reincarnated here. Momentum builds—one millimeter at a time—until compounding speed takes over—and escape velocity is to be reached.</p>
+<p>The planet plying plan is now ready to put into play!!</p>` },
+
+  { layout:'split', svgKey:'twinkle', label:'Chapter 14',
+    title:'Twinkle … Poem to Profound to Propulsion',
+    dress: D('🇵🇪🇯🇵🌍','Poncho · Kimono · Dashiki'),
+    body:`<p>Bed time made up stories and rhymes are the greatest joy of our parenthood. In fact the story for this book is over a decade old, we used to call these 'on-my-way-to-work' stories! Obvioulsy the Twinkle Twinkle Little Star inspired this poem! I say, ask your parents/guardians to write or record even if like a minute version of the stories and songs they are made up for you to sleep into happy slumbers!! Ok, lets go back!</p>
+<p>They send the poem to one of the greatest scientists of their time, Mr. Humboldt from Cordillera de los Andes in Chile, asking if it might be useful. He is struck by a bolt of insight. Of course—Hum is the identity of the active universe. The solar sail moving Earth might sustain speed by gathering charge from ephemeral particles, relative to Earth's own charged state as it leaves the solar system.</p>
+<p>And just like that, Earth can keep going.</p>
+<p>They realized the particles hum in and out endlessly within the vacuum itself—so propulsion is possible. Energy for continued movement is solvable.</p>
+<p>It like tapping into the constant burping (or f..t) of the Universe! Burp propulsion :)</p>` },
+
+  { layout:'split', svgKey:'moonshot', label:'Chapter 15',
+    title:'Moonshot Slignshot Cosmicshot',
+    dress: D('🇮🇳🌺🇳🇿','Kurta · Kaftan · Maori korowai'),
+    body:`<p>Dangerous I agree, so please do so only with your parents/guardians. Seeing anything go from zero to zoom, is like total fun. This can be a kids safe bow and arrow, with may be an LED light at the tip of the arrow; or in this case a sling shot made with a Y shaped wood you find in the woods (all trees have them)! Lets now make a slighshot for the whole Earth!!</p>
+<p>Incredibly, D&S were listening to R&A space adventures (Rytha meaning rhythm of the universe, and Ananya, like the amazing one). R&A are the twin maverick zeal filled Maori sisters from Aotearoa (New Zealand). Their secret to success was inspired by the mind boggling work of the World Coach, Dhita.</p>
+<p>D&S then, ran back to their books and discovered their integrated science teacher and their apprentice explaining gravitational slingshot effects, like those used by Viking satellites long ago. They also recall a child prodigy who understood snooker with the same ease most kids ride scooters in diapers.</p>
+<p>D&S send a message to WASA—the World Astronomical Service Agency ("wasa" meaning "home" in Indian languages). WASA recognizes the kids' remarkable skills and uses them for next-level navigation. Blue giants provide turbo boosts; red dwarfs handle course corrections. Earth is slingshotted toward a vibrant, stable yellow dwarf—much like the Sun they lost for a while.</p>
+<p>Speeding strategy is thus set!!</p>` },
+
+  { layout:'split', svgKey:'areweyet', label:'Chapter 16',
+    title:'Are we there yet',
+    dress: D('🇨🇳🇸🇦🇵🇪','Cheongsam · Thobe · Poncho'),
+    body:`<p>Now be honest, are long drives boring? When you get to a new place, people or pot of nice potatoes fries, though, did it feel like drive is forgotten for fun has began! Well than happens to grown ups too! So story may be gripping, sleep is more important, so lets call it a night. Once up we will resume our story, works?</p>
+<p>Another year passes. Darshan notices irritability in people. Sarthan feels it too, inside and out. They remember an aunt saying that white light in the morning and dim yellow light at night, helps people feel better. Years later, science will explain involuntary neural pathways and neurochemical adjustments behind this. So they seek out people who know how to produce efficient white and yellow light. Zones of light and darkness sweep across Earth, simulating day and night. And yes—a farmer figured it out already using balloons and prisms, to keep the farm life happy, happy enough to feed the Earth to stay happy!</p>
+<p>The pattern is now known!!</p>` },
+
+  { layout:'split', svgKey:'groot', label:'Chapter 17',
+    title:'Therapist Listener Cuddler Extraordinaire',
+    dress: D('🌍','Sari · Kente · Cheongsam · Thobe'),
+    body:`<p>One more thing becomes clear: for their healthy bodies and healthier minds, they have one boundless ball of enthusiasm to thank—Groot. The farmer opens the farm, helping adults and children alike adapt to change by tending life with <strong>presence, love, respect, and reverence.</strong> The mascot for the Farmer Family!</p>
+<p>The Groot the Great Dog!!</p>
+<p>The Dog Therapist of the Universe!!!</p>` },
+
+  { layout:'split', svgKey:'affirm', label:'The End',
+    title:'The Affirm of Universe the Magnificent',
+    dress: D('🌍','Sari · Kente · Poncho · Cheongsam · Thobe · Dirndl'),
+    body:`<p>Journey to the New Sun draws to an end on this page. Settling in the new 'solar home,' and using the 6 system areas and 27 signals, we will view in our next book, The Kids Of The Cosmos!</p>
+<p>Its time to enjoy your art-work, color a bit more, and dream of your journey extraordinaire! Spaces you will go, Stars you will see, and Galaxies you will see, in you and in the Cosmos!!</p>
+<p><em>Life moved the Earth.<br>Life was the Sun's energy.<br>And so, the Sun lived on.</em></p>
+<p>People became one as they made space for all to <em>feel, think, reminisce,</em> and <strong>identify</strong> with their history under the Sun before.</p>
+<p><strong>Live Love Connect!</strong></p>
+<p>End of story kiddos, its time for dinner, dozing and dreaming!!</p>` },
+
+  { layout:'split', svgKey:'littlestory', label:'The Framework',
+    title:'A Little Story About What a Human Is',
+    dress: D('🇩🇪🇬🇭','Dirndl · Kente'),
+    body:`<p>Once upon a time, there was a little human. The human had eyes to see, ears to hear, a nose to smell, a mouth to taste, and skin to touch. That's how the human met the world. Inside, the human's body knew how to breathe, eat and digest, send blood around, let things go, grow, and get older—all by itself, like magic. The human could feel feelings, have ideas, remember stories, and know who they are. Sometimes the human would think, sometimes react really fast, sometimes trust their body, and sometimes dream big dreams. With their body, the human could talk, use their hands, run and jump, go potty, and someday even help new life begin.</p>
+<p>But most important of all…</p>
+<p>The human wanted to live, to love, and to connect with others. That's what makes a human a human.</p>
+<p>And whenever the world feels new, strange, or unknown, these little helpers inside remind the human how to keep going.</p>` },
+
+  { layout:'framework', svgKey:'framework1', label:'The 6 Buckets',
+    title:'Our 6 groups and 27 signals system', framework:true },
+
+  { layout:'split', svgKey:'framework2', label:'How to Use It',
+    title:'The 27 signals help to start on unknowns',
+    dress: D('🇵🇪🇨🇳🇩🇪','Poncho · Cheongsam · Dirndl'),
+    body:`<p>Whenever the world feels new, strange, or unknown, these 27 signals remind you how to keep going.</p>
+<p>Start with any bucket. Ask yourself: What am I sensing? What am I feeling? How is my health? What actions can I take? What are my purposes?</p>
+<p>The kids used the 27 to navigate the unknown woods, India, the UN, deep space, and a new solar system. You can use them for your next unknown too.</p>
+<p><em>That is the HUMS™ framework.</em></p>` },
+
+  { layout:'split', svgKey:'aipartner', label:'Us and AI',
+    title:'Us and AI in partnership (happy path)',
+    dress: D('🧕🇮🇳','Kaftan+Hijab · Sari'),
+    body:`<p>The same 6 buckets and 27 signals map the partnership between humans and AI:</p>
+<p><strong>Who We Are:</strong> Radical Empathy · Sentiment Analytics<br><strong>How We Work:</strong> Moral Direction · Strategy Optimization<br><strong>Senses:</strong> Visual Alignment · High-Res Imaging &amp; LiDAR<br><strong>Health:</strong> Planetary Stewardship · Ecological Automation<br><strong>Actions:</strong> Inspirational Oratory · Universal Translation<br><strong>Purposes:</strong> Existential Fulfillment · Elimination of Drudgery</p>
+<p><em>Font colors in the full diagram: Human · AI/Robots/Automation · Partnership</em></p>` },
+
+  { layout:'split', svgKey:'orgtransform', label:'Us and Orgs',
+    title:'Us and Organization in Transformation as active partners (happy path)',
+    dress: D('🇸🇦🇮🇳🇩🇪🇨🇳','Thobe · Kurta · Dirndl · Cheongsam'),
+    body:`<p>The same lens works for organizational change:</p>
+<p><strong>Who We Are:</strong> Self-regulate · Synergy · Learner · Adapter<br><strong>How We Work:</strong> Learn decision logic · Be adaptability · Trust Network · Learn n join<br><strong>Senses:</strong> Understand Measures · Understand surveys · Regulate reactions · Participate · Feel upskill<br><strong>Health:</strong> Breathe intensity · Assimilate change · Self-Refresh · Self-Purge · Growth · Be wise<br><strong>Actions:</strong> Speak up · Stretch · Learn and Do · No to non-value · Self-responsibility<br><strong>Purposes:</strong> Sustain is life · Relate to customers · Be Community of practices · Expand networks</p>` },
+
+  { layout:'split', svgKey:'mentalhealth', label:'Us and Mental Health',
+    title:'Us and Mental Health',
+    dress: D('🌍','Sari · Kente · Poncho · Kimono · Dirndl · Thobe'),
+    body:`<p><strong>Who We Are:</strong> Regulate emotions · Sparsely Accommodate · Others learnt · Episode is not whole<br><strong>How We Work:</strong> Wherewithal grows · Wherewithal deepens · Rely on Providers · You can<br><strong>Senses:</strong> See whole · Speak whole · Stink fades · Appetite returns · Be in touch<br><strong>Health:</strong> Breathe · Appetite is body thing · Aerobic is Air · Flush makes space · Growth and burp, happens · Wisdom accelerates<br><strong>Actions:</strong> Ok to say not-ok · Art it out · Exercise · Flush downers · Future is doable<br><strong>Purposes:</strong> Value living · Find community · Stay in Community · Keep arms open</p>` },
+
+  { layout:'split', svgKey:'thinkventure', label:'Your Turn',
+    title:'Choose Your Own ThinkVenture',
+    dress: D('🇰🇷🇬🇭🌺','Hanbok · Dashiki · Kaftan'),
+    body:`<p>The template is now yours.</p>
+<p><strong>Us and _______________</strong></p>
+<p>Fill in your own domain. Apply the 6 buckets and 27 signals. Make them your playbooks!!</p>
+<p style="margin-top:18px; font-family:'Playfair Display',serif; font-style:italic; font-size:1.05em;">Pause, Color, Play, Then Play more :)</p>
+<p style="font-size:0.78rem; color:#8a8278; margin-top:14px;">© Srinivasa M. Kasturi, HUMS™, Human as Universal Modelling System framework - AI</p>` }
 ];
 
-function slideTemplate(slide, index) {
-  const num = index + 1;
-  if (slide.layout === "cover") {
-    return `
-      <section class="slide layout-cover ${index === 0 ? 'active' : ''}" data-index="${index}">
-        ${slide.html}
-      </section>
-    `;
-  }
-  if (slide.layout === "framework") {
-    return `
-      <section class="slide layout-framework ${index === 0 ? 'active' : ''}" data-index="${index}">
-        <div class="framework-title">${slide.title}</div>
-        <div class="slide-body">${slide.body}</div>
-      </section>
-    `;
-  }
-  return `
-    <section class="slide layout-split ${index === 0 ? 'active' : ''}" data-index="${index}">
-      <div class="illus-panel">
-        ${slide.svg}
-        <div class="dress-tag">
-          <span class="dtop">${slide.label}</span>
-          <span class="dtip">${num} of ${slides.length}</span>
+// ─── RENDER ────────────────────────────────────────────────────────────
+let current = 0;
+const stage = document.getElementById('stage');
+
+// Each slide gets an icon + short label for the picker
+const pickerMeta = [
+  { icon:'🌟', label:'Cover' },
+  { icon:'📖', label:'Prologue' },
+  { icon:'🐕', label:'Happy Path' },
+  { icon:'☀️', label:'Sun Sunset' },
+  { icon:'🗿', label:'Seer\'s Message' },
+  { icon:'🦁', label:'Kids & Cave' },
+  { icon:'🥭', label:'Food & Far Sight' },
+  { icon:'🍂', label:'Seasons' },
+  { icon:'🪔', label:'Festivals' },
+  { icon:'🧘', label:'Peace Pause' },
+  { icon:'✈️', label:'India Trip' },
+  { icon:'🔢', label:'Inscription' },
+  { icon:'👴', label:'The GPUs' },
+  { icon:'🌍', label:'Kids @ UN' },
+  { icon:'🌋', label:'Preparations' },
+  { icon:'⛵', label:'Solar Sails' },
+  { icon:'💡', label:'Twinkle Poem' },
+  { icon:'🚀', label:'Moonshot' },
+  { icon:'💡', label:'Are We There?' },
+  { icon:'🐾', label:'Groot' },
+  { icon:'🌞', label:'New Sun' },
+  { icon:'👤', label:'What Is Human' },
+  { icon:'📊', label:'6 Buckets' },
+  { icon:'🧭', label:'27 Signals' },
+  { icon:'🤖', label:'Us & AI' },
+  { icon:'🏢', label:'Us & Orgs' },
+  { icon:'💚', label:'Mental Health' },
+  { icon:'✏️', label:'Your Turn' },
+];
+
+function dressTag(d) {
+  if (!d) return '';
+  return `<div class="dress-tag">
+    <span class="dtop">${d.flag} ${d.name}</span>
+  </div>`;
+}
+
+function buildSlides() {
+  const pickerGrid = document.getElementById('pickerGrid');
+
+  slides.forEach((s, i) => {
+    // ── Slide ──
+    const div = document.createElement('div');
+    div.className = `slide layout-${s.layout}`;
+    div.id = `slide-${i}`;
+
+    if (s.layout === 'cover') {
+      div.innerHTML = `
+        <div class="cover-svg-wrap">${svgs[s.svgKey]}</div>
+        <div class="cover-title">${s.title}</div>
+        <div class="cover-sub">A HUMS™ SciFi Coloring Adventure</div>
+        <div class="slide-body">${s.body}</div>
+        <div class="cover-author">Srinivasa M. Kasturi</div>
+        <div style="margin-top:14px; font-size:0.72rem; color:#8a8278; font-style:italic; font-family:'Playfair Display',serif;">🌍 Vasudha Eva Kutumbakam — The whole Earth is one family</div>`;
+    } else if (s.layout === 'framework') {
+      div.innerHTML = `
+        <div class="slide-label">${s.label}</div>
+        <h2 class="framework-title">${s.title}</h2>
+        <div class="buckets-grid">
+          <div class="bucket-card"><div class="bucket-name green">Who We Are</div><div class="bucket-signals">Feel · Ideate · Remember · Identify</div></div>
+          <div class="bucket-card"><div class="bucket-name orange">How We Work</div><div class="bucket-signals">Think · Reflex · Rely · Dream</div></div>
+          <div class="bucket-card"><div class="bucket-name blue">Senses (inputs)</div><div class="bucket-signals">See · Hear · Smell · Taste · Touch</div></div>
+          <div class="bucket-card"><div class="bucket-name teal">Health (processes)</div><div class="bucket-signals">Breathe · Digest · Circulate · Release · Grow · Age</div></div>
+          <div class="bucket-card"><div class="bucket-name purple">Actions (outputs)</div><div class="bucket-signals">Speak · Manipulate · Move · Eliminate · Progeny</div></div>
+          <div class="bucket-card"><div class="bucket-name red">Purposes</div><div class="bucket-signals">Live · Love · Connect</div></div>
         </div>
-      </div>
-      <div class="text-panel">
-        <div class="slide-label">${slide.label}</div>
-        <div class="slide-title">${slide.title}</div>
-        <div class="slide-body">${slide.body}</div>
-      </div>
-    </section>
-  `;
-}
+        <div style="margin-top:18px; width:220px;">${svgs[s.svgKey]}</div>`;
+    } else {
+      div.innerHTML = `
+        <div class="illus-panel">
+          ${svgs[s.svgKey]}
+          ${dressTag(s.dress)}
+        </div>
+        <div class="text-panel">
+          ${s.label ? `<div class="slide-label">${s.label}</div>` : ''}
+          <h2 class="slide-title">${s.title}</h2>
+          <div class="slide-body">${s.body}</div>
+          <div class="tagline" style="margin-top:16px;">Pause · Color · Play · Then Next Page :)</div>
+        </div>`;
+    }
+    stage.appendChild(div);
 
-function renderSlides() {
-  document.getElementById("stage").innerHTML = slides.map(slideTemplate).join("");
-}
-
-function renderPicker() {
-  document.getElementById("pickerGrid").innerHTML = slides.map((slide, i) => `
-    <div class="picker-tile ${i === 0 ? 'current' : ''}" data-index="${i}">
-      <div class="pt-num">${String(i + 1).padStart(2, "0")}</div>
-      <div class="pt-icon">${slide.icon}</div>
-      <div class="pt-label">${slide.title}</div>
-    </div>
-  `).join("");
-}
-
-let currentSlide = 0;
-
-function updateUI() {
-  document.querySelectorAll(".slide").forEach((el, i) => {
-    el.classList.toggle("active", i === currentSlide);
+    // ── Picker tile ──
+    const meta = pickerMeta[i] || { icon: '📄', label: s.title ? s.title.slice(0,14) : `Page ${i+1}` };
+    const tile = document.createElement('button');
+    tile.className = 'picker-tile';
+    tile.id = `tile-${i}`;
+    tile.setAttribute('aria-label', `Go to slide ${i+1}: ${meta.label}`);
+    tile.innerHTML = `
+      <span class="pt-num">${i+1}</span>
+      <span class="pt-icon">${meta.icon}</span>
+      <span class="pt-label">${meta.label}</span>`;
+    tile.onclick = () => { goTo(i); closePicker(); };
+    pickerGrid.appendChild(tile);
   });
-  document.querySelectorAll(".picker-tile").forEach((el, i) => {
-    el.classList.toggle("current", i === currentSlide);
-  });
-  document.getElementById("counterDisplay").textContent = `${currentSlide + 1} / ${slides.length}`;
-  document.getElementById("progressFill").style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
-  document.getElementById("prevBtn").disabled = currentSlide === 0;
-  document.getElementById("nextBtn").disabled = currentSlide === slides.length - 1;
+
+  goTo(0);
 }
 
-function goToSlide(index) {
-  currentSlide = Math.max(0, Math.min(index, slides.length - 1));
-  updateUI();
+function goTo(n) {
+  document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i===n));
+  // Update picker tile highlights
+  document.querySelectorAll('.picker-tile').forEach((t,i) => t.classList.toggle('current', i===n));
+  current = n;
+  document.getElementById('counterDisplay').textContent = `${n+1} / ${slides.length}`;
+  document.getElementById('progressFill').style.width = `${((n+1)/slides.length)*100}%`;
+  document.getElementById('prevBtn').disabled = n === 0;
+  document.getElementById('nextBtn').disabled = n === slides.length-1;
 }
 
-function changeSlide(delta) {
-  goToSlide(currentSlide + delta);
+function changeSlide(dir) { goTo(Math.max(0, Math.min(slides.length-1, current+dir))); }
+
+// ── Picker open/close ──
+function togglePicker() {
+  const open = document.getElementById('pickerDrawer').classList.contains('open');
+  open ? closePicker() : openPicker();
 }
 
 function openPicker() {
-  document.getElementById("pickerOverlay").classList.add("open");
-  document.getElementById("pickerDrawer").classList.add("open");
+  document.getElementById('pickerOverlay').classList.add('open');
+  document.getElementById('pickerDrawer').classList.add('open');
+  // Scroll current tile into view inside the grid
+  requestAnimationFrame(() => {
+    const tile = document.getElementById(`tile-${current}`);
+    if (tile) tile.scrollIntoView({ block:'nearest', inline:'nearest' });
+  });
 }
 
 function closePicker() {
-  document.getElementById("pickerOverlay").classList.remove("open");
-  document.getElementById("pickerDrawer").classList.remove("open");
+  document.getElementById('pickerOverlay').classList.remove('open');
+  document.getElementById('pickerDrawer').classList.remove('open');
 }
 
-function togglePicker() {
-  const drawer = document.getElementById("pickerDrawer");
-  if (drawer.classList.contains("open")) closePicker();
-  else openPicker();
-}
-
-renderSlides();
-renderPicker();
-updateUI();
-
-document.getElementById("prevBtn").addEventListener("click", () => changeSlide(-1));
-document.getElementById("nextBtn").addEventListener("click", () => changeSlide(1));
-document.getElementById("pickerBtn").addEventListener("click", togglePicker);
-document.getElementById("closePickerBtn").addEventListener("click", closePicker);
-document.getElementById("pickerOverlay").addEventListener("click", closePicker);
-
-document.getElementById("pickerGrid").addEventListener("click", (e) => {
-  const tile = e.target.closest(".picker-tile");
-  if (!tile) return;
-  goToSlide(Number(tile.dataset.index));
-  closePicker();
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closePicker(); return; }
+  if (document.getElementById('pickerDrawer').classList.contains('open')) return;
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') changeSlide(1);
+  if (e.key==='ArrowLeft'||e.key==='ArrowUp') changeSlide(-1);
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") changeSlide(-1);
-  if (e.key === "ArrowRight") changeSlide(1);
-  if (e.key === "Escape") closePicker();
+// Touch swipe (only when picker is closed)
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  if (document.getElementById('pickerDrawer').classList.contains('open')) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
 });
+
+buildSlides();
 </script>
+
 </body>
 </html>
