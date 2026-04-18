@@ -29,10 +29,51 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 24px;
-    border-bottom: 1px solid var(--soft);
+    border-bottom: none;
+  }
+  .age-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 16px 6px;
     background: var(--white);
-    flex-shrink: 0;
-    z-index: 10;
+    border-bottom: 1px solid var(--soft);
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .age-bar {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--soft);
+    border-radius: 20px;
+    padding: 3px 5px;
+  }
+  .age-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 11px;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.74rem;
+    color: var(--muted);
+    border-radius: 16px;
+    letter-spacing: 0.03em;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .age-btn:hover { color: var(--ink); background: rgba(255,255,255,0.6); }
+  .age-btn.active { background: var(--white); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .age-btn.author-btn { color: var(--accent); font-style: italic; }
+  .age-btn.author-btn.active { background: var(--accent); color: var(--white); }
+  .age-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'Playfair Display', serif;
+    margin-right: 6px;
+    white-space: nowrap;
   }
   .topbar-title { font-family: 'Playfair Display', serif; font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .slide-counter { font-family: 'Crimson Pro', serif; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.05em; }
@@ -54,6 +95,24 @@
   .slide-body p + p { margin-top: 0.9em; }
   .slide-body em { font-style: italic; color: var(--accent); }
   .slide-body strong { font-weight: 600; }
+  .author-footer {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid var(--soft);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .author-footer span {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--accent);
+    font-style: normal;
+    letter-spacing: 0.03em;
+    margin-top: 3px;
+  }
   .tagline { margin-top: 20px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.85rem; color: var(--muted); border-left: 2px solid var(--soft); padding-left: 12px; line-height: 1.8; }
   .cover-svg-wrap { width: 200px; height: 200px; margin-bottom: 24px; }
   .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; color: var(--ink); margin-bottom: 10px; }
@@ -190,6 +249,18 @@
   <span class="hums-badge">HUMS™</span>
   <span class="topbar-title">Life After Sun</span>
   <span class="slide-counter" id="counterDisplay">1 / 27</span>
+</div>
+<div class="age-row">
+  <span class="age-label">Read as:</span>
+  <div class="age-bar" id="ageBar">
+    <button class="age-btn" onclick="setAge(0)">3–6</button>
+    <button class="age-btn" onclick="setAge(1)">5–8</button>
+    <button class="age-btn active" onclick="setAge(2)">8–12</button>
+    <button class="age-btn" onclick="setAge(3)">12–17</button>
+    <button class="age-btn" onclick="setAge(4)">Parents</button>
+    <button class="age-btn" onclick="setAge(5)">Educators</button>
+    <button class="age-btn author-btn" onclick="setAge(6)">✦ Author</button>
+  </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 <div class="stage" id="stage"></div>
@@ -1492,6 +1563,407 @@ const slides = [
 <p style="font-size:0.78rem; color:#8a8278; margin-top:14px;">© Srinivasa M. Kasturi, HUMS™, Human as Universal Modelling System framework - AI</p>` }
 ];
 
+
+// ─── AGE-BAND TEXT VARIANTS ──────────────────────────────────────────
+// Index: 0=3-6, 1=5-8, 2=8-12(default), 3=12-17, 4=Parents
+// Each entry: array of 27 strings matching slides order (skip cover=0 & framework=22 — those never change)
+// null means "use the default body from slides[]"
+
+const ageText = [
+
+// ── 0: Ages 3–6 ──────────────────────────────────────────────────────
+[
+null, // cover
+`<p>This book has big drawings for you to color!</p><p>Ask a grown-up to read with you. Color while they read. Use any colors you like!</p>`,
+`<p>This is a coloring adventure! It is about two boys named Darshan and Sarthan, and their dog Groot!</p><p>Color each page. Ask a friend to color with you!</p>`,
+`<p>BabLee looked at the sky and saw something strange in the Sun. The Sun was going to change!</p><p>His two kids decided to help. They started by watching their dog Groot!</p>`,
+`<p>BabLee and his family lived near some woods. The woods were small but big to kids!</p><p>The kids found a picture on a rock — a picture of a person with a big eye watching over them.</p>`,
+`<p>Darshan is the big brother. He likes to look and notice things.</p><p>Sarthan is the little brother. He asks lots of questions.</p><p>They walked in the woods with Groot — a fluffy dog — and found a painting in a cave!</p>`,
+`<p>The boys found a mango tree! They picked mangoes and the sun shone through the branches.</p><p>It was beautiful!</p><p><em>All work in Sun. Sun works in All. Sun is cool!</em></p>`,
+`<p>The leaves fell down. Bears went to sleep. Birds flew away. Winter was coming!</p><p>The boys noticed the trees were losing extra branches. The little shrews had tiny heads. The animals knew something!</p>`,
+`<p>Diwali! Lights! Sweets! Christmas! Fireworks! New Year!</p><p>At midnight on New Year's Eve, the boys noticed all five senses working at once — see, hear, smell, taste, touch!</p>`,
+`<p>Darshan made a quiet space for Sarthan when there was too much noise.</p><p>Both brothers learned: you need to know who you are AND what your senses are taking in!</p>`,
+`<p>The boys went to India! Their parents gave them tips:</p><p>🗣️ Be polite · 🖐️ Use right hand · 🚶 Watch traffic · 💧 Water in bathrooms · 🐕 Give dogs space</p>`,
+`<p>Their parents put stickers on the windows. The stickers showed a person with the number <strong>445653</strong> inside!</p><p>What could it mean? (Hint: one of the 5s means something about your senses!)</p>`,
+`<p>Grandma and Grandpa came to visit! They made yummy French toast.</p><p>Grandpa taught them: to feel good, you need to breathe, eat, move, go potty, grow… and let yourself get older too!</p>`,
+`<p>Darshan and Sarthan got bigger and went to a big meeting at the United Nations!</p><p>They shared their 27 thingys with all the grown-ups. The grown-ups listened!</p>`,
+`<p>Earth needed to move to a new star because the Sun was changing.</p><p>The kids helped figure out: bioluminescence (glow-in-the-dark creatures) could make light! And volcanoes could help grow food!</p>`,
+`<p>How do you move a whole planet? With giant sails!</p><p>The wind from the Sun pushed the sails. The sails pushed the Earth. One tiny millimeter at a time — until Earth started moving!</p>`,
+`<p>D&S made up a song for the trip:</p><p><em>Twinkle, twinkle, twinkle Hum,<br>How we wondered where you're from!</em></p><p>A scientist heard it and had a BIG idea — the humming of tiny invisible particles could power the Earth!</p>`,
+`<p>A slingshot isn't just for pebbles! You can slingshot a whole planet using big stars!</p><p>D&S and their Maori friends from New Zealand helped send Earth swinging past blue giants and red dwarfs toward a new yellow sun!</p>`,
+`<p>Travelling through space is a long long trip. Without the Sun, people felt grumpy.</p><p>A farmer fixed it with balloons and prisms — making white light for daytime and yellow light for nighttime. Happy people, happy planet!</p>`,
+`<p>Groot the dog helped everyone feel better. Groot was fluffy and warm and always happy to cuddle.</p><p>Groot = The Dog Therapist of the Universe!!!</p>`,
+`<p>Earth arrived at the new star! Everyone celebrated!</p><p><em>Life moved the Earth. Life was the Sun's energy. And so, the Sun lived on.</em></p><p><strong>Live Love Connect!</strong></p>`,
+`<p>Every person has: eyes, ears, nose, mouth, and skin to feel the world.</p><p>Inside, your body breathes, digests, pumps blood, and grows — all by itself! And you can feel, think, and dream!</p><p>Most important: you want to <strong>live, love, and connect!</strong></p>`,
+null, // framework grid — never changes
+`<p>The 27 signals are your helpers when things feel new or scary.</p><p>Ask yourself: What do I see, hear, smell? How does my body feel? What can I do? What do I want?</p>`,
+`<p>Humans + AI can be friends! Each does what they do best.</p><p>Humans feel and care. AI helps with big calculations and keeping us safe. Together = better!</p>`,
+`<p>Organisations are like big teams. They need to change and grow — just like people do!</p><p>The 27 signals can help teams too.</p>`,
+`<p>Sometimes we feel sad, worried, or scared. That is OK!</p><p>The 27 signals remind us: breathe, move, eat, talk to someone, make art, and keep going. You can!</p>`,
+`<p>Now it is your turn!</p><p><strong>Us and _______________</strong></p><p>Draw your own adventure using the 27 signals!</p><p>Pause, Color, Play, Then Play more :)</p>`,
+],
+
+// ── 1: Ages 5–8 ──────────────────────────────────────────────────────
+[
+null,
+`<p>Hi! This book has cool drawings to color AND a story to read. Ask a grown-up to help with tricky words. Use your wildest colors!</p>`,
+`<p>This is a coloring adventure based on stories from a real family — two boys, Darshan and Sarthan, and their legendary dog Groot!</p><p>Color each page. Try to find the hidden easter eggs!</p>`,
+`<p>BabLee was looking at stars in his backyard when he noticed something strange about the Sun. A swarm of tiny invisible black holes had flown right through it!</p><p>The Sun would slowly grow bigger and hotter. Earth needed a plan. His two kids decided to help!</p>`,
+`<p>BabLee's family lived near some woods that were perfect for adventures. Playing there, the kids discovered an ancient carving of a human with a giant eye watching over it.</p><p>They figured out it was a secret message about 6 buckets and 27 signals — a guide for understanding any unknown!</p>`,
+`<p>Darshan (older, meaning "to perceive") and Sarthan (younger, meaning "purpose") walked into the woods with their dog Groot — a tiny ShiTzu with a huge personality.</p><p>They found two amazing things: a rock carving of a person under a watching eye, and a cave painting of a bull with a sun-eye glowing above it!</p>`,
+`<p>The boys spotted a mango tree loaded with ripe mangoes. Reaching up, they saw the Sun glowing through the branches.</p><p>They remembered their father's rhyme: <em>All work in Sun. Sun works in All. Sun is cool. Be cool like Sun and see All.</em></p>`,
+`<p>Autumn arrived. Leaves fell. Bears hibernated. Birds migrated. Snowplows warmed up.</p><p>But something was different. The boys noticed trees dropping extra branches and shrews with even tinier heads. The animals seemed to know something the humans didn't!</p>`,
+`<p>November brought Diwali sparklers and sweets! Then Christmas lights and carols! Then New Year's Eve with a snowstorm coming!</p><p>At midnight, waiting for the ball to drop, D&S noticed something: all five senses completely overloaded at once — see, hear, smell, taste, touch!</p>`,
+`<p>The New Year's party was loud and busy. Darshan quietly made space for Sarthan to have a calm moment away from the noise.</p><p>Both brothers understood something new: you have to balance <em>who you are</em> with <em>what your five senses are taking in</em>. Big idea!</p>`,
+`<p>A year and a half later, D&S prepared for a trip to India! Too many tips from parents, so they sorted them into five buckets using chalk, cheese dosas, and mango milkshakes:</p><p>🗣️ Talk with respect · 🖐️ Use right hand · 🚶 Watch traffic · 💧 Water in bathrooms · 🐕 Give sniffing dogs space!</p>`,
+`<p>Years later, the boys noticed mysterious stickers their parents had placed on the sunroom windows — a human figure with the number <strong>445653</strong> written inside it.</p><p><em>(Secret: one of the 5s is a clue for the 5 senses!)</em></p>`,
+`<p>Another year later, the Grand Parental Unit (GPU!) arrived for summer — bringing legendary French toast and massage skills!</p><p>Their wisdom: to flow well through life you need 6 things: <strong>Breathe · Digest · Circulate · Release · Grow · Age gracefully.</strong></p>`,
+`<p>Growing up, D and S talked about the "o wows and o woes" of life. Kids, they decided, are specialists at handling the unknown.</p><p>Their 27 thingys toolkit ended up being shared with grown-ups at the United Nations! The UN then created 6 teams and 27 sub-teams to figure out how to move Earth to a new star.</p>`,
+`<p>Preparations began! Earth's insides needed to keep working without the Sun.</p><p>D&S and friends had a great idea: <strong>bioluminescence</strong> — the same glow that deep-sea creatures use — could create light near volcanoes. And volcanic soil is incredibly rich for growing food!</p>`,
+`<p>Moving a planet is a big job! Two giant solar sails were built. The Sun's wind pushed the sails. The sails magnetically pushed huge steel anchors buried in Earth.</p><p>One millimeter at a time, speed built up — until Earth reached escape velocity. It's like the ancient art of sailing, but for a planet!</p>`,
+`<p>D&S wrote a cosmic road-trip poem and sent it to scientist Humboldt in Chile:</p><p><em>Twinkle, twinkle, twinkle Hum, How we wondered where you're from…</em></p><p>Humboldt had a breakthrough: the tiny invisible particles that fill all of space hum in and out constantly — and their energy could power Earth's sails forever. Burp propulsion!</p>`,
+`<p>D&S learned about gravitational slingshots — how Viking space probes used planets to gain speed — and teamed up with the twin Maori sisters Rytha and Ananya from New Zealand.</p><p>Together they planned Earth's route: swing past blue giants for turbo boosts, red dwarfs for steering, and land near a warm yellow star — just like our Sun!</p>`,
+`<p>Deep-space travel made people grumpy. D&S remembered their aunt's tip: white light in the morning, dim yellow at night, makes everyone happier.</p><p>A farmer solved it with balloons and prisms, creating light zones that swept across Earth like artificial day and night. Happy farms, happy planet. Pattern known!!</p>`,
+`<p>Through the whole journey, one thing made everyone feel better: Groot.</p><p>The fluffy ShiTzu became the mascot for the farmer's community — helping adults and children alike adapt to change through presence, love, respect, and reverence.</p><p>The Dog Therapist of the Universe!!!</p>`,
+`<p>Earth arrived at its new home star! D&S, now adults, used the 27 signals to settle in without disturbing the other planets.</p><p><em>Life moved the Earth. Life was the Sun's energy. And so, the Sun lived on.</em></p><p>People became one as they made space for all to feel, think, reminisce, and identify with their history under the Sun before. <strong>Live Love Connect!</strong></p>`,
+`<p>Once upon a time, there was a little human. Eyes to see, ears to hear, nose to smell, mouth to taste, skin to touch — that's how they met the world.</p><p>Inside: breathe, digest, pump blood, grow, and age — all automatic, like magic! Plus: feel, think, remember, imagine, and dream.</p><p>But most important: the human wanted to <strong>live, love, and connect.</strong></p>`,
+null,
+`<p>Whenever something feels new or unknown — new school, new place, new planet — the 27 signals help you start.</p><p>Ask: What am I sensing? What am I feeling? How is my body? What can I do? What do I want?</p>`,
+`<p>The same 6 buckets and 27 signals map how humans and AI work together at their best — each doing what only they can do, supporting each other.</p>`,
+`<p>Organisations change and grow, just like people do. The 27 signals are a guide for teams too — sense what's happening, think clearly, act well, keep healthy, and stay connected to purpose.</p>`,
+`<p>Mental health uses the same 27 signals: breathe space into hard feelings, move your body, let stink fade, make art, reach out, find your community, and remember — an episode is not the whole story.</p>`,
+`<p>The template is yours now. <strong>Us and _______________</strong></p><p>Fill in your own domain and apply the 6 buckets and 27 signals. Pause, Color, Play, Then Play more :)</p>`,
+],
+
+// ── 2: Ages 8–12 (DEFAULT — exact PDF text, already in slides[].body) ─
+null, // null means "use slides[i].body for all slides"
+
+// ── 3: Ages 12–17 ────────────────────────────────────────────────────
+[
+null,
+`<p>"Prologue" is just a fancy word for: here's the context. Skip ahead if you want — or read on for the backstory of this framework.</p>
+<p>Raising kids is the most fascinating adventure I've had — full of all 9 types of emotions, joy leading. What stayed with me most was being a rapt audience for my kids' curiosity. Then AI arrived and gave me a new lens.</p>
+<p>That lens became HUMS™ — a 6-bucket, 27-signal fractal framework: a human-based model of the universe. This book is how I share it. Passion for SciFi + Philosophy + a preference for short, lively reads. Come along.</p>`,
+`<p>This is a coloring book and a philosophy book and a sci-fi story — all at once. Based on my family's real stories, with the legendary dog Groot as co-protagonist.</p>
+<p>Color while you read. The "easter eggs" hidden in earlier illustrations become visible once you look back. Guardians: make the insights pages your own playbooks.</p>`,
+`<p>Amateur astronomer BabLee detects something anomalous in the Sun — confirmed by professional colleagues. A swarm of primordial blackholes has passed through it, triggering a slow Red Giant expansion that will eventually disrupt life on Earth.</p>
+<p>Timeline: centuries. But the story starts now, with B&K's two kids — ages 13 and 6 — sensing that children might see solutions adults have missed.</p>`,
+`<p>B&K chose to live near woods — deliberately choosing a "septic tank community" that real estate developers had overlooked, precisely because it had trees.</p>
+<p>Playing there, the kids stumble on an ancient motif: a human figure beneath a watching eye. They hypothesise it's a framework for navigating unknowns — applicable to everything from starting at a new school to relocating an entire planet. They're right.</p>`,
+`<p>Darshan ("to perceive") and Sarthan ("purpose — recalibrated after insight") explore the woods with Groot, their ShiTzu. They find two ancient images: a human under a watching eye carved in stone, and a cave painting of a bull beneath a radiant sun-eye.</p>
+<p>The symbols start to form a pattern — six categories, twenty-seven signals — a framework for sense-making in any unknown territory.</p>`,
+`<p>Reaching for mangoes under a sun-dappled tree, D&S recall their father's rhyme: <em>All work in Sun. Sun works in All. Sun is cool. Be cool like Sun and see All.</em></p>
+<p>It's a Vedantic idea encoded as a children's rhyme — the universe as a unified field, with the Sun as its visible symbol. Interesting, they think. Later, it will become central to their propulsion theory.</p>`,
+`<p>Late autumn. Trees shedding more than usual. Shrews with measurably smaller craniums. Migratory birds leaving earlier.</p>
+<p>D&S pick up signals from the natural world that the adults — doom-scrolling past the same data on their news feeds — aren't registering. Biomimicry isn't just mechanical engineering; it's an epistemological practice. Pay attention to what other species are already doing.</p>`,
+`<p>Festival season arrives: Diwali gives way to Christmas gives way to New Year's Eve. Waiting for midnight in a crowded, noisy, fragrant, delicious gathering, D&S notice something systematic: their five senses are simultaneously at full capacity.</p>
+<p>The observation is casual. Later, it becomes foundational — the idea that your sensory input load and your inner identity need active balancing.</p>`,
+`<p>Darshan creates space for Sarthan to step back from the sensory overload of the New Year's party. The younger brother resets. Both brothers articulate the insight: <em>knowing who you are</em> and <em>managing what your senses take in</em> are two distinct but interdependent skills.</p>
+<p>It's their first conscious application of the framework they've been building.</p>`,
+`<p>Preparing for India, D&S are given a long list of cultural navigation tips. Too many to hold. So they categorise them into five action buckets — an early, informal use of the HUMS Actions layer:</p>
+<p>Speech · Manipulation (right hand) · Movement (traffic awareness) · Elimination (water-based sanitation) · Progeny (animal behaviour awareness).</p>
+<p>Framework thinking, applied to a practical cultural challenge.</p>`,
+`<p>Years later, D&S realise their parents had placed human-figure stickers on the east and west sunroom windows — each with the number <strong>445653</strong> inscribed inside.</p>
+<p>The number maps to the HUMS bucket signal counts. One of the 5s is a deliberate clue for the five senses. The parents had been encoding the framework into the environment all along.</p>`,
+`<p>The GPU (Grand Parental Unit) visits — bringing brioche French toast and traditional massage wisdom. Through them, D&S receive a distilled model of physiological flow:</p>
+<p><strong>Breathe</strong> consciously · <strong>Digest</strong> food well · <strong>Circulate</strong> blood happily · <strong>Release</strong> (the solid, liquid, and gas of the universe, as the family puts it) · <strong>Grow</strong> · <strong>Age</strong> gracefully.</p>
+<p>Six flows. The HUMS Health bucket in lived practice.</p>`,
+`<p>D&S, now teenagers, present their 27-signal framework to the United Nations. The delegates — specialists in crisis management — recognise that children, having spent their whole lives navigating unknowns, have a more useful toolkit than the adults.</p>
+<p>The UN creates 6 teams and 27 sub-teams structured around the framework. The project: relocate Earth.</p>`,
+`<p>Technical preparations begin. The challenge: maintain Earth's circulatory systems (weather, food production, light cycles) without solar energy.</p>
+<p>D&S and peers propose bioluminescence as a stopgap light source; Ring of Fire volcanoes as geothermal farms. Energy source: the planet's own core. The insight — children thinking in biological analogies rather than purely mechanical ones — proves decisive.</p>`,
+`<p>Propulsion mechanism: two massive solar sails, driven by solar wind, magnetically repel steel anchor structures embedded in Earth's crust. The physics is the same as ancient sailing — momentum compound over time from near-zero.</p>
+<p>The kite analogy holds: even a plastic bag catches enough air to lift, given sufficient string and patience.</p>`,
+`<p>D&S send their Hum poem to scientist Humboldt. He makes the connection they hadn't fully articulated: <em>Hum</em> is the identity signature of the active universe — the quantum vacuum fluctuations that fill apparently empty space.</p>
+<p>If the solar sail charges itself from the differential between Earth's electromagnetic state and the ambient vacuum charge, propulsion becomes self-sustaining. Vacuum energy as a propellant. Burp propulsion, they call it. The physics is sound.</p>`,
+`<p>D&S apply gravitational slingshot mechanics — the same technique used by Voyager and Cassini — to map a multi-stage acceleration route. Blue giant stars for maximum delta-v; red dwarfs for course corrections; destination: a stable G-type yellow dwarf.</p>
+<p>Collaboration with Rytha and Ananya, Maori sisters from Aotearoa, brings indigenous navigational knowledge of stars into the mission planning. Speeding strategy set.</p>`,
+`<p>Extended space travel without natural light cycles produces measurable neurological effects — circadian disruption, mood instability. D&S identify the mechanism and the fix: spectral lighting zones mimicking dawn/dusk cycles across Earth's surface.</p>
+<p>A farmer independently solves the same problem using balloon-diffused prisms. Bottom-up and top-down solutions converging. The pattern is now known.</p>`,
+`<p>Groot — the ShiTzu — turns out to be the mission's most essential resource. The physiological and psychological effects of animal companionship on humans under chronic stress are measurable. The dog doesn't fix anything. The dog makes everything else fixable.</p>
+<p>The farmer's community organises around Groot as mascot. Presence, love, respect, reverence — the operational values of the light-farming collective.</p>`,
+`<p>Earth arrives. D&S, now adults, apply the 27 signals to settle into the new solar system without disrupting existing planetary ecologies. The same framework that helped a child navigate a noisy New Year's party navigates interstellar relocation.</p>
+<p><em>Life moved the Earth. Life was the Sun's energy. And so, the Sun lived on.</em> Live Love Connect.</p>`,
+`<p>The HUMS framework begins with a simple observation: a human being has a finite, describable set of inputs, processes, outputs, and purposes. Map them clearly, and you have a universal diagnostic tool.</p>
+<p>The 6 buckets: Senses (inputs) · Health (processes) · How We Work (operating modes) · Who We Are (identity) · Actions (outputs) · Purposes (requirements). 27 signals across all six. Fractal — applicable at any scale.</p>`,
+null,
+`<p>The 27 signals are a starting-point protocol for any unknown. They don't tell you the answer — they tell you where to look first.</p>
+<p>Any sufficiently novel situation (new school, new relationship, new planet) can be mapped across all six buckets. Which signals are active? Which are absent or suppressed? That gap between current state and optimal state is your action space.</p>`,
+`<p>The HUMS framework maps the human-AI partnership non-hierarchically. Each bucket contains both a human capability and an AI/automation analogue. The goal isn't replacement — it's complementarity.</p>
+<p>Moral Direction and Strategy Optimisation sit together in How We Work. Radical Empathy and Sentiment Analytics sit together in Who We Are. Neither alone is sufficient. Both together are powerful.</p>`,
+`<p>Organisational transformation follows the same 6-bucket logic as individual adaptation. The difference is scale and the added complexity of distributed trust.</p>
+<p>Key insight: the Organisation column in the HUMS diagram isn't a description of what organisations do — it's a prescription for what they need to do <em>alongside</em> their people, as active partners in transformation.</p>`,
+`<p>The mental health application of HUMS is the most personal. The key reframe: an episode is not the whole. Any single reading of any bucket — a bad sensory day, a stuck reflex, a suppressed identity signal — is a snapshot, not a verdict.</p>
+<p>The framework restores agency: if you can name which of the 27 signals is dysregulated, you have somewhere to start. That starting point is everything.</p>`,
+`<p>The template is open. <strong>Us and _______________</strong></p>
+<p>HUMS has been applied to AI partnerships, organisational change, and mental health. It scales to any domain where human beings meet complexity. Apply the 6 buckets and 27 signals to your own context. Make it your playbook.</p>
+<p>© Srinivasa M. Kasturi, HUMS™, Human as Universal Modelling System framework - AI</p>`,
+],
+
+// ── 4: Parents ────────────────────────────────────────────────────────
+[
+null,
+`<p>This book has two audiences simultaneously: your child's imagination and your own. The coloring pages are theirs. These insight pages are yours to annotate, cross out, and rewrite.</p>
+<p>The HUMS™ framework — 6 buckets, 27 signals — began as an attempt to describe what was happening in my household across parenting, career, and a search for philosophical coherence. It became a diagnostic tool that works at every scale I've tested it at.</p>`,
+`<p>The illustrations encode the framework spatially — the human figure with the 27 signals distributed across it appears in multiple slides as a coloring page. Let your child color it without explanation. See which signals they choose to highlight.</p>
+<p>The "easter eggs" are deliberate: the 445653 sticker on the sunroom window, the ancient motifs in the woods. They reward re-reading. Children who color through the book find things they missed the first time.</p>`,
+`<p>The setup: a slow-moving planetary crisis with a multi-century timeline. This is deliberate — it's a frame for thinking about problems that require intergenerational cooperation, where children's thinking is genuinely more agile than adults'.</p>
+<p>The freezemegadon is real — a term Sarthan coined for a sudden, inexplicable deep freeze. It stayed because it's accurate to how children name phenomena before the adult vocabulary arrives.</p>`,
+`<p>The septic tank community detail is real. We chose our home specifically because developers had bypassed it, leaving woods intact. The framework observation: children's developmental environments are shaped by the micro-choices adults make about proximity to nature, quiet, and unstructured space.</p>
+<p>The ancient motif discovery is fictional — but the insight it delivers (a pre-existing human framework for navigating the unknown) is the epistemological core of the book.</p>`,
+`<p>Darshan and Sarthan are named for their HUMS roles: perception and purpose-recalibration. These aren't aspirational names — they're descriptive of what the two modes of a healthy mind actually do.</p>
+<p>Groot is a ShiTzu. Real dog. Real personality. The decision to include him as a structural character (rather than comic relief) reflects the research on animal companionship and physiological regulation. He's not decoration.</p>`,
+`<p>The Vedantic rhyme — <em>All work in Sun, Sun works in All</em> — is a simplified encoding of the Upanishadic concept of Brahman as the substrate of all phenomena. I've been encoding ancient Indian philosophical concepts into accessible forms since 2005 (the Dashaavataara board game).</p>
+<p>HUMS is the Rosetta Stone connecting all these projects. The sun-as-awareness metaphor runs through the book deliberately.</p>`,
+`<p>The animal observation chapter is biomimicry as an epistemological practice. Children who are allowed unstructured time in nature develop the habit of multi-species observation that our survival instincts evolved to use.</p>
+<p>The shrews with smaller heads — Dehnel's phenomenon — is real. Seasonal cranial shrinkage as a metabolic adaptation. The boys noticing it before the adults represents the core thesis: children's observation bandwidth is wider when undirected.</p>`,
+`<p>The festival chapter maps directly to the HUMS Senses bucket: five inputs simultaneously at maximum. The insight — that sensory overload and identity stability are related — is the foundation of the Senses/Who We Are relationship in the framework.</p>
+<p>The gluten-free gulab jamuns are real. Sarthan's dietary needs shaped how our family navigated every communal gathering for years. The detail stays because it signals to neurodiverse families: you are in this story.</p>`,
+`<p>The Peace Pause chapter is the first conscious application of HUMS as a real-time intervention. Darshan creates space — a deliberate act of regulating the sensory environment for his brother.</p>
+<p>For parents: the "seer/seeing/scene" wordplay isn't accidental. The framework distinguishes between the observer (Who We Are), the act of observation (How We Work / Senses), and the observed (external environment). This chapter enacts that distinction.</p>`,
+`<p>The India trip chapter is the HUMS Actions bucket applied to cultural navigation. The five buckets D&S identify (speech, manipulation, movement, p&p, progeny) are informal names for the five Action signals.</p>
+<p>The cheese dosa and mango milkshake detail: we actually did this. Sorting complex information works better with pleasant sensory accompaniment. A framework insight disguised as a snack.</p>`,
+`<p>The 445653 sticker is an encoding of the HUMS signal counts by bucket: 4 (Who We Are) · 4 (How We Work) · 5 (Senses) · 6 (Health) · 5 (Actions) · 3 (Purposes). Parents placed the clue in the environment without explanation.</p>
+<p>This is a parenting philosophy: embed the framework spatially and let children discover it. The sunroom — east and west facing — was deliberately chosen for maximum light and seasonal variation.</p>`,
+`<p>The GPU chapter encodes the HUMS Health bucket through intergenerational transmission. The six flows (Breathe · Digest · Circulate · Release · Grow · Age) are the six Health signals in accessible language.</p>
+<p>R&S GPU (paternal grandparents) passed away before D&S could form deep memories. The relay of their wisdom through BabLee — imperfect, partial, lovingly reconstructed — is honest about how intergenerational knowledge actually transmits.</p>`,
+`<p>The UN chapter is a thought experiment in institutional humility. The premise: children, having spent their entire lives successfully navigating unknowns, are structurally better equipped to design frameworks for unknown navigation than domain experts whose expertise is precisely calibrated to known problems.</p>
+<p>The 6 teams / 27 sub-teams mapping to HUMS is the framework validating itself at planetary scale.</p>`,
+`<p>The bioluminescence / volcano farming insight represents child-mode thinking: analogical reasoning from biology to engineering, unencumbered by the assumption that industrial solutions are the default.</p>
+<p>For parents facilitating the reading: ask your child where else bioluminescence exists. Ask what else volcanoes provide. The chapter is designed to open lateral thinking rather than deliver answers.</p>`,
+`<p>The solar sail chapter is the HUMS Actions bucket at planetary scale. Each of the five action signals (Speak · Manipulate · Move · Eliminate · Progeny) has a physical analogue in the propulsion system.</p>
+<p>The kite-making aside is real. We did it with a plastic grocery bag. The physics holds. And the direct experience of momentum-from-nothing is a better explanation of compounding than any verbal description.</p>`,
+`<p>The Hum poem / vacuum energy chapter connects two threads: the Vedantic "Hum" (the primal sound, OM, the identity of the active universe) and quantum vacuum fluctuations (zero-point energy, the irreducible activity of apparently empty space).</p>
+<p>Humboldt is fictional but the insight is not. The framework implication: playful analogical thinking (a child's poem) can generate hypotheses that rigorous domain thinking misses.</p>`,
+`<p>The gravitational slingshot chapter introduces the Maori sisters as a deliberate act of decolonising the science narrative. Polynesian wayfinding — navigating by stars, currents, and birds across thousands of miles of open ocean — is the oldest and most sophisticated navigational knowledge system on Earth.</p>
+<p>Rytha (rhythm of the universe) and Ananya (the amazing one) bring indigenous star knowledge into the mission. The framework needs all the signal types.</p>`,
+`<p>The light-cycle chapter is practical neuroscience in narrative form. Circadian rhythm disruption is the first symptom of environmental disconnection — from natural light, from season, from community rhythm.</p>
+<p>The farmer solving it with balloons and prisms is the book's clearest example of bottom-up solution generation: not a scientist, not a bureaucrat, someone with direct sensory contact with the problem and the patience to observe until a pattern emerged.</p>`,
+`<p>Groot's chapter is placed here deliberately — at the moment of maximum accumulated stress in the journey. The research on animal-assisted therapy, oxytocin release, and the physiological regulation effects of companion animals is extensive.</p>
+<p>But the chapter isn't making a clinical argument. It's making a human one: the things that actually help are usually warm, alive, and not trying to solve the problem.</p>`,
+`<p>The arrival chapter closes the first book's arc. D&S, now adults, apply the same framework they developed as children. The 27 signals scale from a New Year's party to interstellar relocation.</p>
+<p>The next book (The Kids Of The Cosmos) will cover the settling-in phase — navigating a new solar system using the same HUMS framework, this time as adults who remember being children.</p>`,
+`<p>The "Little Story About What a Human Is" is the framework's simplest expression — every signal named at the level a 4-year-old can follow. This is the entry point for reading the book with very young children.</p>
+<p>For parents: the order of the story matters. Senses come first (inputs), then Health (processes), then How We Work (operating modes), then Who We Are (identity), then Actions (outputs), then Purposes (requirements). The human as a system.</p>`,
+null,
+`<p>The 27 signals as a diagnostic tool for the unknown: map the current situation across all six buckets. Which signals are active? Which are absent? The gap is the action space.</p>
+<p>For family use: this works as a dinner-table protocol. "How are your senses today?" is a different question from "how was school?" It opens a different kind of conversation.</p>`,
+`<p>The AI partnership diagram shows each HUMS bucket with a human column and an AI column. Neither is privileged. The goal is complementarity — each doing what only it can do.</p>
+<p>For parents navigating the AI conversation with children: the framework offers a non-threatening entry point. AI extends human capability in specific directions. It doesn't replace the Who We Are column.</p>`,
+`<p>The organisational transformation diagram is included because many parents reading this are navigating workplace change. The same framework applies. The Organisation column isn't what companies do to people — it's what companies need to do alongside people.</p>`,
+`<p>The mental health diagram is the most important page in the book for parents. The key insight: episode is not whole. Any single dysregulated signal is not a diagnosis — it's a starting point for intervention.</p>
+<p>For families with neurodiverse members: the framework was developed partly through lived experience with sensory processing differences. The 27 signals don't pathologise variation — they describe it as a navigable landscape.</p>`,
+`<p>The blank template is an invitation. HUMS has been applied to AI, organisational transformation, and mental health in this book. It has also been applied to secure software development (C-SALF framework) and dietary/wellness practice (ASiWiFi).</p>
+<p>Your application is the next one. Make it your playbook. © Srinivasa M. Kasturi, HUMS™</p>`,
+]
+,
+
+// ── 5: Educators / Teachers ───────────────────────────────────────────
+// Format per slide: Learning Objectives · Curriculum Links · Discussion Questions · Activity
+[
+null, // cover
+
+// Prologue
+`<p><strong>Learning Objectives:</strong> Students will understand that frameworks are tools for organising complex ideas, and that personal experience can be the origin of a universal model.</p>
+<p><strong>Curriculum Links:</strong> Philosophy of Knowledge (IB ToK) · Social-Emotional Learning · Metacognition · Reflective Writing</p>
+<p><strong>Discussion:</strong> What does it mean to build a "framework"? Can a personal observation become a universal tool? When has your own experience taught you something that applied beyond your situation?</p>
+<p><strong>Activity:</strong> Ask students to write one paragraph describing a personal observation that taught them something about how people work. Share and compare — do patterns emerge?</p>`,
+
+// Happy Path
+`<p><strong>Learning Objectives:</strong> Students will identify the narrative structure of the book and its dual audience design (children + guardians). They will explore how coloring functions as active engagement rather than passive consumption.</p>
+<p><strong>Curriculum Links:</strong> Media Literacy · Multimodal Texts · Art Integration · Family Systems</p>
+<p><strong>Discussion:</strong> Why might a book be designed for two different readers simultaneously? What does coloring add to reading comprehension? How does participation change the relationship to a text?</p>
+<p><strong>Activity:</strong> Have students design a two-audience page for a topic of their choice — what changes between the child version and the adult version of the same content?</p>`,
+
+// Sun Sunset
+`<p><strong>Learning Objectives:</strong> Students will connect a fictional crisis scenario to real astrophysics concepts (stellar evolution, Red Giants) and to systems-thinking principles about slow-moving, high-impact events.</p>
+<p><strong>Curriculum Links:</strong> Astronomy · Physics · Systems Thinking · Environmental Science · Science Fiction as Speculation</p>
+<p><strong>Discussion:</strong> What real challenges have a slow timeline but catastrophic eventual impact? How do children and adults respond differently to slow-moving crises? What is the role of imagination in scientific hypothesis?</p>
+<p><strong>Activity:</strong> Research one real slow-moving planetary challenge (e.g. ocean acidification, magnetic pole shift). Map it onto the story's structure: what would the "primordial blackholes" be in your scenario?</p>`,
+
+// Seers
+`<p><strong>Learning Objectives:</strong> Students will explore how ancient symbolic systems encode knowledge, and how children can serve as interpreters of complex systems when given the right framework.</p>
+<p><strong>Curriculum Links:</strong> Semiotics · History of Knowledge Systems · Indigenous Wisdom Traditions · Information Literacy</p>
+<p><strong>Discussion:</strong> Why might ancient peoples encode knowledge in symbols rather than writing? What does it mean for children to "discover" a framework that already exists? How does the HUMS framework relate to other classification systems you know (e.g. Bloom's Taxonomy, Maslow's Hierarchy)?</p>
+<p><strong>Activity:</strong> Find three different human frameworks for classifying experience (e.g. the Enneagram, Maslow, the Elements). Compare their structure to HUMS. What do they share? What does HUMS offer that others don't?</p>`,
+
+// Kids
+`<p><strong>Learning Objectives:</strong> Students will analyse how names carry meaning across cultures, and how siblings with different cognitive styles can complement each other in problem-solving.</p>
+<p><strong>Curriculum Links:</strong> Sanskrit / Linguistics · Collaborative Learning · Cognitive Diversity · Narrative Character Analysis</p>
+<p><strong>Discussion:</strong> What does it mean to name a character after their cognitive function? How do Darshan (perceive) and Sarthan (recalibrate purpose) complement each other? Can you think of real partnerships — scientific, historical, personal — that work this way?</p>
+<p><strong>Activity:</strong> Students create a "character card" for themselves using the HUMS framework: which signals are their strongest? Which do they rely on in unknowns? Share in pairs and discuss complementarity.</p>`,
+
+// Food and Far Sight
+`<p><strong>Learning Objectives:</strong> Students will examine how sensory experience and philosophical insight can be interwoven, and analyse the Vedantic concept encoded in the Sun rhyme.</p>
+<p><strong>Curriculum Links:</strong> World Religions / Philosophy · Poetry Analysis · Sensory Writing · Vedanta / Indian Philosophy</p>
+<p><strong>Discussion:</strong> The rhyme "All work in Sun, Sun works in All" encodes a non-dualistic philosophical idea. What does it mean? How does the Sun function as a metaphor in this story? Can you think of other cultures that use a sun or light metaphor to describe consciousness or truth?</p>
+<p><strong>Activity:</strong> Students write their own 4-line rhyme that encodes a philosophical or scientific idea in simple language, suitable for a child to memorise and an adult to unpack.</p>`,
+
+// Seasons
+`<p><strong>Learning Objectives:</strong> Students will understand biomimicry as an epistemological practice and analyse how children's observation methods differ from adult expert observation.</p>
+<p><strong>Curriculum Links:</strong> Biology · Ecology · Biomimicry · Epistemology · Scientific Observation Methods</p>
+<p><strong>Discussion:</strong> Dehnel's phenomenon (shrews reducing cranial mass seasonally) is a real biological adaptation. What does it mean to "read" the environment through animal behaviour? Why might a child notice this before an adult expert? What are the epistemological advantages of being a non-expert observer?</p>
+<p><strong>Activity:</strong> 30-minute outdoor observation session. Students record three things they notice that they cannot immediately explain. Research one of them. How does the explanation change what they would notice next time?</p>`,
+
+// Festivals
+`<p><strong>Learning Objectives:</strong> Students will connect the HUMS Senses bucket to the neuroscience of sensory integration, and explore how cultural celebrations function as structured sensory experiences.</p>
+<p><strong>Curriculum Links:</strong> Neuroscience · Cultural Studies · Anthropology of Ritual · Sensory Processing</p>
+<p><strong>Discussion:</strong> Why do cultures across history create large sensory-rich celebrations? What happens neurologically during sensory overload? How does the HUMS framework help explain why festivals can be both joyful and exhausting simultaneously?</p>
+<p><strong>Activity:</strong> Students map a festival or cultural celebration they know onto the five HUMS Senses signals. Then map it onto the Who We Are bucket — how does the celebration affect identity and belonging?</p>`,
+
+// Peace Pause
+`<p><strong>Learning Objectives:</strong> Students will understand co-regulation as a developmental skill, and examine the relationship between sensory input management and stable identity in the HUMS framework.</p>
+<p><strong>Curriculum Links:</strong> Developmental Psychology · Social-Emotional Learning · Mindfulness Education · Neuroscience of Self-Regulation</p>
+<p><strong>Discussion:</strong> What is the difference between Senses (inputs) and Who We Are (identity) in the HUMS framework? Why do they need to be balanced? How does Darshan's act of creating space for Sarthan demonstrate co-regulation? How can this be taught in a classroom?</p>
+<p><strong>Activity:</strong> Design a "Peace Pause Protocol" for your classroom — a brief structured moment that helps students balance sensory input with self-awareness. Test it for one week. Reflect on what changed.</p>`,
+
+// India
+`<p><strong>Learning Objectives:</strong> Students will practise framework thinking as a tool for cultural navigation, and analyse how the HUMS Actions bucket applies to cross-cultural competency.</p>
+<p><strong>Curriculum Links:</strong> Cross-Cultural Communication · Global Citizenship · Ethics · International Education</p>
+<p><strong>Discussion:</strong> D&S sort cultural tips into five action buckets. Is this a helpful way to approach a new culture? What is lost when you reduce cultural navigation to a framework? What is gained? How does the HUMS Actions layer (Speech · Manipulation · Movement · Elimination · Progeny) map to basic cultural protocols?</p>
+<p><strong>Activity:</strong> Students research one cultural protocol from a country not their own and categorise it into one of the five HUMS Action signals. Class discussion: are there protocols that don't fit? What does that tell us about the framework's limits?</p>`,
+
+// Inscription
+`<p><strong>Learning Objectives:</strong> Students will decode the HUMS signal count encoding in 445653 and reflect on environmental design as a teaching method.</p>
+<p><strong>Curriculum Links:</strong> Numeracy · Cryptography / Code-Breaking · Learning Environment Design · Constructivist Pedagogy</p>
+<p><strong>Discussion:</strong> The number 445653 encodes the signal counts per bucket (4+4+5+6+5+3 = 27). Why might a parent encode knowledge into the environment rather than explain it directly? What does this say about how children learn? Can you design a physical environment that teaches without instructing?</p>
+<p><strong>Activity:</strong> Students design a "HUMS classroom installation" — a physical feature of the classroom that encodes a HUMS concept without labelling it. Present to each other and see if peers can decode it.</p>`,
+
+// GPUs
+`<p><strong>Learning Objectives:</strong> Students will map the HUMS Health bucket onto intergenerational knowledge transmission and analyse the six physiological flows as a wellness curriculum.</p>
+<p><strong>Curriculum Links:</strong> Health Education · Intergenerational Learning · Biology (homeostasis) · Gerontology</p>
+<p><strong>Discussion:</strong> The six flows (Breathe · Digest · Circulate · Release · Grow · Age) are the HUMS Health signals. How does this compare to how health is typically taught in schools? What is lost when we separate physical health from the rest of the 27 signals? What role do grandparents play in transmitting health knowledge?</p>
+<p><strong>Activity:</strong> Students interview a grandparent or elder about one health practice they follow. Map it onto the HUMS Health bucket. What does the elder know that the textbook doesn't say?</p>`,
+
+// Kids @ UN
+`<p><strong>Learning Objectives:</strong> Students will critically analyse the premise that children are better equipped to navigate unknowns than expert adults, and explore the UN structure as a case study in distributed problem-solving.</p>
+<p><strong>Curriculum Links:</strong> Political Science · Systems Thinking · Youth Voice in Policy · Global Governance · Critical Thinking</p>
+<p><strong>Discussion:</strong> Is the book's premise valid — that children's frameworks for unknowns are superior to expert frameworks? When has this been true in history? (Consider: child perspective in the Cold War arms race, climate youth movements, etc.) What would the UN's 6 teams / 27 sub-teams structure actually look like in practice?</p>
+<p><strong>Activity:</strong> Simulate a mini-UN: students are assigned one of the 6 HUMS buckets as their "team's" domain. Given a school-scale challenge (e.g. improving lunchtime wellbeing), each team proposes solutions from their bucket's perspective. Combine all 27 signal-level recommendations.</p>`,
+
+// Preparations
+`<p><strong>Learning Objectives:</strong> Students will connect bioluminescence and geothermal energy to engineering design thinking, and practise analogical reasoning from biology to technology.</p>
+<p><strong>Curriculum Links:</strong> Biology (bioluminescence) · Earth Science (Ring of Fire) · Engineering Design · Renewable Energy · Biomimicry</p>
+<p><strong>Discussion:</strong> Bioluminescence is already used in research (GFP protein, CRISPR markers). How might it be used as a food-production light source? What are the constraints? What does it mean to solve an engineering problem by asking "what does biology already do?"</p>
+<p><strong>Activity:</strong> Biomimicry design challenge: identify one human technology challenge and find a biological system that already solves it. Present the biological mechanism and propose a technology adaptation.</p>`,
+
+// Sun Signals / Solar Sails
+`<p><strong>Learning Objectives:</strong> Students will understand solar sail physics and the principle of momentum accumulation, and connect the ancient technology of sailing to cutting-edge spacecraft propulsion.</p>
+<p><strong>Curriculum Links:</strong> Physics (momentum, radiation pressure) · History of Technology · Engineering · Space Science</p>
+<p><strong>Discussion:</strong> Real solar sails exist — JAXA's IKAROS and The Planetary Society's LightSail 2 have flown. How does radiation pressure work? Why is "one millimetre at a time" a physically accurate description? What does the kite-making analogy teach that the equations don't?</p>
+<p><strong>Activity:</strong> Students calculate the estimated acceleration of a solar sail the size of a football field in Earth orbit (radiation pressure ≈ 9 μPa). How long to reach 1% of light speed? What does "compounding momentum" look like on a graph?</p>`,
+
+// Twinkle / Propulsion
+`<p><strong>Learning Objectives:</strong> Students will connect quantum vacuum energy (zero-point energy) to the story's propulsion concept, and analyse how a children's poem can encode a scientific hypothesis.</p>
+<p><strong>Curriculum Links:</strong> Quantum Physics · Philosophy of Science · Creative Writing · History of Scientific Discovery</p>
+<p><strong>Discussion:</strong> Zero-point energy (vacuum fluctuations) is real and measurable (Casimir effect). Is "burp propulsion" a scientifically plausible concept? What is the role of metaphor in scientific hypothesis-generation? Can you think of other cases where a non-technical analogy led to a real scientific breakthrough?</p>
+<p><strong>Activity:</strong> Students write a 4-line poem that encodes a real scientific concept. Swap with a partner — can they identify the concept? Discuss: what is gained and lost when science is expressed poetically?</p>`,
+
+// Moonshot
+`<p><strong>Learning Objectives:</strong> Students will understand gravitational assist mechanics and Indigenous astronomical knowledge traditions, and analyse how diverse knowledge systems contribute to complex problem-solving.</p>
+<p><strong>Curriculum Links:</strong> Astrophysics · History of Navigation · Indigenous Studies · Maori Culture · Diversity in STEM</p>
+<p><strong>Discussion:</strong> Polynesian wayfinding — navigating thousands of miles of open ocean using stars, currents, swells, and bird behaviour — is among the most sophisticated navigational systems ever developed. How does this knowledge complement computational navigation? What is lost when only one knowledge system is used?</p>
+<p><strong>Activity:</strong> Research Polynesian star navigation (e.g. Hokule'a voyages, Mau Piailug). Map the navigational signals used onto the HUMS Senses bucket. How many of the five senses are active in traditional wayfinding?</p>`,
+
+// Are We There Yet
+`<p><strong>Learning Objectives:</strong> Students will understand the neuroscience of circadian rhythm and spectral lighting, and analyse how a bottom-up community solution can emerge in parallel with top-down institutional planning.</p>
+<p><strong>Curriculum Links:</strong> Neuroscience · Chronobiology · Environmental Design · Community Innovation · Agriculture</p>
+<p><strong>Discussion:</strong> The farmer solves the light problem independently using balloons and prisms. This is "grassroots innovation" — bottom-up solutions that emerge from direct sensory contact with a problem. What conditions produce this kind of innovation? What does the school environment currently do to support or suppress it?</p>
+<p><strong>Activity:</strong> Students audit their classroom's lighting and its effect on learning. Using only accessible materials, propose one modification that might improve circadian alignment. Test it. Measure the effect (self-reported energy, focus) over a week.</p>`,
+
+// Groot
+`<p><strong>Learning Objectives:</strong> Students will analyse the evidence base for animal-assisted wellbeing interventions and connect Groot's role to the HUMS Health and Who We Are buckets.</p>
+<p><strong>Curriculum Links:</strong> Psychology · Animal Behaviour · Wellbeing Education · Community Building · Care Ethics</p>
+<p><strong>Discussion:</strong> There is robust research on the physiological effects of animal companionship (oxytocin release, cortisol reduction, blood pressure regulation). Why does the book place this chapter at the moment of maximum accumulated stress? What does "presence, love, respect, and reverence" mean as an operational value for a community?</p>
+<p><strong>Activity:</strong> Students map the qualities of a "Dog Therapist of the Universe" onto the HUMS Who We Are and Purposes buckets. Then: what human role in a school community comes closest to this? How would you design that role intentionally?</p>`,
+
+// Affirm
+`<p><strong>Learning Objectives:</strong> Students will synthesise the book's narrative arc and identify how the 27 signals scaled from a personal framework to a planetary one.</p>
+<p><strong>Curriculum Links:</strong> Narrative Structure · Systems Thinking · Philosophy (meaning-making) · Environmental Ethics</p>
+<p><strong>Discussion:</strong> "Life moved the Earth. Life was the Sun's energy." What does this mean philosophically? How does the book's ending reframe the crisis it began with? What does it mean to "make space for all to feel, think, reminisce, and identify"?</p>
+<p><strong>Activity:</strong> Students write a short reflection: which of the 27 signals do they most want to develop? Which does their learning environment currently support best? Which does it most neglect? Share and discuss as a class.</p>`,
+
+// Little Story
+`<p><strong>Learning Objectives:</strong> Students will be able to articulate all 6 HUMS buckets and 27 signals and explain the framework's structure to a younger child.</p>
+<p><strong>Curriculum Links:</strong> Metacognition · Peer Teaching · Health & Wellbeing Curriculum · Biology (body systems)</p>
+<p><strong>Discussion:</strong> The "Little Story About What a Human Is" is the framework's most compressed expression. What is lost and what is gained by simplifying this way? How does the story's order (Senses → Health → How We Work → Who We Are → Actions → Purposes) reflect a systems-logic?</p>
+<p><strong>Activity:</strong> Teach-back exercise: students explain the 6 HUMS buckets to a partner who pretends to be 6 years old. Then swap. Reflect on what was hardest to simplify. Why?</p>`,
+
+null, // framework grid — always stays as the visual diagram
+
+// 27 Signals
+`<p><strong>Learning Objectives:</strong> Students will apply the 27-signal framework as a diagnostic tool to a real personal or community challenge.</p>
+<p><strong>Curriculum Links:</strong> Applied Philosophy · Design Thinking · Problem-Solving · SEL · Curriculum Integration across all subjects</p>
+<p><strong>Discussion:</strong> The 27 signals are described as "a starting-point protocol for any unknown." What makes a good starting-point protocol? How does it differ from a solution? Where in your curriculum do students most encounter genuine unknowns — and are they given frameworks for approaching them?</p>
+<p><strong>Activity:</strong> Students choose one genuine unknown from their own life or their community. They map it across all 6 HUMS buckets, identifying which signals are active, which are absent, and what one action from each bucket might help. Present as a "HUMS diagnostic."</p>`,
+
+// Us and AI
+`<p><strong>Learning Objectives:</strong> Students will critically analyse the human-AI partnership diagram and identify which HUMS signals are currently handled by AI and which remain distinctly human.</p>
+<p><strong>Curriculum Links:</strong> Digital Literacy · Ethics of AI · Computer Science · Philosophy of Mind</p>
+<p><strong>Discussion:</strong> Which of the 27 signals can AI currently replicate? Which can it approximate? Which are entirely beyond it — and why? Where does "Moral Direction" sit, and who is responsible for it when AI makes decisions? Is "Radical Empathy" something AI can learn?</p>
+<p><strong>Activity:</strong> Students map current AI tools they use (chatbots, recommendation systems, search engines) onto the HUMS diagram. Which bucket does each tool primarily serve? Which buckets are currently underserved by AI? Where is the greatest risk of AI overreach?</p>`,
+
+// Us and Orgs
+`<p><strong>Learning Objectives:</strong> Students will apply the organisational transformation framework to their school as a system and identify one structural change that would better serve all 27 signals.</p>
+<p><strong>Curriculum Links:</strong> Organisational Studies · Leadership · Systems Thinking · School Improvement · Sociology</p>
+<p><strong>Discussion:</strong> The HUMS Org diagram positions the organisation as an "active partner" in transformation — not an authority over it. How does your school currently function in relation to student wellbeing signals? Which signals does your school's structure serve well? Which does it actively suppress?</p>
+<p><strong>Activity:</strong> Students conduct a HUMS audit of their school: for each of the 27 signals, rate (1–5) how well the school environment supports it. Aggregate the class results. Identify the three lowest-scoring signals. Propose one structural change for each.</p>`,
+
+// Us and Mental Health
+`<p><strong>Learning Objectives:</strong> Students will use the HUMS mental health framework as a non-clinical tool for normalising emotional complexity and building classroom wellbeing literacy.</p>
+<p><strong>Curriculum Links:</strong> Health & Wellbeing Education · Mental Health Literacy · Neurodiversity · Counselling Approaches · PSHE</p>
+<p><strong>Discussion:</strong> The framework's key mental health reframe is "episode is not whole" — a single dysregulated signal is a starting point, not a verdict. How does this compare to clinical diagnostic frameworks? What is the risk of over-medicalising ordinary human signal dysregulation? How can a classroom use this framework without overstepping into clinical territory?</p>
+<p><strong>Activity:</strong> Students create a personal "HUMS wellbeing snapshot" — anonymously, for themselves only. Which signals are currently strong? Which feel depleted? They write one micro-action for one depleted signal. No sharing required. The act of naming is the intervention.</p>`,
+
+// ThinkVenture
+`<p><strong>Learning Objectives:</strong> Students will design an original HUMS application for a domain they care about and present it as a "Us and ___" playbook.</p>
+<p><strong>Curriculum Links:</strong> Cross-Curricular Project Work · Design Thinking · Presentation Skills · Creative Writing · Philosophy</p>
+<p><strong>Discussion:</strong> HUMS has been applied to AI, organisations, mental health, secure software development, and wellness. What domain would most benefit from a HUMS mapping in your school community? What would "Us and Our School" look like? "Us and Our Town"? "Us and Our Planet"?</p>
+<p><strong>Activity (capstone):</strong> Students choose a domain and create a full "Us and ___" HUMS page — filling in all 6 buckets with specific signals relevant to their domain. Present to the class as a 3-minute "ThinkVenture pitch." Collect all pages into a class HUMS playbook. © Srinivasa M. Kasturi, HUMS™</p>`,
+]
+,
+
+// ── 6: Author's Text ─────────────────────────────────────────────────
+// Uses exact same body text as 8-12 (index 2 / slides[].body)
+// setAge logic adds the author footer to every slide when this band is active
+// All entries null = fall through to slides[].body
+Array(28).fill(null)
+
+]; // end ageText
+
+// ── AGE STATE ──────────────────────────────────────────────────────────
+let currentAge = 2; // default 8-12
+
+const AUTHOR_FOOTER = `<p class="author-footer">Pause, Color, Play, Then Next Page :)<br><span>© Srinivasa M. Kasturi, HUMS™, Human as Universal Modelling System framework - AI</span></p>`;
+
+function setAge(idx) {
+  currentAge = idx;
+  document.querySelectorAll('.age-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  document.querySelectorAll('.slide-body[data-slide]').forEach(el => {
+    const si = parseInt(el.dataset.slide);
+    const txt = getBodyText(si, idx);
+    if (txt !== null) el.innerHTML = txt;
+    // Author band: re-render with original text + footer
+    if (idx === 6) {
+      const base = slides[si] && slides[si].body ? slides[si].body : '';
+      el.innerHTML = base + AUTHOR_FOOTER;
+    }
+    // Leaving Author band: restore clean text
+    if (idx !== 6 && txt === null) {
+      const base = slides[si] && slides[si].body ? slides[si].body : '';
+      el.innerHTML = base;
+    }
+  });
+}
+
+function getBodyText(slideIndex, ageIdx) {
+  if (ageIdx === 2 || ageIdx === 6) return null; // use slides[].body directly
+  const band = ageText[ageIdx];
+  if (!band) return null;
+  const t = band[slideIndex];
+  return (t === null || t === undefined) ? null : t;
+}
+
 // ─── RENDER ────────────────────────────────────────────────────────────
 let current = 0;
 const stage = document.getElementById('stage');
@@ -1574,7 +2046,7 @@ function buildSlides() {
         <div class="text-panel">
           ${s.label ? `<div class="slide-label">${s.label}</div>` : ''}
           <h2 class="slide-title">${s.title}</h2>
-          <div class="slide-body">${s.body}</div>
+          <div class="slide-body" data-slide="${i}">${s.body || ''}</div>
           <div class="tagline" style="margin-top:16px;">Pause · Color · Play · Then Next Page :)</div>
         </div>`;
     }
@@ -1595,6 +2067,8 @@ function buildSlides() {
   });
 
   goTo(0);
+  // Apply default age band (8-12 = index 2, already rendered — just highlight button)
+  document.querySelectorAll('.age-btn')[2].classList.add('active');
 }
 
 function goTo(n) {
