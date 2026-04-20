@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HUMS — Intro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1209; --paper: #f5f0e8; --accent: #c4622d; --gold: #d4a034; --faint: rgba(26,18,9,0.12);
+}
+html, body { width: 100%; height: 100%; }
+body {
+  background: var(--paper); font-family: "Caveat", cursive; color: var(--ink);
+  overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 100svh;
+}
+
+/* Grain overlay — pointer-events off so it never blocks anything */
+body::before {
+content: “”; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+background-image: url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.75’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23n)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+}
+
+/* Outer wrapper — full screen, no overflow hidden so buttons are never clipped */
+#app {
+position: relative; width: 100vw; height: 100svh;
+}
+
+/* Scene layer — clips only the scene content, not the UI chrome */
+#scene-layer {
+position: absolute; inset: 0; overflow: hidden;
+}
+
+/* Each scene */
+.scene {
+position: absolute; inset: 0;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+gap: clamp(5px, 1.6vh, 14px);
+opacity: 0; pointer-events: none;
+transition: opacity 0.6s ease;
+padding: clamp(80px, 12vh, 110px) clamp(18px, 6vw, 70px) clamp(50px, 8vh, 80px);
+}
+.scene.active { opacity: 1; pointer-events: auto; }
+
+.scene svg { width: clamp(120px, 26vw, 220px); height: auto; flex-shrink: 0; }
+.scene.wide svg { width: clamp(190px, 50vw, 370px); }
+
+/* Caption */
+.caption {
+font-family: “Caveat”, cursive; font-size: clamp(1.1rem, 3.6vw, 2.1rem); font-weight: 600;
+color: var(–ink); text-align: center; opacity: 0; transform: translateY(10px);
+transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s;
+line-height: 1.45; max-width: min(520px, 80vw); word-break: break-word;
+}
+.scene.active .caption { opacity: 1; transform: translateY(0); }
+.caption em { font-family: “Libre Baskerville”, serif; font-style: italic; color: var(–accent); }
+
+.sub {
+font-family: “Libre Baskerville”, serif; font-style: italic;
+font-size: clamp(0.82rem, 2vw, 1.05rem); color: var(–ink); text-align: center;
+opacity: 0; max-width: min(500px, 80vw); line-height: 1.65; transition: opacity 0.7s ease 2.2s;
+}
+.scene.active .sub { opacity: 0.65; }
+
+/* Thinking dots */
+.think-dot { display: inline-block; opacity: 0; }
+.scene.active .think-dot:nth-child(1) { animation: dot-pop 0.4s ease 0.6s forwards; }
+.scene.active .think-dot:nth-child(2) { animation: dot-pop 0.4s ease 1.0s forwards; }
+.scene.active .think-dot:nth-child(3) { animation: dot-pop 0.4s ease 1.4s forwards; }
+.scene.active .think-dot:nth-child(4) { animation: dot-pop 0.4s ease 1.8s forwards; }
+@keyframes dot-pop { to { opacity: 1; } }
+
+/* SVG drawing */
+svg path, svg circle, svg ellipse, svg rect, svg line, svg polyline, svg polygon {
+fill: none; stroke: var(–ink); stroke-width: 2.2;
+stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.draw { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+.scene.active .draw { animation: draw-in 1.4s ease forwards; }
+.d1 { animation-delay: 0.10s !important; } .d2 { animation-delay: 0.35s !important; }
+.d3 { animation-delay: 0.55s !important; } .d4 { animation-delay: 0.75s !important; }
+.d5 { animation-delay: 0.95s !important; } .d6 { animation-delay: 1.10s !important; }
+.d7 { animation-delay: 1.25s !important; } .d8 { animation-delay: 1.40s !important; }
+@keyframes draw-in { to { stroke-dashoffset: 0; } }
+
+.fill-beat { fill: var(–faint); opacity: 0; }
+.scene.active .fill-beat { animation: fill-appear 0.5s ease 1.3s forwards; }
+@keyframes fill-appear { to { opacity: 1; } }
+.accent-stroke { stroke: var(–accent); stroke-width: 2.5; }
+.gold-stroke   { stroke: var(–gold);   stroke-width: 2.5; }
+.gear-group { transform-origin: 50px 50px; }
+.scene.active .gear-group { animation: spin-slow 12s linear infinite; }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+/* HUMS title scene */
+.hums-welcome { font-family: “Caveat”, cursive; font-size: clamp(1rem, 3vw, 1.6rem); color: var(–ink); opacity: 0; text-align: center; letter-spacing: 0.02em; transition: opacity 0.6s ease 0.3s; }
+.scene.active .hums-welcome { opacity: 0.6; }
+.hums-title { font-family: “Caveat”, cursive; font-size: clamp(3rem, 10vw, 5.5rem); font-weight: 700; letter-spacing: 0.06em; color: var(–accent); opacity: 0; transform: scale(0.8); transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s; line-height: 1; }
+.scene.active .hums-title { opacity: 1; transform: scale(1); }
+.hums-sub { font-size: clamp(0.9rem, 2.4vw, 1.3rem); opacity: 0; color: var(–ink); text-align: center; max-width: min(420px, 80vw); transition: opacity 0.7s ease 1.3s; }
+.scene.active .hums-sub { opacity: 0.75; }
+
+/* Bucket list */
+.bucket-list { display: flex; flex-direction: column; gap: clamp(5px, 1.2vh, 10px); max-width: min(520px, 84vw); width: 100%; }
+.bucket { display: flex; align-items: flex-start; gap: clamp(8px, 1.5vw, 14px); opacity: 0; transform: translateX(-12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.bucket.b1 { transition-delay: 0.4s; } .bucket.b2 { transition-delay: 0.8s; }
+.bucket.b3 { transition-delay: 1.2s; } .bucket.b4 { transition-delay: 1.6s; }
+.bucket.b5 { transition-delay: 2.0s; }
+.scene.active .bucket { opacity: 1; transform: translateX(0); }
+.bucket-icon { width: clamp(28px, 5vw, 40px); height: clamp(28px, 5vw, 40px); flex-shrink: 0; }
+.bucket-icon svg { width: 100%; height: 100%; }
+.bucket-text { font-family: “Caveat”, cursive; font-size: clamp(0.85rem, 2.2vw, 1.15rem); color: var(–ink); line-height: 1.4; padding-top: 2px; }
+.bucket-text strong { color: var(–accent); } .bucket-text em { font-family: “Libre Baskerville”, serif; font-style: italic; opacity: 0.6; font-size: 0.92em; }
+
+/* Coming soon / prompt */
+.hums-coming { font-size: clamp(0.72rem, 1.8vw, 0.95rem); color: var(–gold); opacity: 0; letter-spacing: 0.05em; text-align: center; max-width: min(460px, 80vw); line-height: 1.5; transition: opacity 0.7s ease 0.5s; }
+.scene.active .hums-coming { opacity: 0.85; }
+.hums-book { font-size: clamp(0.68rem, 1.5vw, 0.85rem); color: var(–ink); opacity: 0; font-style: italic; text-align: center; max-width: min(460px, 80vw); line-height: 1.6; transition: opacity 0.7s ease 1.0s; }
+.scene.active .hums-book { opacity: 0.7; }
+.hums-book a { color: var(–accent); font-weight: 700; font-style: normal; text-decoration: underline; text-decoration-color: var(–gold); text-underline-offset: 3px; }
+.hums-book a:hover { color: var(–gold); }
+.prompt-subhead { font-size: clamp(0.82rem, 2vw, 1.05rem); color: var(–ink); text-align: center; max-width: min(460px, 80vw); opacity: 0; line-height: 1.5; transition: opacity 0.6s ease 1.5s; }
+.scene.active .prompt-subhead { opacity: 0.62; }
+.prompt-box { font-family: “Libre Baskerville”, serif; font-style: italic; font-size: clamp(0.78rem, 1.8vw, 1rem); color: var(–ink); opacity: 0; text-align: center; max-width: min(480px, 80vw); line-height: 1.85; border-left: 2.5px solid var(–gold); border-right: 2.5px solid var(–gold); padding: clamp(8px,1.5vh,14px) clamp(14px,3vw,28px); word-break: break-word; transition: opacity 0.7s ease 2.0s; }
+.scene.active .prompt-box { opacity: 0.9; }
+.prompt-url { font-family: “Caveat”, cursive; font-style: normal; font-weight: 700; color: var(–accent); font-size: 1.08em; word-break: break-all; display: inline-block; }
+
+/* Voila */
+.voila { font-family: “Caveat”, cursive; font-size: clamp(2rem, 7vw, 4rem); font-weight: 700; color: var(–accent); opacity: 0; transform: scale(0.8); transition: opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s; }
+.scene.active .voila { opacity: 1; transform: scale(1); }
+.voila-sub { font-size: clamp(1rem, 3vw, 1.7rem); font-weight: 600; text-align: center; color: var(–ink); opacity: 0; max-width: min(500px, 82vw); line-height: 1.5; transition: opacity 0.7s ease 1.0s; }
+.scene.active .voila-sub { opacity: 1; }
+.voila-sub em { font-family: “Libre Baskerville”, serif; font-style: italic; color: var(–accent); }
+.fractal-hint { position: absolute; opacity: 0.05; font-size: clamp(5rem, 18vw, 9rem); font-family: “Caveat”, cursive; font-weight: 700; color: var(–accent); pointer-events: none; user-select: none; }
+
+/* UI chrome — sits above scene layer, always interactive */
+#ui {
+position: absolute; inset: 0; pointer-events: none; z-index: 10;
+}
+
+#copyright {
+position: absolute; top: 0; left: 0; right: 0;
+text-align: center; font-size: clamp(0.42rem, 0.9vw, 0.62rem);
+color: var(–ink); opacity: 0.3; letter-spacing: 0.03em;
+padding: clamp(5px,1vh,9px) 8px;
+white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+pointer-events: none;
+}
+
+#nav {
+position: absolute; top: clamp(20px,4vh,34px); left: 0; right: 0;
+display: flex; justify-content: center; gap: 10px;
+pointer-events: auto;
+}
+
+#nav button {
+font-family: “Caveat”, cursive; font-size: clamp(0.9rem, 2vw, 1.15rem);
+background: var(–paper); border: 1.5px solid var(–ink); color: var(–ink);
+padding: 5px 16px; border-radius: 20px; cursor: pointer; opacity: 0.7;
+transition: opacity 0.2s; pointer-events: auto;
+}
+#nav button:hover { opacity: 1; }
+
+#progress {
+position: absolute; bottom: clamp(8px, 1.8vh, 16px); left: 0; right: 0;
+display: flex; justify-content: center; gap: 7px;
+pointer-events: auto; flex-wrap: wrap;
+}
+.dot {
+width: clamp(5px,1vw,7px); height: clamp(5px,1vw,7px);
+border-radius: 50%; background: var(–ink); opacity: 0.2; cursor: pointer;
+transition: opacity 0.3s; pointer-events: auto;
+}
+.dot.active { opacity: 0.85; }
+
+/* Screen reader live region */
+#sr-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+</style>
+
+</head>
+<body>
+<div id="app">
+
+  <!-- Scene layer -->
+
+  <div id="scene-layer">
+
+```
+<!-- S1 -->
+<div class="scene active" id="s1" data-narration="This is Human.">
+  <svg viewBox="0 0 100 100">
+    <circle class="draw d1" cx="50" cy="22" r="14" stroke-dasharray="90"/>
+    <line   class="draw d2" x1="50" y1="36" x2="50" y2="70" stroke-dasharray="40"/>
+    <path   class="draw d2" d="M50 45 L28 58 M50 45 L72 58" stroke-dasharray="60"/>
+    <path   class="draw d3" d="M50 70 L38 90 M50 70 L62 90" stroke-dasharray="50"/>
+    <path   class="draw d4 accent-stroke" d="M43 48 l3-4 3 7 3-10 3 7 3-4" stroke-dasharray="60"/>
+  </svg>
+  <div class="caption">This is <em>Human</em></div>
+</div>
+
+<!-- S2 -->
+<div class="scene" id="s2" data-narration="This is Knowledge.">
+  <svg viewBox="0 0 100 100">
+    <path class="draw d1" d="M10 75 L10 25 Q50 20 50 30 Q50 20 90 25 L90 75 Q50 70 50 60 Q50 70 10 75Z" stroke-dasharray="500"/>
+    <line class="draw d2" x1="50" y1="30" x2="50" y2="60" stroke-dasharray="40"/>
+    <line class="draw d3" x1="16" y1="40" x2="44" y2="41" stroke-dasharray="40" style="opacity:0.5"/>
+    <line class="draw d3" x1="16" y1="48" x2="44" y2="49" stroke-dasharray="40" style="opacity:0.5"/>
+    <line class="draw d3" x1="16" y1="56" x2="44" y2="57" stroke-dasharray="40" style="opacity:0.5"/>
+    <line class="draw d4" x1="56" y1="40" x2="84" y2="41" stroke-dasharray="40" style="opacity:0.5"/>
+    <line class="draw d4" x1="56" y1="48" x2="84" y2="49" stroke-dasharray="40" style="opacity:0.5"/>
+    <line class="draw d4" x1="56" y1="56" x2="84" y2="57" stroke-dasharray="40" style="opacity:0.5"/>
+    <path class="draw d5 gold-stroke" d="M16 32 h6 M16 35 h12 M16 38 h10" stroke-dasharray="60"/>
+  </svg>
+  <div class="caption">This is <em>Knowledge</em></div>
+</div>
+
+<!-- S3 -->
+<div class="scene wide" id="s3" data-narration="What if Knowledge looked like us?">
+  <svg viewBox="0 0 160 95">
+    <path class="draw d1" d="M5 80 L5 20 Q38 14 38 26 Q38 14 72 20 L72 80 Q38 74 38 62 Q38 74 5 80Z" stroke-dasharray="500"/>
+    <line class="draw d2" x1="38" y1="26" x2="38" y2="62" stroke-dasharray="40"/>
+    <path class="draw d3 accent-stroke" d="M80 45 Q90 35 100 45" stroke-dasharray="50"/>
+    <path class="draw d3 accent-stroke" d="M97 42 L100 45 L96 48" stroke-dasharray="20"/>
+    <circle class="draw d4" cx="128" cy="18" r="10" stroke-dasharray="65"/>
+    <line   class="draw d4" x1="128" y1="28" x2="128" y2="55" stroke-dasharray="30"/>
+    <path   class="draw d5" d="M128 36 L116 47 M128 36 L140 47" stroke-dasharray="40"/>
+    <path   class="draw d5" d="M128 55 L120 72 M128 55 L136 72" stroke-dasharray="30"/>
+    <line class="draw d6 gold-stroke" x1="120" y1="38" x2="136" y2="38" stroke-dasharray="30" style="opacity:0.6"/>
+    <line class="draw d6 gold-stroke" x1="120" y1="44" x2="136" y2="44" stroke-dasharray="30" style="opacity:0.6"/>
+    <line class="draw d7 gold-stroke" x1="120" y1="50" x2="136" y2="50" stroke-dasharray="30" style="opacity:0.6"/>
+  </svg>
+  <div class="caption">What if <em>Knowledge</em> looked like us?</div>
+</div>
+
+<!-- S4 -->
+<div class="scene" id="s4" data-narration="Hm.... thinking.">
+  <div class="caption" style="font-size:clamp(1.8rem,6vw,3.5rem); transition-delay:0.2s; letter-spacing:0.02em;">Hm<span class="think-dot">.</span><span class="think-dot">.</span><span class="think-dot">.</span><span class="think-dot">.</span></div>
+  <div class="sub">thinking</div>
+</div>
+
+<!-- S5 -->
+<div class="scene" id="s5" data-narration="This is a System.">
+  <svg viewBox="0 0 100 100">
+    <g class="gear-group">
+      <path class="draw d1" d="M50 12 L54 8 L58 12 A28 28 0 0 1 74 22 L80 22 L82 27 L78 30 A28 28 0 0 1 88 50 L92 52 L90 58 L85 56 A28 28 0 0 1 74 78 L76 83 L72 87 L68 82 A28 28 0 0 1 50 88 L48 93 L42 93 L42 88 A28 28 0 0 1 26 78 L22 82 L18 78 L20 73 A28 28 0 0 1 12 50 L7 48 L8 42 L13 43 A28 28 0 0 1 26 22 L22 17 L26 13 L30 18 A28 28 0 0 1 50 12Z" stroke-dasharray="600"/>
+      <circle class="draw d2" cx="50" cy="50" r="16" stroke-dasharray="110"/>
+      <circle cx="50" cy="50" r="3" style="fill:var(--ink);stroke:none;" class="fill-beat"/>
+    </g>
+  </svg>
+  <div class="caption">This is a <em>System</em></div>
+</div>
+
+<!-- S6 -->
+<div class="scene wide" id="s6" data-narration="We shaped Systems to be like us.">
+  <svg viewBox="0 0 160 100">
+    <circle class="draw d1" cx="28" cy="20" r="10" stroke-dasharray="65"/>
+    <line   class="draw d2" x1="28" y1="30" x2="28" y2="56" stroke-dasharray="30"/>
+    <path   class="draw d2" d="M28 38 L17 49 M28 38 L39 49" stroke-dasharray="40"/>
+    <path   class="draw d3" d="M28 56 L20 72 M28 56 L36 72" stroke-dasharray="30"/>
+    <path class="draw d3 accent-stroke" d="M50 46 Q68 36 86 46" stroke-dasharray="60"/>
+    <path class="draw d4 accent-stroke" d="M83 43 L86 46 L82 49" stroke-dasharray="20"/>
+    <g style="transform:translate(92px,8px) scale(0.7)">
+      <path class="draw d4" d="M50 12 L54 8 L58 12 A28 28 0 0 1 74 22 L80 22 L82 27 L78 30 A28 28 0 0 1 88 50 L92 52 L90 58 L85 56 A28 28 0 0 1 74 78 L76 83 L72 87 L68 82 A28 28 0 0 1 50 88 L48 93 L42 93 L42 88 A28 28 0 0 1 26 78 L22 82 L18 78 L20 73 A28 28 0 0 1 12 50 L7 48 L8 42 L13 43 A28 28 0 0 1 26 22 L22 17 L26 13 L30 18 A28 28 0 0 1 50 12Z" stroke-dasharray="600"/>
+      <circle class="draw d5" cx="50" cy="50" r="16" stroke-dasharray="110"/>
+    </g>
+    <line class="draw d6" x1="28" y1="20" x2="93" y2="16" style="stroke-dasharray:4 4;opacity:0.25;"/>
+    <line class="draw d6" x1="28" y1="40" x2="93" y2="38" style="stroke-dasharray:4 4;opacity:0.25;"/>
+    <line class="draw d7" x1="28" y1="64" x2="93" y2="68" style="stroke-dasharray:4 4;opacity:0.25;"/>
+  </svg>
+  <div class="caption">We shaped <em>Systems</em> to be like us</div>
+</div>
+
+<!-- S7 -->
+<div class="scene" id="s7" data-narration="So....">
+  <div class="caption" style="font-size:clamp(2rem,7vw,4rem); transition-delay:0.2s; color:var(--accent); letter-spacing:0.03em;">So<span class="think-dot">.</span><span class="think-dot">.</span><span class="think-dot">.</span><span class="think-dot">.</span></div>
+</div>
+
+<!-- S8 -->
+<div class="scene wide" id="s8" data-narration="What if we showed Knowledge shaped like a System?">
+  <svg viewBox="0 0 160 90">
+    <path class="draw d1" d="M5 78 L5 18 Q38 12 38 24 Q38 12 72 18 L72 78 Q38 72 38 60 Q38 72 5 78Z" stroke-dasharray="500"/>
+    <line class="draw d2" x1="38" y1="24" x2="38" y2="60" stroke-dasharray="40"/>
+    <path class="draw d3 accent-stroke" d="M80 42 Q90 32 100 42" stroke-dasharray="50"/>
+    <path class="draw d3 accent-stroke" d="M97 39 L100 42 L96 45" stroke-dasharray="20"/>
+    <g style="transform:translate(104px,4px) scale(0.52)">
+      <path class="draw d4" d="M50 12 L54 8 L58 12 A28 28 0 0 1 74 22 L80 22 L82 27 L78 30 A28 28 0 0 1 88 50 L92 52 L90 58 L85 56 A28 28 0 0 1 74 78 L76 83 L72 87 L68 82 A28 28 0 0 1 50 88 L48 93 L42 93 L42 88 A28 28 0 0 1 26 78 L22 82 L18 78 L20 73 A28 28 0 0 1 12 50 L7 48 L8 42 L13 43 A28 28 0 0 1 26 22 L22 17 L26 13 L30 18 A28 28 0 0 1 50 12Z" stroke-dasharray="600"/>
+      <line class="draw d5 gold-stroke" x1="28" y1="42" x2="72" y2="42" stroke-dasharray="60"/>
+      <line class="draw d5 gold-stroke" x1="28" y1="50" x2="72" y2="50" stroke-dasharray="60"/>
+      <line class="draw d6 gold-stroke" x1="28" y1="58" x2="72" y2="58" stroke-dasharray="60"/>
+    </g>
+  </svg>
+  <div class="caption">What if we showed <em>Knowledge</em><br>shaped like a <em>System</em>?</div>
+</div>
+
+<!-- S9 -->
+<div class="scene wide" id="s9" data-narration="A System that looks like us.">
+  <svg viewBox="0 0 160 100">
+    <g style="transform:translate(20px,4px) scale(0.72)">
+      <path class="draw d1" d="M50 12 L54 8 L58 12 A28 28 0 0 1 74 22 L80 22 L82 27 L78 30 A28 28 0 0 1 88 50 L92 52 L90 58 L85 56 A28 28 0 0 1 74 78 L76 83 L72 87 L68 82 A28 28 0 0 1 50 88 L48 93 L42 93 L42 88 A28 28 0 0 1 26 78 L22 82 L18 78 L20 73 A28 28 0 0 1 12 50 L7 48 L8 42 L13 43 A28 28 0 0 1 26 22 L22 17 L26 13 L30 18 A28 28 0 0 1 50 12Z" stroke-dasharray="600"/>
+      <circle class="draw d2 accent-stroke" cx="50" cy="28" r="10" stroke-dasharray="65"/>
+      <line   class="draw d3 accent-stroke" x1="50" y1="38" x2="50" y2="62" stroke-dasharray="30"/>
+      <path   class="draw d3 accent-stroke" d="M50 46 L38 56 M50 46 L62 56" stroke-dasharray="40"/>
+      <path   class="draw d4 accent-stroke" d="M50 62 L42 76 M50 62 L58 76" stroke-dasharray="30"/>
+    </g>
+    <line class="draw d5 gold-stroke" x1="96" y1="44" x2="112" y2="44" stroke-dasharray="30"/>
+    <line class="draw d5 gold-stroke" x1="96" y1="52" x2="112" y2="52" stroke-dasharray="30"/>
+    <circle class="draw d6" cx="136" cy="20" r="10" stroke-dasharray="65"/>
+    <line   class="draw d6" x1="136" y1="30" x2="136" y2="56" stroke-dasharray="30"/>
+    <path   class="draw d7" d="M136 38 L124 49 M136 38 L148 49" stroke-dasharray="40"/>
+    <path   class="draw d7" d="M136 56 L128 72 M136 56 L144 72" stroke-dasharray="30"/>
+  </svg>
+  <div class="caption">A <em>System</em> that looks like <em>us</em></div>
+</div>
+
+<!-- S10 -->
+<div class="scene wide" id="s10" data-narration="Voila! Now Knowledge looks like a System that looks like Human.">
+  <svg viewBox="0 0 200 85">
+    <path class="draw d1" d="M2 74 L2 18 Q26 12 26 22 Q26 12 52 18 L52 74 Q26 68 26 56 Q26 68 2 74Z" stroke-dasharray="400"/>
+    <line class="draw d2" x1="26" y1="22" x2="26" y2="56" stroke-dasharray="40"/>
+    <path class="draw d2 accent-stroke" d="M58 42 L70 42" stroke-dasharray="20"/>
+    <path class="draw d2 accent-stroke" d="M67 39 L70 42 L67 45" stroke-dasharray="15"/>
+    <g style="transform:translate(72px,7px) scale(0.38)">
+      <path class="draw d3" d="M50 12 L54 8 L58 12 A28 28 0 0 1 74 22 L80 22 L82 27 L78 30 A28 28 0 0 1 88 50 L92 52 L90 58 L85 56 A28 28 0 0 1 74 78 L76 83 L72 87 L68 82 A28 28 0 0 1 50 88 L48 93 L42 93 L42 88 A28 28 0 0 1 26 78 L22 82 L18 78 L20 73 A28 28 0 0 1 12 50 L7 48 L8 42 L13 43 A28 28 0 0 1 26 22 L22 17 L26 13 L30 18 A28 28 0 0 1 50 12Z" stroke-dasharray="600"/>
+      <line class="draw d4 gold-stroke" x1="28" y1="44" x2="72" y2="44" stroke-dasharray="60"/>
+      <line class="draw d4 gold-stroke" x1="28" y1="52" x2="72" y2="52" stroke-dasharray="60"/>
+      <line class="draw d5 gold-stroke" x1="28" y1="60" x2="72" y2="60" stroke-dasharray="60"/>
+    </g>
+    <path class="draw d5 accent-stroke" d="M116 42 L128 42" stroke-dasharray="20"/>
+    <path class="draw d5 accent-stroke" d="M125 39 L128 42 L125 45" stroke-dasharray="15"/>
+    <circle class="draw d6" cx="146" cy="17" r="10" stroke-dasharray="65"/>
+    <line   class="draw d6" x1="146" y1="27" x2="146" y2="53" stroke-dasharray="30"/>
+    <path   class="draw d7" d="M146 35 L134 46 M146 35 L158 46" stroke-dasharray="40"/>
+    <path   class="draw d7" d="M146 53 L138 69 M146 53 L154 69" stroke-dasharray="30"/>
+    <path class="draw d8 gold-stroke" d="M168 12 l2 5 5 0 -4 3 2 5 -5-3 -5 3 2-5 -4-3 5 0Z" stroke-dasharray="60"/>
+  </svg>
+  <div class="voila">Voila!</div>
+  <div class="voila-sub">Now <em>Knowledge</em> looks like a <em>System</em><br>that looks like <em>Human</em></div>
+</div>
+
+<!-- S11 -->
+<div class="scene" id="s11" data-narration="Welcome HUMS. Human as Universal Modelling System.">
+  <div class="fractal-hint" style="top:-10px;left:-20px">H</div>
+  <div class="fractal-hint" style="bottom:-20px;right:-10px;color:var(--gold)">U</div>
+  <div class="hums-welcome">Welcome</div>
+  <div class="hums-title">HUMS</div>
+  <div class="hums-sub">Human as Universal Modelling System</div>
+</div>
+
+<!-- S12 -->
+<div class="scene" id="s12" data-narration="It has got... Inputs, senses that take the world in. Inner gears, how we think and process. Levers, controls that steer the gears. Outputs and Outcomes, what we make and what changes. And Inner flows, health loops that keep gears happy. Like a burp that makes your tummy feel better!">
+  <div class="caption" style="font-size:clamp(0.95rem,2.8vw,1.5rem); transition-delay:0.2s; margin-bottom:2px;">It&#39;s got&hellip;</div>
+  <div class="bucket-list">
+    <div class="bucket b1">
+      <div class="bucket-icon"><svg viewBox="0 0 40 40"><ellipse class="draw d1 accent-stroke" cx="20" cy="20" rx="14" ry="9" stroke-dasharray="80"/><circle class="draw d2 accent-stroke" cx="20" cy="20" r="4" stroke-dasharray="30"/></svg></div>
+      <div class="bucket-text"><strong>Inputs</strong> &#8212; senses that take the world in</div>
+    </div>
+    <div class="bucket b2">
+      <div class="bucket-icon"><svg viewBox="0 0 40 40"><path class="draw d1" d="M20 6 L22 3 L24 6 A10 10 0 0 1 30 11 L33 11 L34 13 L32 15 A10 10 0 0 1 34 20 L37 21 L36 23 L33 22 A10 10 0 0 1 28 29 L29 32 L27 34 L25 31 A10 10 0 0 1 20 33 L19 36 L17 36 L17 33 A10 10 0 0 1 12 28 L9 30 L7 28 L9 26 A10 10 0 0 1 6 20 L3 19 L3 17 L6 17 A10 10 0 0 1 11 11 L9 8 L11 6 L13 9 A10 10 0 0 1 20 6Z" stroke-dasharray="400"/><circle class="draw d2" cx="20" cy="20" r="5" stroke-dasharray="35"/></svg></div>
+      <div class="bucket-text"><strong>Inner gears</strong> &#8212; how we think &amp; process</div>
+    </div>
+    <div class="bucket b3">
+      <div class="bucket-icon"><svg viewBox="0 0 40 40"><line class="draw d1 gold-stroke" x1="6" y1="28" x2="34" y2="14" stroke-dasharray="50"/><circle class="draw d2 gold-stroke" cx="20" cy="21" r="3" stroke-dasharray="25"/><line class="draw d2" x1="20" y1="24" x2="20" y2="34" stroke-dasharray="15"/><line class="draw d3" x1="14" y1="34" x2="26" y2="34" stroke-dasharray="20"/></svg></div>
+      <div class="bucket-text"><strong>Levers</strong> &#8212; controls that steer the gears</div>
+    </div>
+    <div class="bucket b4">
+      <div class="bucket-icon"><svg viewBox="0 0 40 40"><path class="draw d1 accent-stroke" d="M6 20 L28 20" stroke-dasharray="40"/><path class="draw d2 accent-stroke" d="M24 14 L30 20 L24 26" stroke-dasharray="30"/><path class="draw d3 gold-stroke" d="M34 8 l1.5 4 4 0 -3 2.5 1.5 4 -4-2.5 -4 2.5 1.5-4 -3-2.5 4 0Z" stroke-dasharray="50"/></svg></div>
+      <div class="bucket-text"><strong>Outputs &amp; Outcomes</strong> &#8212; what we make &amp; what changes</div>
+    </div>
+    <div class="bucket b5">
+      <div class="bucket-icon"><svg viewBox="0 0 40 40"><path class="draw d1 gold-stroke" d="M6 20 Q11 12 16 20 Q21 28 26 20 Q31 12 36 20" stroke-dasharray="80"/><path class="draw d2 accent-stroke" d="M20 32 Q13 27 13 22 A4 4 0 0 1 20 19 A4 4 0 0 1 27 22 Q27 27 20 32Z" stroke-dasharray="60"/></svg></div>
+      <div class="bucket-text"><strong>Inner flows</strong> &#8212; health loops that keep gears happy <em>(like a burp that makes your tummy feel better!)</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- S13 -->
+<div class="scene" id="s13" data-narration="The HUMS interface to visit any knowledge is coming soon. Also coming, a philosophy and kids sci-fi coloring book for all ages and all minds: Life After Sun Adventure. Until then, paste this into your favourite AI.">
+  <svg viewBox="0 0 120 60" style="width:clamp(130px,28vw,200px); opacity:0.7;">
+    <circle class="draw d1 accent-stroke" cx="60" cy="30" r="6"  stroke-dasharray="40"/>
+    <line   class="draw d2 accent-stroke" x1="60" y1="36" x2="60" y2="48" stroke-dasharray="20"/>
+    <circle class="draw d2 gold-stroke" cx="60" cy="10" r="5" stroke-dasharray="35"/>
+    <circle class="draw d3 gold-stroke" cx="76" cy="18" r="4" stroke-dasharray="30"/>
+    <circle class="draw d3 gold-stroke" cx="78" cy="38" r="4" stroke-dasharray="30"/>
+    <circle class="draw d4 gold-stroke" cx="60" cy="50" r="4" stroke-dasharray="30"/>
+    <circle class="draw d4 gold-stroke" cx="42" cy="38" r="4" stroke-dasharray="30"/>
+    <circle class="draw d5 gold-stroke" cx="44" cy="18" r="4" stroke-dasharray="30"/>
+    <line class="draw d5" x1="60" y1="30" x2="60" y2="16" stroke-dasharray="20" style="opacity:0.3"/>
+    <line class="draw d5" x1="60" y1="30" x2="73" y2="22" stroke-dasharray="20" style="opacity:0.3"/>
+    <line class="draw d6" x1="60" y1="30" x2="74" y2="35" stroke-dasharray="20" style="opacity:0.3"/>
+    <line class="draw d6" x1="60" y1="30" x2="60" y2="45" stroke-dasharray="20" style="opacity:0.3"/>
+    <line class="draw d7" x1="60" y1="30" x2="46" y2="35" stroke-dasharray="20" style="opacity:0.3"/>
+    <line class="draw d7" x1="60" y1="30" x2="47" y2="22" stroke-dasharray="20" style="opacity:0.3"/>
+    <circle class="draw d7" cx="60" cy="30" r="22" stroke-dasharray="140" style="opacity:0.15"/>
+  </svg>
+  <div class="hums-coming">&#10022; The HUMS interface to visit any knowledge &#8212; coming soon &#10022;</div>
+  <div class="hums-book">&#10022; Also &#8212; a philosophy + kids sci-fi coloring book for all ages &amp; all minds:<br><a href="https://srinimkasturi.github.io/Hums/LASA.html" target="_blank" rel="noopener">Life After Sun Adventure &#8599;</a></div>
+  <div class="prompt-subhead">Until then &#8212; paste this into your favourite AI:</div>
+  <div class="prompt-box">"Using this URL as guide &#8212;<br><span class="prompt-url">srinimkasturi.github.io/Hums/</span><br>&#8212; how can humans &amp; AI work together instead of against each other?<br>Give me full analysis, actions first."</div>
+</div>
+```
+
+  </div><!-- /scene-layer -->
+
+  <!-- UI chrome — always on top, always interactive -->
+
+  <div id="ui">
+    <div id="sr-live" aria-live="polite" aria-atomic="true"></div>
+    <div id="copyright">&#169; Srinivasa M. Kasturi &#183; HUMS&#8482; &#183; Human as Universal Modelling System &#183; All rights reserved &#183; v2026-04-20 03:49</div>
+    <div id="nav">
+      <button id="audioBtn" aria-label="Toggle narration" aria-pressed="false">&#128263; narrate</button>
+      <button id="prevBtn" aria-label="Previous slide">&#8592; prev</button>
+      <button id="nextBtn" aria-label="Next slide">next &#8594;</button>
+    </div>
+    <div id="progress"></div>
+  </div>
+
+</div><!-- /app -->
+
+<script>
+  var scenes = Array.from(document.querySelectorAll('.scene'));
+  var total = scenes.length;
+  var current = 0;
+  var autoTimer = null;
+  var narrateOn = false;
+
+  var durations = scenes.map(function(_, i) {
+    if (i === 3 || i === 6) return 3800;
+    if (i === 11) return 9000;
+    if (i === 12) return 12000;
+    return 5800;
+  });
+
+  // Build progress dots
+  var prog = document.getElementById('progress');
+  scenes.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', function() { goTo(i); });
+    prog.appendChild(d);
+  });
+
+  function speak(text) {
+    if (!narrateOn || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.92; u.pitch = 1.0; u.lang = 'en-US';
+    var voices = window.speechSynthesis.getVoices();
+    var preferred = voices.find(function(v) { return /samantha|karen|daniel|google us/i.test(v.name); });
+    if (preferred) u.voice = preferred;
+    window.speechSynthesis.speak(u);
+  }
+
+  function stopSpeech() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+
+  function goTo(idx) {
+    clearTimeout(autoTimer);
+    stopSpeech();
+    scenes[current].classList.remove('active');
+    prog.children[current].classList.remove('active');
+    current = (idx + total) % total;
+    scenes[current].classList.add('active');
+    prog.children[current].classList.add('active');
+    scenes[current].querySelectorAll('.draw').forEach(function(el) {
+      el.style.animation = 'none';
+      el.getBoundingClientRect();
+      el.style.animation = '';
+    });
+    var text = scenes[current].dataset.narration || '';
+    document.getElementById('sr-live').textContent = text;
+    setTimeout(function() { speak(text); }, 600);
+    scheduleNext();
+  }
+
+  function scheduleNext() {
+    if (current < total - 1) {
+      autoTimer = setTimeout(function() { goTo(current + 1); }, durations[current]);
+    }
+  }
+
+  document.getElementById('audioBtn').addEventListener('click', function() {
+    narrateOn = !narrateOn;
+    this.textContent = narrateOn ? '&#128264; narrate' : '&#128263; narrate';
+    this.setAttribute('aria-pressed', String(narrateOn));
+    if (narrateOn) { speak(scenes[current].dataset.narration || ''); }
+    else { stopSpeech(); }
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', function() { goTo(current - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function() { goTo(current + 1); });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+  });
+
+  var tx = 0;
+  document.addEventListener('touchstart', function(e) { tx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+
+  document.getElementById('sr-live').textContent = scenes[0].dataset.narration || '';
+  scheduleNext();
+</script>
+
+</body>
+</html>
