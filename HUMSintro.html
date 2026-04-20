@@ -446,7 +446,6 @@
   const total = scenes.length;
   let current = 0, autoTimer = null;
   let narrateOn = false;
-  let utterance = null;
 
 const durations = scenes.map((_, i) => {
 if (i === 3 || i === 6) return 3800;
@@ -455,54 +454,41 @@ if (i === 12) return 12000;
 return 5800;
 });
 
+// Build progress dots
 const prog = document.getElementById(‘progress’);
-scenes.forEach((_, i) => {
-const d = document.createElement(‘div’);
+scenes.forEach(function(_, i) {
+var d = document.createElement(‘div’);
 d.className = ‘dot’ + (i === 0 ? ’ active’ : ‘’);
-d.addEventListener(‘click’, () => goTo(i));
+d.addEventListener(‘click’, function() { goTo(i); });
 prog.appendChild(d);
 });
 
-// Narration
+// Speech
 function speak(text) {
 if (!narrateOn || !window.speechSynthesis) return;
 window.speechSynthesis.cancel();
-utterance = new SpeechSynthesisUtterance(text);
-utterance.rate = 0.92;
-utterance.pitch = 1.0;
-utterance.lang = ‘en-US’;
-// Pick a warm voice if available
-const voices = window.speechSynthesis.getVoices();
-const preferred = voices.find(v => /samantha|karen|moira|victoria|daniel|google us/i.test(v.name));
-if (preferred) utterance.voice = preferred;
-window.speechSynthesis.speak(utterance);
-// Also update aria-live for screen readers regardless of toggle
-const live = document.getElementById(‘sr-live’);
-if (live) live.textContent = text;
+var u = new SpeechSynthesisUtterance(text);
+u.rate = 0.92;
+u.pitch = 1.0;
+u.lang = ‘en-US’;
+var voices = window.speechSynthesis.getVoices();
+var preferred = voices.find(function(v) {
+return /samantha|karen|moira|daniel|google us/i.test(v.name);
+});
+if (preferred) u.voice = preferred;
+window.speechSynthesis.speak(u);
 }
 
 function stopSpeech() {
 if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
-// Audio toggle button
-const audioBtn = document.getElementById(‘audioBtn’);
-audioBtn.addEventListener(‘click’, () => {
-narrateOn = !narrateOn;
-audioBtn.textContent = narrateOn ? ‘🔊 narrate’ : ‘🔇 narrate’;
-audioBtn.setAttribute(‘aria-pressed’, narrateOn);
-if (narrateOn) {
-// Read current scene immediately
-const text = scenes[current].dataset.narration;
-if (text) speak(text);
-} else {
-stopSpeech();
+function updateLive(text) {
+var live = document.getElementById(‘sr-live’);
+if (live) live.textContent = text || ‘’;
 }
-});
 
-// Voices may load async on some browsers
-window.speechSynthesis.onvoiceschanged = () => {};
-
+// Navigate to a scene
 function goTo(idx) {
 clearTimeout(autoTimer);
 stopSpeech();
@@ -511,42 +497,62 @@ prog.children[current].classList.remove(‘active’);
 current = (idx + total) % total;
 scenes[current].classList.add(‘active’);
 prog.children[current].classList.add(‘active’);
-scenes[current].querySelectorAll(’.draw’).forEach(el => {
+scenes[current].querySelectorAll(’.draw’).forEach(function(el) {
 el.style.animation = ‘none’;
 el.getBoundingClientRect();
 el.style.animation = ‘’;
 });
-// Slight delay so drawing starts before narration
-const text = scenes[current].dataset.narration;
-if (text) setTimeout(() => speak(text), 600);
-// Also always update aria-live for screen readers
-const live = document.getElementById(‘sr-live’);
-if (live) live.textContent = text || ‘’;
+var text = scenes[current].dataset.narration || ‘’;
+updateLive(text);
+setTimeout(function() { speak(text); }, 600);
 scheduleNext();
 }
 
 function scheduleNext() {
-if (current < total - 1) autoTimer = setTimeout(() => goTo(current + 1), durations[current]);
+if (current < total - 1) {
+autoTimer = setTimeout(function() { goTo(current + 1); }, durations[current]);
+}
 }
 
-document.getElementById(‘nextBtn’).addEventListener(‘click’, () => goTo(current + 1));
-document.getElementById(‘prevBtn’).addEventListener(‘click’, () => goTo(current - 1));
-document.addEventListener(‘keydown’, e => {
+// Button listeners
+document.getElementById(‘audioBtn’).addEventListener(‘click’, function() {
+narrateOn = !narrateOn;
+this.textContent = narrateOn ? ‘🔊 narrate’ : ‘🔇 narrate’;
+this.setAttribute(‘aria-pressed’, String(narrateOn));
+if (narrateOn) {
+var text = scenes[current].dataset.narration || ‘’;
+speak(text);
+} else {
+stopSpeech();
+}
+});
+
+document.getElementById(‘prevBtn’).addEventListener(‘click’, function() {
+goTo(current - 1);
+});
+
+document.getElementById(‘nextBtn’).addEventListener(‘click’, function() {
+goTo(current + 1);
+});
+
+// Keyboard
+document.addEventListener(‘keydown’, function(e) {
 if (e.key === ‘ArrowRight’ || e.key === ’ ’) goTo(current + 1);
 if (e.key === ‘ArrowLeft’) goTo(current - 1);
 });
 
-let tx = 0;
-document.addEventListener(‘touchstart’, e => { tx = e.touches[0].clientX; }, {passive:true});
-document.addEventListener(‘touchend’, e => {
-const dx = e.changedTouches[0].clientX - tx;
+// Touch swipe
+var tx = 0;
+document.addEventListener(‘touchstart’, function(e) {
+tx = e.touches[0].clientX;
+}, {passive: true});
+document.addEventListener(‘touchend’, function(e) {
+var dx = e.changedTouches[0].clientX - tx;
 if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
-}, {passive:true});
+}, {passive: true});
 
-// Set initial aria-live content
-const live = document.getElementById(‘sr-live’);
-if (live) live.textContent = scenes[0].dataset.narration || ‘’;
-
+// Init
+updateLive(scenes[0].dataset.narration || ‘’);
 scheduleNext();
 </script>
 
