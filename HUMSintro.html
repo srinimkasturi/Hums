@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HUMS — Intro 10:35pm 19Apr26</title>
+<title>HUMS — Intro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
@@ -29,8 +29,9 @@
     align-items: center; justify-content: center; gap: clamp(5px, 1.6vh, 14px);
     opacity: 0; transition: opacity 0.6s ease;
     padding: clamp(70px, 11vh, 96px) clamp(18px, 6vw, 70px) clamp(38px, 7vh, 64px);
+    pointer-events: none;
   }
-  .scene.active { opacity: 1; }
+  .scene.active { opacity: 1; pointer-events: auto; }
   .scene svg { width: clamp(120px, 26vw, 220px); height: auto; flex-shrink: 0; }
   .scene.wide svg { width: clamp(190px, 50vw, 370px); }
   .caption {
@@ -137,13 +138,13 @@
   .prompt-url { font-family: 'Caveat', cursive; font-style: normal; font-weight: 700; color: var(--accent); font-size: 1.08em; word-break: break-all; display: inline-block; }
   #progress {
     position: absolute; bottom: clamp(8px, 1.8vh, 16px); left: 50%; transform: translateX(-50%);
-    display: flex; gap: 7px; z-index: 10; flex-wrap: wrap; justify-content: center; max-width: 90vw;
+    display: flex; gap: 7px; z-index: 1000; pointer-events: auto; flex-wrap: wrap; justify-content: center; max-width: 90vw;
   }
   .dot { width: clamp(5px,1vw,7px); height: clamp(5px,1vw,7px); border-radius: 50%; background: var(--ink); opacity: 0.2; cursor: pointer; transition: opacity 0.3s; }
   .dot.active { opacity: 0.85; }
   #nav {
     position: absolute; top: clamp(22px,4vh,36px); left: 50%; transform: translateX(-50%);
-    display: flex; gap: 8px; z-index: 20;
+    display: flex; gap: 8px; z-index: 1000; pointer-events: auto;
   }
   button {
     font-family: 'Caveat', cursive; font-size: clamp(0.9rem, 2vw, 1.15rem);
@@ -154,7 +155,7 @@
   #copyright {
     position: absolute; top: 0; left: 0; right: 0;
     text-align: center; font-size: clamp(0.45rem, 0.95vw, 0.65rem); color: var(--ink); opacity: 0.3;
-    letter-spacing: 0.03em; pointer-events: none; z-index: 20;
+    letter-spacing: 0.03em; pointer-events: none; z-index: 1000;
     padding: clamp(5px,1vh,10px) 8px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
@@ -433,7 +434,7 @@
   </div>
 
   <div id="sr-live" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></div>
-  <div id="copyright">© Srinivasa M. Kasturi · HUMS™ — Human as Universal Modelling System · All rights reserved</div>
+  <div id="copyright">© Srinivasa M. Kasturi · HUMS™ — Human as Universal Modelling System · All rights reserved · v2026-04-20 02:37</div>
   <div id="progress"></div>
   <div id="nav">
     <button id="audioBtn" aria-label="Toggle narration" aria-pressed="false">🔇 narrate</button>
