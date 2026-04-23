@@ -93,15 +93,15 @@
   .slide-counter { font-family: 'Crimson Pro', serif; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.05em; }
   .hums-badge { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-family: 'Playfair Display', serif; }
   .progress-bar { height: 2px; background: var(--soft); flex-shrink: 0; }
-  /* AdSense slot */
+  /* AdSense slot — thin footer strip */
   .ad-bar {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--white);
-    border-bottom: 1px solid var(--soft);
-    min-height: 60px;
+    border-top: 1px solid var(--soft);
+    min-height: 52px;
     overflow: hidden;
   }
   .ad-bar ins { display: block; margin: 0 auto; }
@@ -289,16 +289,6 @@
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-<!-- AdSense: horizontal banner, child-directed -->
-<div class="ad-bar">
-  <ins class="adsbygoogle"
-       style="display:inline-block;width:728px;height:60px;max-width:100%"
-       data-ad-client="ca-pub-9536210186158067"
-       data-ad-slot="3908472959"
-       data-tag-for-child-directed-treatment="1"
-       data-tag-for-under-age-of-consent="1"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-</div>
 <div class="stage" id="stage"></div>
 <div class="nav-bar">
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
@@ -318,6 +308,18 @@
 </div>
 
 <div class="key-hint">← → keys · ☰ to jump</div>
+
+<!-- AdSense: thin footer strip, child-directed -->
+
+<div class="ad-bar">
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:728px;height:50px;max-width:100%"
+       data-ad-client="ca-pub-9536210186158067"
+       data-ad-slot="3908472959"
+       data-tag-for-child-directed-treatment="1"
+       data-tag-for-under-age-of-consent="1"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 
 <script>
 // ─── HELPER: shared SVG drawing functions ─────────────────────────────
