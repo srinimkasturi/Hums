@@ -4,8 +4,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Child-directed content — COPPA compliant, kids-safe ads only -->
+<meta name="rating" content="safe for kids">
 <title>Life After Sun — A HUMS SciFi Coloring Adventure</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9536210186158067"
+     crossorigin="anonymous"></script>
+<script>
+  // Tag this page as child-directed for COPPA compliance
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-9536210186158067",
+    enable_page_level_ads: true,
+    tag_for_child_directed_treatment: 1,
+    tag_for_under_age_of_consent: 1
+  });
+</script>
 <style>
   :root {
     --white: #FDFCF9;
@@ -79,6 +93,18 @@
   .slide-counter { font-family: 'Crimson Pro', serif; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.05em; }
   .hums-badge { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-family: 'Playfair Display', serif; }
   .progress-bar { height: 2px; background: var(--soft); flex-shrink: 0; }
+  /* AdSense slot */
+  .ad-bar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border-bottom: 1px solid var(--soft);
+    min-height: 60px;
+    overflow: hidden;
+  }
+  .ad-bar ins { display: block; margin: 0 auto; }
   .progress-fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
   .stage { flex: 1; display: flex; overflow: hidden; position: relative; }
   .slide { position: absolute; inset: 0; display: flex; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
@@ -263,6 +289,16 @@
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<!-- AdSense: horizontal banner, child-directed -->
+<div class="ad-bar">
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:728px;height:60px;max-width:100%"
+       data-ad-client="ca-pub-9536210186158067"
+       data-ad-slot="auto"
+       data-tag-for-child-directed-treatment="1"
+       data-tag-for-under-age-of-consent="1"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 <div class="stage" id="stage"></div>
 <div class="nav-bar">
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
@@ -1369,14 +1405,14 @@ const slides = [
 <p>Have fun coloring each page and ask at least one friend or guardians to color with you!</p>
 <p>I mean if you have a way, have your pets put their paw prints on the art work too!!</p>
 <p>Guardians, on insights pages, feel free to scratch any of the writeups and pen in your insights. Make them your playbooks!!</p>
-<p>Note: The Artry and Artery of this SciFiFunVenture by Bablee and Kanna.</p>` },
+<p>Note: The Artry and Artery of this SciFiFunVenture by Bablee and Kanna (Dhita).</p>` },
 
   { layout:'split', svgKey:'sunsetsetup', label:'Chapter 1',
     title:'Sun sunset, the story setup',
     dress: D('🇵🇪🇮🇳','Poncho · Sari'),
     body:`<p>My name is BabLee. A few years ago, I was doing some backyard Astronomy. I noticed an anomaly and after talking to my professional Astronomy friends, I realized what was about to happen.</p>
 <p>A quiet swarm of tiny, invisible space primordial blackholes drifted toward our Solar System and eventually passed right through the Sun. The Sun flickered and flared a little brighter and would eventually lose some layers and grow like a Red Giant. Enough to effect life on the Earth. Eventually, a few centuries or more, later Sun would heal this wound and be back as life sustainer. Our story unfolds in this in between time, first part of it, leaving Solar System and settling in a new Solar Home.</p>
-<p>Here on Earth, mine and Kanna (my wife) (B&K from now on) two kids, ages 13 and 6, figure out that an out-of-the-box solution may be how they can help the adults. They begin their journey by trying to understand their dog, Groot, and the freezemegadon their city has just experienced.</p>
+<p>Here on Earth, mine and Kanna — Dhita — (my wife) (B&K from now on) two kids, ages 13 and 6, figure out that an out-of-the-box solution may be how they can help the adults. They begin their journey by trying to understand their dog, Groot, and the freezemegadon their city has just experienced.</p>
 <p>Now let's get some healthy cookies and warm milk and dive into the story</p>` },
 
   { layout:'split', svgKey:'seers', label:'Chapter 2',
@@ -1437,7 +1473,7 @@ const slides = [
   { layout:'split', svgKey:'inscription', label:'Chapter 9',
     title:'Inscription inception!!',
     dress: D('🇵🇪🇰🇷','Poncho · Hanbok'),
-    body:`<p>This part is truly made up for this book, we did not do this but we, actually Kanna put up superhero curtains because our sons wanted to keep their heros seen! Ok, lets go to their play area!!</p>
+    body:`<p>This part is truly made up for this book, we did not do this but we, actually Kanna (Dhita) put up superhero curtains because our sons wanted to keep their heros seen! Ok, lets go to their play area!!</p>
 <p>Years later, they realize their parents had stickers on both the east- and west-facing windows of the sunroom—their favorite play area in all seasons. The stickers showed a human figure with "<strong>445653</strong>" scribbled inside, why and what they wondered.</p>
 <p><em>(secret: one of the 5 is clue for the 5 senses ;)</em></p>` },
 
@@ -1487,7 +1523,7 @@ const slides = [
     title:'Moonshot Slignshot Cosmicshot',
     dress: D('🇮🇳🌺🇳🇿','Kurta · Kaftan · Maori korowai'),
     body:`<p>Dangerous I agree, so please do so only with your parents/guardians. Seeing anything go from zero to zoom, is like total fun. This can be a kids safe bow and arrow, with may be an LED light at the tip of the arrow; or in this case a sling shot made with a Y shaped wood you find in the woods (all trees have them)! Lets now make a slighshot for the whole Earth!!</p>
-<p>Incredibly, D&S were listening to R&A space adventures (Rytha meaning rhythm of the universe, and Ananya, like the amazing one). R&A are the twin maverick zeal filled Maori sisters from Aotearoa (New Zealand). Their secret to success was inspired by the mind boggling work of the World Coach, Dhita.</p>
+<p>Incredibly, D&S were listening to R&A space adventures (Rytha meaning rhythm of the universe, and Ananya, like the amazing one). R&A are the twin maverick zeal filled Maori sisters from Aotearoa (New Zealand). Their secret to success was inspired by the mind boggling work of the World Coach, Dhita (yes, our own Kanna!).</p>
 <p>D&S then, ran back to their books and discovered their integrated science teacher and their apprentice explaining gravitational slingshot effects, like those used by Viking satellites long ago. They also recall a child prodigy who understood snooker with the same ease most kids ride scooters in diapers.</p>
 <p>D&S send a message to WASA—the World Astronomical Service Agency ("wasa" meaning "home" in Indian languages). WASA recognizes the kids' remarkable skills and uses them for next-level navigation. Blue giants provide turbo boosts; red dwarfs handle course corrections. Earth is slingshotted toward a vibrant, stable yellow dwarf—much like the Sun they lost for a while.</p>
 <p>Speeding strategy is thus set!!</p>` },
