@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; object-src 'none'; base-uri 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purushartha Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & TOKENS ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+–ink:    #1C1A18;
+–paper:  #F2EDE4;
+–cream:  #EAE3D6;
+–warm:   #DDD5C4;
+–border: #C8BFA8;
+–muted:  #7A7060;
+–faint:  #A89E8C;
+–accent: #5C3A1E;
+–accent-l:rgba(92,58,30,0.1);
+–accent-m:rgba(92,58,30,0.2);
+–red:    #8B2020;
+–red-l:  rgba(139,32,32,0.1);
+–green:  #2A5A3A;
+–green-l:rgba(42,90,58,0.1);
+–gold:   #8A6A20;
+–shadow: 0 2px 12px rgba(28,26,24,0.08);
+–r:      4px;
+}
+
+html{font-size:16px;scroll-behavior:smooth}
+
+body{
+background:var(–paper);
+color:var(–ink);
+font-family:‘DM Sans’,sans-serif;
+font-weight:300;
+min-height:100vh;
+line-height:1.65;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.app{
+display:grid;
+grid-template-columns:300px 1fr;
+grid-template-rows:auto 1fr;
+grid-template-areas:
+“header header”
+“sidebar main”;
+min-height:100vh;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.app-header{
+grid-area:header;
+background:var(–ink);
+color:var(–paper);
+padding:20px 32px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:16px;
+flex-wrap:wrap;
+}
+
+.header-left{}
+.header-tag{
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:3px;
+color:rgba(242,237,228,0.4);
+text-transform:uppercase;
+margin-bottom:4px;
+}
+.header-title{
+font-family:‘Playfair Display’,serif;
+font-size:22px;
+font-weight:400;
+letter-spacing:-0.3px;
+}
+.header-title em{font-style:italic;color:rgba(242,237,228,0.6)}
+
+.header-right{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.hdr-btn{
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+text-transform:uppercase;
+padding:8px 14px;
+border-radius:var(–r);
+cursor:pointer;
+border:1px solid;
+transition:all .18s;
+white-space:nowrap;
+}
+.hdr-btn-export{
+background:var(–accent-l);
+border-color:rgba(92,58,30,0.4);
+color:rgba(242,237,228,0.75);
+}
+.hdr-btn-export:hover{background:var(–accent-m);color:var(–paper)}
+
+.hdr-btn-import{
+background:rgba(255,255,255,0.05);
+border-color:rgba(242,237,228,0.2);
+color:rgba(242,237,228,0.6);
+}
+.hdr-btn-import:hover{background:rgba(255,255,255,0.1);color:var(–paper)}
+
+.hdr-btn-purge-all{
+background:var(–red-l);
+border-color:rgba(139,32,32,0.4);
+color:rgba(242,237,228,0.6);
+}
+.hdr-btn-purge-all:hover{background:rgba(139,32,32,0.25);color:#FFAAAA}
+
+.lock-status{
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+color:rgba(242,237,228,0.35);
+display:flex;
+align-items:center;
+gap:5px;
+}
+.lock-dot{
+width:6px;height:6px;
+border-radius:50%;
+background:var(–green);
+box-shadow:0 0 6px rgba(42,90,58,0.8);
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.app-sidebar{
+grid-area:sidebar;
+background:var(–cream);
+border-right:1px solid var(–border);
+overflow-y:auto;
+position:sticky;
+top:0;
+height:calc(100vh - 62px);
+display:flex;
+flex-direction:column;
+}
+
+.sidebar-search{
+padding:16px;
+border-bottom:1px solid var(–border);
+position:sticky;
+top:0;
+background:var(–cream);
+z-index:10;
+}
+
+.search-input{
+width:100%;
+background:var(–paper);
+border:1px solid var(–border);
+border-radius:var(–r);
+padding:8px 12px;
+font-family:‘DM Sans’,sans-serif;
+font-size:13px;
+color:var(–ink);
+outline:none;
+transition:border-color .15s;
+}
+.search-input:focus{border-color:var(–accent)}
+.search-input::placeholder{color:var(–faint)}
+
+.sidebar-stats{
+padding:10px 16px;
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+color:var(–faint);
+border-bottom:1px solid var(–border);
+display:flex;
+justify-content:space-between;
+}
+
+.entry-list{
+flex:1;
+overflow-y:auto;
+padding:8px;
+}
+
+.entry-item{
+padding:12px 14px;
+border-radius:var(–r);
+cursor:pointer;
+border:1px solid transparent;
+margin-bottom:4px;
+transition:all .15s;
+position:relative;
+}
+.entry-item:hover{background:var(–warm);border-color:var(–border)}
+.entry-item.active{background:var(–paper);border-color:var(–accent);box-shadow:var(–shadow)}
+
+.entry-item-date{
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:1px;
+color:var(–faint);
+margin-bottom:4px;
+}
+.entry-item-event{
+font-size:13px;
+font-weight:400;
+color:var(–ink);
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+margin-bottom:3px;
+}
+.entry-item-tags{
+display:flex;
+gap:4px;
+flex-wrap:wrap;
+margin-top:4px;
+}
+.tag-pill{
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+letter-spacing:1px;
+padding:2px 6px;
+border-radius:10px;
+border:1px solid;
+}
+.tag-tamas   {color:#7A5AA0;border-color:#7A5AA0;background:rgba(122,90,160,0.08)}
+.tag-rajas   {color:#A04A30;border-color:#A04A30;background:rgba(160,74,48,0.08)}
+.tag-sattva  {color:#2A6A40;border-color:#2A6A40;background:rgba(42,106,64,0.08)}
+.tag-gunateeta{color:#2A5A8A;border-color:#2A5A8A;background:rgba(42,90,138,0.08)}
+
+.entry-forget-btn{
+position:absolute;
+top:10px;right:10px;
+background:none;
+border:none;
+cursor:pointer;
+color:var(–faint);
+font-size:13px;
+line-height:1;
+padding:2px 4px;
+border-radius:2px;
+transition:all .15s;
+opacity:0;
+}
+.entry-item:hover .entry-forget-btn{opacity:1}
+.entry-forget-btn:hover{color:var(–red);background:var(–red-l)}
+
+.sidebar-new-btn{
+margin:12px;
+padding:12px;
+background:var(–ink);
+color:var(–paper);
+border:none;
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:11px;
+letter-spacing:2px;
+text-transform:uppercase;
+cursor:pointer;
+transition:opacity .15s;
+text-align:center;
+}
+.sidebar-new-btn:hover{opacity:.85}
+
+/* ── MAIN PANEL ─────────────────────────────────────────── */
+.app-main{
+grid-area:main;
+padding:32px 40px;
+overflow-y:auto;
+height:calc(100vh - 62px);
+}
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+height:60%;
+text-align:center;
+gap:12px;
+}
+.empty-glyph{
+font-family:‘Playfair Display’,serif;
+font-size:48px;
+color:var(–warm);
+line-height:1;
+}
+.empty-title{
+font-family:‘Playfair Display’,serif;
+font-size:22px;
+font-weight:400;
+color:var(–muted);
+}
+.empty-sub{font-size:14px;color:var(–faint);max-width:320px;line-height:1.6}
+
+/* ── ENTRY FORM ─────────────────────────────────────────── */
+.entry-form{max-width:680px}
+
+.form-section{margin-bottom:28px}
+
+.form-label{
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:3px;
+text-transform:uppercase;
+color:var(–faint);
+margin-bottom:8px;
+display:block;
+}
+
+.form-input,
+.form-textarea,
+.form-select{
+width:100%;
+background:var(–paper);
+border:1px solid var(–border);
+border-radius:var(–r);
+padding:10px 14px;
+font-family:‘DM Sans’,sans-serif;
+font-size:14px;
+color:var(–ink);
+outline:none;
+transition:border-color .15s;
+line-height:1.6;
+}
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus{border-color:var(–accent)}
+.form-input::placeholder,
+.form-textarea::placeholder{color:var(–faint);font-style:italic}
+.form-textarea{resize:vertical;min-height:80px}
+.form-select{cursor:pointer}
+
+.form-row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.form-row-3{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+}
+
+/* Guna selector */
+.guna-selector{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+.guna-opt{
+padding:7px 14px;
+border-radius:20px;
+border:1px solid;
+cursor:pointer;
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+transition:all .15s;
+background:transparent;
+}
+.go-tamas   {color:#7A5AA0;border-color:#7A5AA0}
+.go-rajas   {color:#A04A30;border-color:#A04A30}
+.go-sattva  {color:#2A6A40;border-color:#2A6A40}
+.go-gunateeta{color:#2A5A8A;border-color:#2A5A8A;font-size:9px}
+.go-tamas.sel   {background:rgba(122,90,160,0.18)}
+.go-rajas.sel   {background:rgba(160,74,48,0.18)}
+.go-sattva.sel  {background:rgba(42,106,64,0.18)}
+.go-gunateeta.sel{background:rgba(42,90,138,0.18)}
+
+/* Discipline selector */
+.disc-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:6px;
+}
+.disc-opt{
+padding:8px 10px;
+border-radius:var(–r);
+border:1px solid var(–border);
+cursor:pointer;
+font-size:12px;
+background:var(–paper);
+transition:all .15s;
+text-align:left;
+}
+.disc-opt:hover{border-color:var(–accent);background:var(–accent-l)}
+.disc-opt.sel{border-color:var(–accent);background:var(–accent-l)}
+.disc-san{
+display:block;
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+color:var(–faint);
+margin-top:2px;
+letter-spacing:1px;
+}
+
+/* S2L2 selector */
+.s2l2-group-label{
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+letter-spacing:2px;
+color:var(–faint);
+text-transform:uppercase;
+margin-bottom:6px;
+margin-top:10px;
+}
+.s2l2-grid{display:flex;flex-wrap:wrap;gap:5px}
+.s2l2-opt{
+padding:5px 10px;
+border-radius:12px;
+border:1px solid;
+cursor:pointer;
+font-size:11px;
+font-family:‘DM Mono’,monospace;
+transition:all .15s;
+background:transparent;
+}
+.s2l2-rise{color:#2A6A40;border-color:#2A6A40}
+.s2l2-fall{color:#8B2020;border-color:#8B2020}
+.s2l2-rise.sel{background:rgba(42,106,64,0.15)}
+.s2l2-fall.sel{background:rgba(139,32,32,0.15)}
+
+/* Form actions */
+.form-actions{
+display:flex;
+gap:10px;
+padding-top:8px;
+border-top:1px solid var(–border);
+margin-top:28px;
+}
+.btn-save{
+padding:11px 24px;
+background:var(–ink);
+color:var(–paper);
+border:none;
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:11px;
+letter-spacing:2px;
+text-transform:uppercase;
+cursor:pointer;
+transition:opacity .15s;
+}
+.btn-save:hover{opacity:.85}
+.btn-clear{
+padding:11px 20px;
+background:transparent;
+border:1px solid var(–border);
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:11px;
+letter-spacing:2px;
+color:var(–muted);
+cursor:pointer;
+transition:all .15s;
+text-transform:uppercase;
+}
+.btn-clear:hover{border-color:var(–muted);color:var(–ink)}
+
+/* ── VIEW MODE ─────────────────────────────────────────── */
+.view-header{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+margin-bottom:28px;
+gap:16px;
+flex-wrap:wrap;
+}
+.view-date{
+font-family:‘DM Mono’,monospace;
+font-size:11px;
+letter-spacing:2px;
+color:var(–faint);
+margin-bottom:6px;
+}
+.view-event{
+font-family:‘Playfair Display’,serif;
+font-size:26px;
+font-weight:400;
+line-height:1.25;
+color:var(–ink);
+max-width:540px;
+}
+.view-actions{display:flex;gap:8px}
+.view-btn{
+padding:8px 14px;
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+text-transform:uppercase;
+cursor:pointer;
+border:1px solid;
+transition:all .15s;
+}
+.vb-edit{background:var(–accent-l);border-color:var(–accent);color:var(–accent)}
+.vb-edit:hover{background:var(–accent-m)}
+.vb-forget{background:var(–red-l);border-color:var(–red);color:var(–red)}
+.vb-forget:hover{background:rgba(139,32,32,0.2)}
+
+.view-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-bottom:20px;
+}
+.view-field{
+background:var(–cream);
+border:1px solid var(–border);
+border-radius:var(–r);
+padding:14px 16px;
+}
+.view-field-label{
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+letter-spacing:3px;
+text-transform:uppercase;
+color:var(–faint);
+margin-bottom:5px;
+}
+.view-field-value{
+font-size:14px;
+color:var(–ink);
+line-height:1.55;
+}
+.view-full{grid-column:1/-1}
+
+.view-summary-block{
+background:var(–ink);
+color:var(–paper);
+border-radius:var(–r);
+padding:20px 24px;
+margin-top:20px;
+font-family:‘Playfair Display’,serif;
+font-style:italic;
+font-size:15px;
+line-height:1.75;
+position:relative;
+}
+.view-summary-label{
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+letter-spacing:3px;
+text-transform:uppercase;
+color:rgba(242,237,228,0.4);
+font-style:normal;
+margin-bottom:8px;
+display:block;
+}
+
+/* ── TOAST ─────────────────────────────────────────────── */
+.toast{
+position:fixed;
+bottom:28px;
+right:28px;
+background:var(–ink);
+color:var(–paper);
+padding:12px 20px;
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:11px;
+letter-spacing:2px;
+opacity:0;
+transform:translateY(8px);
+transition:all .25s;
+z-index:1000;
+pointer-events:none;
+max-width:320px;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.warn{background:var(–red)}
+
+/* ── MODAL ─────────────────────────────────────────────── */
+.modal-backdrop{
+position:fixed;inset:0;
+background:rgba(28,26,24,0.6);
+backdrop-filter:blur(3px);
+z-index:500;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+.modal-backdrop.open{display:flex}
+.modal{
+background:var(–paper);
+border-radius:var(–r);
+padding:28px;
+max-width:440px;
+width:100%;
+box-shadow:0 8px 32px rgba(28,26,24,0.25);
+}
+.modal-title{
+font-family:‘Playfair Display’,serif;
+font-size:20px;
+margin-bottom:10px;
+}
+.modal-body{
+font-size:14px;
+color:var(–muted);
+line-height:1.6;
+margin-bottom:20px;
+}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+.modal-btn{
+padding:9px 18px;
+border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:10px;
+letter-spacing:2px;
+text-transform:uppercase;
+cursor:pointer;
+border:1px solid;
+transition:all .15s;
+}
+.mb-cancel{background:transparent;border-color:var(–border);color:var(–muted)}
+.mb-cancel:hover{border-color:var(–muted);color:var(–ink)}
+.mb-confirm{background:var(–red);border-color:var(–red);color:#fff}
+.mb-confirm:hover{opacity:.85}
+
+/* ── SECURITY NOTICE ─────────────────────────────────────── */
+.sec-notice{
+font-family:‘DM Mono’,monospace;
+font-size:9px;
+letter-spacing:1.5px;
+color:var(–faint);
+padding:8px 16px;
+border-top:1px solid var(–border);
+text-align:center;
+background:var(–cream);
+}
+
+/* ── MOBILE NAV BAR ──────────────────────────────────────── */
+.mobile-nav{
+display:none;
+position:fixed;
+bottom:0;left:0;right:0;
+height:56px;
+background:var(–ink);
+border-top:1px solid rgba(255,255,255,0.08);
+z-index:200;
+align-items:center;
+justify-content:space-around;
+padding:0 8px;
+}
+.mnav-btn{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:3px;
+background:none;
+border:none;
+cursor:pointer;
+padding:6px 12px;
+border-radius:var(–r);
+transition:background .15s;
+min-width:56px;
+}
+.mnav-btn:hover,.mnav-btn.active{background:rgba(255,255,255,0.08)}
+.mnav-icon{font-size:17px;line-height:1;color:rgba(242,237,228,0.7)}
+.mnav-label{
+font-family:‘DM Mono’,monospace;
+font-size:8px;
+letter-spacing:1.5px;
+text-transform:uppercase;
+color:rgba(242,237,228,0.45);
+}
+.mnav-btn.active .mnav-icon,
+.mnav-btn.active .mnav-label{color:var(–paper)}
+
+/* Drawer */
+.mobile-drawer{
+display:none;
+position:fixed;
+inset:0;
+z-index:150;
+}
+.mobile-drawer.open{display:block}
+.drawer-backdrop{
+position:absolute;inset:0;
+background:rgba(28,26,24,0.55);
+backdrop-filter:blur(2px);
+}
+.drawer-panel{
+position:absolute;
+top:0;left:0;bottom:0;
+width:min(320px, 88vw);
+background:var(–cream);
+border-right:1px solid var(–border);
+display:flex;
+flex-direction:column;
+transform:translateX(-100%);
+transition:transform .25s cubic-bezier(0.4,0,0.2,1);
+overflow:hidden;
+}
+.mobile-drawer.open .drawer-panel{transform:translateX(0)}
+.drawer-header{
+background:var(–ink);
+padding:14px 16px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-shrink:0;
+}
+.drawer-title{
+font-family:‘Playfair Display’,serif;
+font-size:16px;
+color:var(–paper);
+font-style:italic;
+}
+.drawer-close{
+background:none;border:none;
+color:rgba(242,237,228,0.5);
+font-size:18px;cursor:pointer;
+padding:4px 8px;line-height:1;
+}
+.drawer-close:hover{color:var(–paper)}
+.drawer-search{padding:12px;border-bottom:1px solid var(–border);flex-shrink:0;}
+.drawer-stats{
+padding:6px 14px;
+font-family:‘DM Mono’,monospace;
+font-size:9px;letter-spacing:2px;
+color:var(–faint);
+border-bottom:1px solid var(–border);flex-shrink:0;
+}
+.drawer-list{flex:1;overflow-y:auto;padding:8px;}
+.drawer-new-btn{
+margin:12px;padding:12px;
+background:var(–ink);color:var(–paper);
+border:none;border-radius:var(–r);
+font-family:‘DM Mono’,monospace;
+font-size:11px;letter-spacing:2px;text-transform:uppercase;
+cursor:pointer;text-align:center;flex-shrink:0;
+}
+.drawer-new-btn:hover{opacity:.85}
+.drawer-sec{
+font-family:‘DM Mono’,monospace;font-size:9px;letter-spacing:1.5px;
+color:var(–faint);padding:6px 14px 10px;text-align:center;
+border-top:1px solid var(–border);flex-shrink:0;
+}
+.hdr-hamburger{
+display:none;
+background:rgba(255,255,255,0.07);
+border:1px solid rgba(242,237,228,0.15);
+color:rgba(242,237,228,0.75);
+border-radius:var(–r);
+padding:8px 12px;cursor:pointer;
+font-size:16px;line-height:1;transition:all .15s;
+}
+.hdr-hamburger:hover{background:rgba(255,255,255,0.12);color:var(–paper)}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:720px){
+.app{
+grid-template-columns:1fr;
+grid-template-areas:“header”“main”;
+padding-bottom:56px;
+}
+.app-sidebar{display:none}
+.app-main{height:auto;padding:20px 16px 80px}
+.form-row,.form-row-3,.view-grid{grid-template-columns:1fr}
+.view-full{grid-column:1}
+.mobile-nav{display:flex}
+.hdr-hamburger{display:block}
+.lock-status{display:none}
+}
+</style>
+
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-tag">HUMS™ · Purushartha</div>
+      <div class="header-title">Inner <em>Journal</em></div>
+    </div>
+    <div class="header-right">
+      <div class="lock-status"><div class="lock-dot"></div>LOCAL ONLY</div>
+      <button class="hdr-btn hdr-btn-export" onclick="exportData()">↓ Export</button>
+      <button class="hdr-btn hdr-btn-import" onclick="document.getElementById('importFile').click()">↑ Import</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="hdr-btn hdr-btn-purge-all" onclick="confirmPurgeAll()">✕ Forget All</button>
+      <button class="hdr-hamburger" onclick="openDrawer()" aria-label="Open entries">☰</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR -->
+
+  <aside class="app-sidebar">
+    <div class="sidebar-search">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search entries…" oninput="renderList()">
+    </div>
+    <div class="sidebar-stats" id="sidebarStats">0 ENTRIES</div>
+    <div class="entry-list" id="entryList"></div>
+    <button class="sidebar-new-btn" onclick="newEntry()">+ New Entry</button>
+    <div class="sec-notice">⬤ STORED LOCALLY · NEVER TRANSMITTED</div>
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="app-main" id="appMain">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-glyph">॥</div>
+      <div class="empty-title">Begin a reflection</div>
+      <div class="empty-sub">Each entry is a mirror. The event is the occasion. The signal is the lens. The discipline is the response.</div>
+    </div>
+  </main>
+
+</div>
+
+<!-- MOBILE DRAWER -->
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-backdrop" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <div class="drawer-title">All Entries</div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-search">
+      <input class="search-input" type="text" id="drawerSearchInput" placeholder="Search entries…" oninput="renderDrawerList()">
+    </div>
+    <div class="drawer-stats" id="drawerStats">0 ENTRIES</div>
+    <div class="drawer-list" id="drawerEntryList"></div>
+    <button class="drawer-new-btn" onclick="newEntry();closeDrawer()">+ New Entry</button>
+    <div class="drawer-sec">⬤ STORED LOCALLY · NEVER TRANSMITTED</div>
+  </div>
+</div>
+
+<!-- MOBILE NAV BAR -->
+
+<nav class="mobile-nav">
+  <button class="mnav-btn" id="mnav-entries" onclick="openDrawer()">
+    <span class="mnav-icon">≡</span>
+    <span class="mnav-label">Entries</span>
+  </button>
+  <button class="mnav-btn" id="mnav-new" onclick="newEntry()">
+    <span class="mnav-icon">✦</span>
+    <span class="mnav-label">New</span>
+  </button>
+  <button class="mnav-btn" id="mnav-export" onclick="exportData()">
+    <span class="mnav-icon">↓</span>
+    <span class="mnav-label">Export</span>
+  </button>
+  <button class="mnav-btn" id="mnav-import" onclick="document.getElementById('importFile').click()">
+    <span class="mnav-icon">↑</span>
+    <span class="mnav-label">Import</span>
+  </button>
+  <button class="mnav-btn" id="mnav-purge" onclick="confirmPurgeAll()">
+    <span class="mnav-icon">✕</span>
+    <span class="mnav-label">Forget</span>
+  </button>
+</nav>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+<!-- CONFIRM MODAL -->
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Are you certain?</div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="modal-btn mb-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn mb-confirm" id="modalConfirm">Forget</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   SECURITY LAYER
+   ═══════════════════════════════════════════════════════ */
+
+// Namespace key — not guessable from generic XSS payload
+const STORE_KEY = 'pj_hums_v1_' + btoa('purushartha').replace(/=/g,'');
+
+// Sanitize ALL user input before storage — strip every HTML tag
+function sanitize(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#x27;')
+    .replace(/\//g,'&#x2F;')
+    .trim();
+}
+
+// Safe text node setter — NEVER use innerHTML with user data
+function safeText(el, str) {
+  if (!el) return;
+  el.textContent = typeof str === 'string' ? str : String(str ?? '');
+}
+
+// Safe element creator with text
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STORAGE LAYER
+   All reads/writes go through these functions only.
+   ═══════════════════════════════════════════════════════ */
+
+let entries = []; // in-memory working copy
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) { entries = []; return; }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) { entries = []; return; }
+    // Validate each entry shape — reject anything malformed
+    entries = parsed.filter(e =>
+      e && typeof e === 'object' &&
+      typeof e.id === 'string' &&
+      typeof e.ts === 'number'
+    );
+  } catch(_) {
+    entries = [];
+  }
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(entries));
+  } catch(e) {
+    showToast('Storage write failed — may be full.', true);
+  }
+}
+
+function purgeAll() {
+  entries = [];
+  localStorage.removeItem(STORE_KEY);
+}
+
+function purgeEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  saveToStorage();
+}
+
+/* ═══════════════════════════════════════════════════════
+   DATA DEFINITIONS
+   ═══════════════════════════════════════════════════════ */
+
+const GUNAS = [
+  {val:'tamas',    label:'Tamas'},
+  {val:'rajas',    label:'Rajas'},
+  {val:'sattva',   label:'Sattva'},
+  {val:'gunateeta',label:'Guṇātīta'},
+];
+
+const DISCIPLINES = [
+  {val:'viveka',      label:'Viveka',      san:'विवेक'},
+  {val:'vairagya',    label:'Vairāgya',    san:'वैराग्य'},
+  {val:'sama',        label:'Śama',        san:'शम'},
+  {val:'dama',        label:'Dama',        san:'दम'},
+  {val:'uparati',     label:'Uparati',     san:'उपरति'},
+  {val:'titiksha',    label:'Titikṣā',     san:'तितिक्षा'},
+  {val:'sraddha',     label:'Śraddhā',     san:'श्रद्धा'},
+  {val:'samadhana',   label:'Samādhāna',   san:'समाधान'},
+  {val:'mumukshutva', label:'Mumukṣutva',  san:'मुमुक्षुत्व'},
+];
+
+const S2L2_RISE = [
+  {val:'satsangatva',   label:'Satsaṅgatva'},
+  {val:'nissangatva',   label:'Nissaṅgatva'},
+  {val:'nirmohatva',    label:'Nirmohatva'},
+  {val:'nischalatatva', label:'Niśchalatatva'},
+  {val:'jivanmukti',    label:'Jīvanmukti'},
+];
+const S2L2_FALL = [
+  {val:'dhyana',          label:'Dhyāna of Viṣaya'},
+  {val:'sanga',           label:'Saṅga'},
+  {val:'kama',            label:'Kāma'},
+  {val:'krodha',          label:'Krodha'},
+  {val:'sammoha',         label:'Sammoha'},
+  {val:'smritibhramsha',  label:'Smṛtivibhrama'},
+  {val:'buddhinasha',     label:'Buddhinaśa'},
+  {val:'pranashyati',     label:'Praṇaśyati'},
+];
+
+/* ═══════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════ */
+
+let currentId = null;   // viewing/editing this entry id
+let editMode  = false;  // true = form, false = view
+let formState = {};     // working form data
+
+/* ═══════════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════════ */
+
+function renderList() {
+  const list  = document.getElementById('entryList');
+  const stats = document.getElementById('sidebarStats');
+  const q     = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  // Clear safely
+  while (list.firstChild) list.removeChild(list.firstChild);
+
+  const filtered = entries
+    .filter(e => !q ||
+      (e.event   && e.event.toLowerCase().includes(q)) ||
+      (e.signal  && e.signal.toLowerCase().includes(q)) ||
+      (e.notes   && e.notes.toLowerCase().includes(q))
+    )
+    .sort((a,b) => b.ts - a.ts);
+
+  safeText(stats, filtered.length + ' / ' + entries.length + ' ENTRIES');
+
+  if (!filtered.length) {
+    const empty = el('div', null, q ? 'No matches' : 'No entries yet');
+    empty.style.cssText = 'padding:20px;text-align:center;color:var(--faint);font-size:13px;';
+    list.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(entry => {
+    const item = el('div', 'entry-item' + (entry.id === currentId ? ' active' : ''));
+    item.setAttribute('data-id', entry.id);
+
+    const dateEl = el('div', 'entry-item-date',
+      new Date(entry.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' +
+      new Date(entry.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
+    );
+
+    const eventEl = el('div', 'entry-item-event', entry.event || '(no event)');
+
+    const tags = el('div', 'entry-item-tags');
+    if (entry.guna_dominant) {
+      const t = el('span', 'tag-pill tag-' + entry.guna_dominant, entry.guna_dominant.charAt(0).toUpperCase() + entry.guna_dominant.slice(1));
+      tags.appendChild(t);
+    }
+    if (entry.s2l2_direction) {
+      const dir = entry.s2l2_direction === 'rise' ? '↑' : '↓';
+      const t = el('span', 'tag-pill tag-' + (entry.s2l2_direction === 'rise' ? 'sattva' : 'rajas'), dir + ' ' + (entry.s2l2_rung || ''));
+      tags.appendChild(t);
+    }
+
+    const forgetBtn = el('button', 'entry-forget-btn', '✕');
+    forgetBtn.title = 'Forget this entry';
+    forgetBtn.setAttribute('aria-label', 'Forget entry');
+    forgetBtn.addEventListener('click', ev => {
+      ev.stopPropagation();
+      confirmForgetEntry(entry.id, entry.event || '(no event)');
+    });
+
+    item.appendChild(dateEl);
+    item.appendChild(eventEl);
+    item.appendChild(tags);
+    item.appendChild(forgetBtn);
+
+    item.addEventListener('click', () => viewEntry(entry.id));
+    list.appendChild(item);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW ENTRY FORM
+   ═══════════════════════════════════════════════════════ */
+
+function newEntry() {
+  currentId = null;
+  editMode  = true;
+  formState = {};
+  renderForm(null);
+}
+
+function renderForm(entry) {
+  const main = document.getElementById('appMain');
+  while (main.firstChild) main.removeChild(main.firstChild);
+
+  const form = el('div', 'entry-form');
+
+  // Title
+  const titleDiv = el('div');
+  titleDiv.style.marginBottom = '28px';
+  const titleLabel = el('div', 'form-label', entry ? 'Editing Entry' : 'New Entry');
+  const titleInput = el('input', 'form-input');
+  titleInput.type = 'text';
+  titleInput.id   = 'f_title';
+  titleInput.placeholder = 'Title (optional)';
+  titleInput.value = entry ? (entry.title || '') : '';
+  titleDiv.appendChild(titleLabel);
+  titleDiv.appendChild(titleInput);
+  form.appendChild(titleDiv);
+
+  // Event
+  const eventSec = el('div', 'form-section');
+  eventSec.appendChild(el('label', 'form-label', 'The Event'));
+  const eventTA = el('textarea', 'form-textarea');
+  eventTA.id          = 'f_event';
+  eventTA.rows        = 3;
+  eventTA.placeholder = 'What happened? Describe the moment without judgment…';
+  eventTA.value       = entry ? (entry.event || '') : '';
+  eventSec.appendChild(eventTA);
+  form.appendChild(eventSec);
+
+  // Signal + CBT distortion row
+  const row1 = el('div', 'form-row');
+  const sigSec = el('div', 'form-section');
+  sigSec.style.marginBottom = '0';
+  sigSec.appendChild(el('label', 'form-label', 'HUMS Signal(s)'));
+  const sigInput = el('input', 'form-input');
+  sigInput.id          = 'f_signal';
+  sigInput.type        = 'text';
+  sigInput.placeholder = 'e.g. Think (S05), Identify (S04)';
+  sigInput.value       = entry ? (entry.signal || '') : '';
+  sigSec.appendChild(sigInput);
+  row1.appendChild(sigSec);
+
+  const cbtSec = el('div', 'form-section');
+  cbtSec.style.marginBottom = '0';
+  cbtSec.appendChild(el('label', 'form-label', 'CBT / DBT Insight (optional)'));
+  const cbtInput = el('input', 'form-input');
+  cbtInput.id          = 'f_cbt';
+  cbtInput.type        = 'text';
+  cbtInput.placeholder = 'e.g. Mind Reading distortion';
+  cbtInput.value       = entry ? (entry.cbt_insight || '') : '';
+  cbtSec.appendChild(cbtInput);
+  row1.appendChild(cbtSec);
+  form.appendChild(row1);
+
+  // Spacer
+  form.appendChild(el('div')).style.height = '16px';
+
+  // Guna dominant + next
+  const row2 = el('div', 'form-row');
+
+  const gunaDomSec = el('div', 'form-section');
+  gunaDomSec.style.marginBottom = '0';
+  gunaDomSec.appendChild(el('label', 'form-label', 'Dominant Guna'));
+  const gunaDomSel = buildGunaSelector('f_guna_dom', entry ? entry.guna_dominant : null);
+  gunaDomSec.appendChild(gunaDomSel);
+  row2.appendChild(gunaDomSec);
+
+  const gunaNextSec = el('div', 'form-section');
+  gunaNextSec.style.marginBottom = '0';
+  gunaNextSec.appendChild(el('label', 'form-label', 'Next Guna (aspired)'));
+  const gunaNextSel = buildGunaSelector('f_guna_next', entry ? entry.guna_next : null);
+  gunaNextSec.appendChild(gunaNextSel);
+  row2.appendChild(gunaNextSec);
+
+  form.appendChild(row2);
+  form.appendChild(el('div')).style.height = '20px';
+
+  // 7 Reflections summary
+  const refSec = el('div', 'form-section');
+  refSec.appendChild(el('label', 'form-label', 'Seven Reflections — Summary'));
+  const refTA = el('textarea', 'form-textarea');
+  refTA.id          = 'f_reflections';
+  refTA.rows        = 3;
+  refTA.placeholder = 'Which of the 7 Gita dimensions lit up most? What did they reveal?';
+  refTA.value       = entry ? (entry.reflections || '') : '';
+  refSec.appendChild(refTA);
+  form.appendChild(refSec);
+
+  // Discipline
+  const discSec = el('div', 'form-section');
+  discSec.appendChild(el('label', 'form-label', 'Chosen Discipline — Sadhana Chatushtaya'));
+  discSec.appendChild(buildDisciplineGrid('f_discipline', entry ? entry.discipline : null));
+  form.appendChild(discSec);
+
+  // S2L2
+  const s2l2Sec = el('div', 'form-section');
+  s2l2Sec.appendChild(el('label', 'form-label', 'S2L2 — Climbing or Slipping?'));
+  s2l2Sec.appendChild(buildS2L2Selector(entry ? entry.s2l2_direction : null, entry ? entry.s2l2_rung : null));
+  form.appendChild(s2l2Sec);
+
+  // Closing notes
+  const notesSec = el('div', 'form-section');
+  notesSec.appendChild(el('label', 'form-label', 'Closing Reflection'));
+  const notesTA = el('textarea', 'form-textarea');
+  notesTA.id          = 'f_notes';
+  notesTA.rows        = 3;
+  notesTA.placeholder = 'What does this entry leave you with?';
+  notesTA.value       = entry ? (entry.notes || '') : '';
+  notesSec.appendChild(notesTA);
+  form.appendChild(notesSec);
+
+  // Actions
+  const actions = el('div', 'form-actions');
+  const saveBtn = el('button', 'btn-save', entry ? 'Update Entry' : 'Save Entry');
+  saveBtn.addEventListener('click', saveEntry);
+  const clearBtn = el('button', 'btn-clear', 'Cancel');
+  clearBtn.addEventListener('click', () => {
+    if (currentId) viewEntry(currentId);
+    else showEmpty();
+  });
+  actions.appendChild(saveBtn);
+  actions.appendChild(clearBtn);
+  form.appendChild(actions);
+
+  main.appendChild(form);
+}
+
+// ── SELECTOR BUILDERS ──────────────────────────────────
+
+function buildGunaSelector(id, selected) {
+  const wrap = el('div', 'guna-selector');
+  wrap.id = id;
+  GUNAS.forEach(g => {
+    const btn = el('button', 'guna-opt go-' + g.val + (selected === g.val ? ' sel' : ''), g.label);
+    btn.setAttribute('data-val', g.val);
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.guna-opt').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function buildDisciplineGrid(id, selected) {
+  const wrap = el('div', 'disc-grid');
+  wrap.id = id;
+  DISCIPLINES.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'disc-opt' + (selected === d.val ? ' sel' : '');
+    btn.setAttribute('data-val', d.val);
+    const name = el('span', null, d.label);
+    const san  = el('span', 'disc-san', d.san);
+    btn.appendChild(name);
+    btn.appendChild(san);
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.disc-opt').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function buildS2L2Selector(selDir, selRung) {
+  const wrap = document.createElement('div');
+
+  const riseLabel = el('div', 's2l2-group-label', '↑ Rise — Shankara\'s Satsangatve');
+  wrap.appendChild(riseLabel);
+  const riseRow = el('div', 's2l2-grid');
+  riseRow.id = 's2l2-rise-row';
+  S2L2_RISE.forEach(r => {
+    const btn = el('button', 's2l2-opt s2l2-rise' + (selDir==='rise' && selRung===r.val ? ' sel' : ''), r.label);
+    btn.setAttribute('data-val', r.val);
+    btn.setAttribute('data-dir', 'rise');
+    btn.addEventListener('click', () => selectS2L2(btn, 'rise'));
+    riseRow.appendChild(btn);
+  });
+  wrap.appendChild(riseRow);
+
+  const fallLabel = el('div', 's2l2-group-label', '↓ Caution — Krishna\'s fall (BG 2.62–63)');
+  wrap.appendChild(fallLabel);
+  const fallRow = el('div', 's2l2-grid');
+  fallRow.id = 's2l2-fall-row';
+  S2L2_FALL.forEach(r => {
+    const btn = el('button', 's2l2-opt s2l2-fall' + (selDir==='fall' && selRung===r.val ? ' sel' : ''), r.label);
+    btn.setAttribute('data-val', r.val);
+    btn.setAttribute('data-dir', 'fall');
+    btn.addEventListener('click', () => selectS2L2(btn, 'fall'));
+    fallRow.appendChild(btn);
+  });
+  wrap.appendChild(fallRow);
+
+  return wrap;
+}
+
+function selectS2L2(btn, dir) {
+  document.querySelectorAll('.s2l2-opt').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+/* ═══════════════════════════════════════════════════════
+   SAVE
+   ═══════════════════════════════════════════════════════ */
+
+function saveEntry() {
+  const get = id => document.getElementById(id);
+  const getSel = (id) => {
+    const el = get(id);
+    if (!el) return null;
+    const s = el.querySelector('.sel');
+    return s ? s.getAttribute('data-val') : null;
+  };
+  const getS2L2Sel = () => {
+    const s = document.querySelector('.s2l2-opt.sel');
+    if (!s) return {dir:null, rung:null};
+    return {dir: s.getAttribute('data-dir'), rung: s.getAttribute('data-val')};
+  };
+
+  const raw = {
+    title:        get('f_title')?.value       || '',
+    event:        get('f_event')?.value       || '',
+    signal:       get('f_signal')?.value      || '',
+    cbt_insight:  get('f_cbt')?.value         || '',
+    reflections:  get('f_reflections')?.value || '',
+    notes:        get('f_notes')?.value       || '',
+    guna_dominant:getSel('f_guna_dom'),
+    guna_next:    getSel('f_guna_next'),
+    discipline:   getSel('f_discipline'),
+  };
+
+  const s2l2 = getS2L2Sel();
+  raw.s2l2_direction = s2l2.dir;
+  raw.s2l2_rung      = s2l2.rung;
+
+  // Sanitize every string field
+  const clean = {};
+  Object.keys(raw).forEach(k => {
+    clean[k] = typeof raw[k] === 'string' ? sanitize(raw[k]) : raw[k];
+  });
+
+  // Require at minimum an event
+  if (!clean.event) {
+    showToast('Please describe the event before saving.', true);
+    return;
+  }
+
+  // Auto-generate summary
+  clean.summary = generateSummary(clean);
+
+  if (currentId) {
+    // Update existing
+    const idx = entries.findIndex(e => e.id === currentId);
+    if (idx !== -1) {
+      clean.id = currentId;
+      clean.ts = entries[idx].ts;
+      clean.ts_updated = Date.now();
+      entries[idx] = clean;
+    }
+  } else {
+    // New entry
+    clean.id = 'e_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    clean.ts = Date.now();
+    entries.unshift(clean);
+    currentId = clean.id;
+  }
+
+  saveToStorage();
+  renderList();
+  viewEntry(currentId);
+  showToast('Entry saved.');
+}
+
+/* ═══════════════════════════════════════════════════════
+   SUMMARY GENERATOR
+   ═══════════════════════════════════════════════════════ */
+
+function generateSummary(e) {
+  const parts = [];
+
+  if (e.event)        parts.push('Event: ' + e.event + '.');
+  if (e.signal)       parts.push('Signal(s) touched: ' + e.signal + '.');
+  if (e.cbt_insight)  parts.push('CBT/DBT insight: ' + e.cbt_insight + '.');
+  if (e.guna_dominant) {
+    let gunaLine = 'Dominant guna: ' + e.guna_dominant;
+    if (e.guna_next) gunaLine += ' → moving toward ' + e.guna_next;
+    parts.push(gunaLine + '.');
+  }
+  if (e.discipline)   parts.push('Chosen discipline: ' + e.discipline + '.');
+  if (e.s2l2_direction && e.s2l2_rung) {
+    const dir = e.s2l2_direction === 'rise' ? 'Climbing ↑' : 'Caution ↓ — slip recognised at';
+    parts.push('S2L2: ' + dir + ' ' + e.s2l2_rung + '.');
+  }
+  if (e.notes) parts.push(e.notes);
+
+  return parts.join(' ');
+}
+
+/* ═══════════════════════════════════════════════════════
+   VIEW MODE
+   ═══════════════════════════════════════════════════════ */
+
+function viewEntry(id) {
+  currentId = id;
+  editMode  = false;
+  const entry = entries.find(e => e.id === id);
+  if (!entry) { showEmpty(); return; }
+
+  renderList(); // refresh active state in sidebar
+
+  const main = document.getElementById('appMain');
+  while (main.firstChild) main.removeChild(main.firstChild);
+
+  const wrap = el('div');
+
+  // Header
+  const vh = el('div', 'view-header');
+
+  const vhl = el('div');
+  const vDate = el('div', 'view-date');
+  vDate.textContent =
+    new Date(entry.ts).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) +
+    ' · ' + new Date(entry.ts).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  const vEvent = el('div', 'view-event', entry.event || '(no event recorded)');
+  vhl.appendChild(vDate);
+  vhl.appendChild(vEvent);
+
+  const vActions = el('div', 'view-actions');
+  const editBtn = el('button', 'view-btn vb-edit', 'Edit');
+  editBtn.addEventListener('click', () => { editMode = true; renderForm(entry); });
+  const forgetBtn = el('button', 'view-btn vb-forget', 'Forget');
+  forgetBtn.addEventListener('click', () => confirmForgetEntry(entry.id, entry.event));
+  vActions.appendChild(editBtn);
+  vActions.appendChild(forgetBtn);
+
+  vh.appendChild(vhl);
+  vh.appendChild(vActions);
+  wrap.appendChild(vh);
+
+  // Grid fields
+  const grid = el('div', 'view-grid');
+
+  if (entry.title) {
+    grid.appendChild(viewField('Title', entry.title, false));
+  }
+  if (entry.signal) {
+    grid.appendChild(viewField('HUMS Signal(s)', entry.signal, false));
+  }
+  if (entry.cbt_insight) {
+    grid.appendChild(viewField('CBT / DBT Insight', entry.cbt_insight, false));
+  }
+
+  // Guna
+  const gunaVal = [
+    entry.guna_dominant ? ('Dominant: ' + entry.guna_dominant) : '',
+    entry.guna_next     ? ('→ Next: ' + entry.guna_next) : '',
+  ].filter(Boolean).join('  ');
+  if (gunaVal) grid.appendChild(viewField('Guna', gunaVal, false));
+
+  // Discipline
+  if (entry.discipline) {
+    const disc = DISCIPLINES.find(d => d.val === entry.discipline);
+    grid.appendChild(viewField('Discipline', disc ? (disc.label + ' ' + disc.san) : entry.discipline, false));
+  }
+
+  // S2L2
+  if (entry.s2l2_direction && entry.s2l2_rung) {
+    const dir = entry.s2l2_direction === 'rise' ? '↑ Climbing' : '↓ Caution — slip recognised';
+    grid.appendChild(viewField('S2L2', dir + ' · ' + entry.s2l2_rung, false));
+  }
+
+  // Reflections
+  if (entry.reflections) {
+    grid.appendChild(viewField('Seven Reflections', entry.reflections, true));
+  }
+
+  // Notes
+  if (entry.notes) {
+    grid.appendChild(viewField('Closing Reflection', entry.notes, true));
+  }
+
+  wrap.appendChild(grid);
+
+  // Summary block
+  if (entry.summary) {
+    const sb = el('div', 'view-summary-block');
+    sb.appendChild(el('span', 'view-summary-label', 'Summary'));
+    const st = el('p');
+    st.textContent = entry.summary; // textContent — never innerHTML
+    sb.appendChild(st);
+    wrap.appendChild(sb);
+  }
+
+  main.appendChild(wrap);
+}
+
+function viewField(label, value, fullWidth) {
+  const f = el('div', 'view-field' + (fullWidth ? ' view-full' : ''));
+  f.appendChild(el('div', 'view-field-label', label));
+  const v = el('div', 'view-field-value');
+  v.textContent = value; // safe
+  f.appendChild(v);
+  return f;
+}
+
+function showEmpty() {
+  currentId = null;
+  const main = document.getElementById('appMain');
+  while (main.firstChild) main.removeChild(main.firstChild);
+  const empty = el('div', 'empty-state');
+  empty.appendChild(el('div', 'empty-glyph', '॥'));
+  empty.appendChild(el('div', 'empty-title', 'Begin a reflection'));
+  const sub = el('div', 'empty-sub', 'Each entry is a mirror. The event is the occasion. The signal is the lens. The discipline is the response.');
+  empty.appendChild(sub);
+  main.appendChild(empty);
+}
+
+/* ═══════════════════════════════════════════════════════
+   EXPORT / IMPORT
+   ═══════════════════════════════════════════════════════ */
+
+function exportData() {
+  if (!entries.length) { showToast('No entries to export.', true); return; }
+  const payload = JSON.stringify(entries, null, 2);
+  const blob = new Blob([payload], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'purushartha-journal-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); document.body.removeChild(a); }, 500);
+  showToast('Journal exported.');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!Array.isArray(parsed)) throw new Error('Not an array');
+      // Validate each entry before merging
+      const valid = parsed.filter(entry =>
+        entry && typeof entry === 'object' &&
+        typeof entry.id === 'string' &&
+        typeof entry.ts === 'number'
+      );
+      // Sanitize all string fields from imported data
+      const sanitized = valid.map(entry => {
+        const clean = {...entry};
+        Object.keys(clean).forEach(k => {
+          if (typeof clean[k] === 'string') clean[k] = sanitize(clean[k]);
+        });
+        return clean;
+      });
+      // Merge: existing ids win (no overwrite), new ids prepended
+      const existingIds = new Set(entries.map(e => e.id));
+      const toAdd = sanitized.filter(e => !existingIds.has(e.id));
+      entries = [...toAdd, ...entries].sort((a,b) => b.ts - a.ts);
+      saveToStorage();
+      renderList();
+      showToast(toAdd.length + ' new entries imported.');
+    } catch(_) {
+      showToast('Import failed — invalid file.', true);
+    }
+  };
+  reader.readAsText(file);
+  // Reset file input so same file can be re-imported
+  event.target.value = '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   PURGE / FORGET
+   ═══════════════════════════════════════════════════════ */
+
+let pendingConfirm = null;
+
+function confirmForgetEntry(id, eventText) {
+  const title = document.getElementById('modalTitle');
+  const body  = document.getElementById('modalBody');
+  const btn   = document.getElementById('modalConfirm');
+  safeText(title, 'Forget this entry?');
+  safeText(body,  'This will permanently remove: "' + (eventText || id) + '". This action cannot be undone.');
+  pendingConfirm = () => {
+    purgeEntry(id);
+    if (currentId === id) showEmpty();
+    renderList();
+    closeModal();
+    showToast('Entry forgotten.');
+  };
+  btn.onclick = pendingConfirm;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function confirmPurgeAll() {
+  const title = document.getElementById('modalTitle');
+  const body  = document.getElementById('modalBody');
+  const btn   = document.getElementById('modalConfirm');
+  safeText(title, 'Forget everything?');
+  safeText(body,  'This will permanently erase all ' + entries.length + ' journal entries from local storage. There is no recovery.');
+  pendingConfirm = () => {
+    purgeAll();
+    showEmpty();
+    renderList();
+    closeModal();
+    showToast('All entries forgotten.');
+  };
+  btn.onclick = pendingConfirm;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  pendingConfirm = null;
+}
+
+// Close modal on backdrop click
+document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════ */
+
+let toastTimer = null;
+function showToast(msg, warn = false) {
+  const t = document.getElementById('toast');
+  safeText(t, msg);
+  t.className = 'toast' + (warn ? ' warn' : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+   ═══════════════════════════════════════════════════════ */
+
+document.addEventListener('keydown', e => {
+  // Escape closes modal or cancels edit
+  if (e.key === 'Escape') {
+    if (document.getElementById('modalBackdrop').classList.contains('open')) {
+      closeModal();
+    } else if (editMode && currentId) {
+      viewEntry(currentId);
+    }
+  }
+  // Cmd/Ctrl+N = new entry (when not in a text field)
+  if ((e.metaKey || e.ctrlKey) && e.key === 'n' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    newEntry();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE DRAWER
+   ═══════════════════════════════════════════════════════ */
+
+function openDrawer() {
+  document.getElementById('mobileDrawer').classList.add('open');
+  renderDrawerList();
+  document.getElementById('drawerSearchInput').value = '';
+}
+
+function closeDrawer() {
+  document.getElementById('mobileDrawer').classList.remove('open');
+}
+
+function renderDrawerList() {
+  const list  = document.getElementById('drawerEntryList');
+  const stats = document.getElementById('drawerStats');
+  const q     = document.getElementById('drawerSearchInput').value.toLowerCase().trim();
+
+  while (list.firstChild) list.removeChild(list.firstChild);
+
+  const filtered = entries
+    .filter(e => !q ||
+      (e.event  && e.event.toLowerCase().includes(q)) ||
+      (e.signal && e.signal.toLowerCase().includes(q)) ||
+      (e.notes  && e.notes.toLowerCase().includes(q))
+    )
+    .sort((a,b) => b.ts - a.ts);
+
+  safeText(stats, filtered.length + ' / ' + entries.length + ' ENTRIES');
+
+  if (!filtered.length) {
+    const empty = el('div', null, q ? 'No matches' : 'No entries yet');
+    empty.style.cssText = 'padding:20px;text-align:center;color:var(--faint);font-size:13px;';
+    list.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(entry => {
+    const item = el('div', 'entry-item' + (entry.id === currentId ? ' active' : ''));
+    item.setAttribute('data-id', entry.id);
+
+    const dateEl = el('div', 'entry-item-date',
+      new Date(entry.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+    );
+    const eventEl = el('div', 'entry-item-event', entry.event || '(no event)');
+    const tags = el('div', 'entry-item-tags');
+    if (entry.guna_dominant) {
+      tags.appendChild(el('span', 'tag-pill tag-' + entry.guna_dominant,
+        entry.guna_dominant.charAt(0).toUpperCase() + entry.guna_dominant.slice(1)));
+    }
+    if (entry.s2l2_direction) {
+      const dir = entry.s2l2_direction === 'rise' ? '↑' : '↓';
+      tags.appendChild(el('span', 'tag-pill tag-' + (entry.s2l2_direction === 'rise' ? 'sattva' : 'rajas'),
+        dir + ' ' + (entry.s2l2_rung || '')));
+    }
+
+    const forgetBtn = el('button', 'entry-forget-btn', '✕');
+    forgetBtn.title = 'Forget this entry';
+    forgetBtn.addEventListener('click', ev => {
+      ev.stopPropagation();
+      closeDrawer();
+      confirmForgetEntry(entry.id, entry.event || '(no event)');
+    });
+
+    item.appendChild(dateEl);
+    item.appendChild(eventEl);
+    item.appendChild(tags);
+    item.appendChild(forgetBtn);
+
+    item.addEventListener('click', () => {
+      viewEntry(entry.id);
+      closeDrawer();
+    });
+    list.appendChild(item);
+  });
+}
+
+// Close drawer on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('mobileDrawer').classList.contains('open')) {
+    closeDrawer();
+  }
+});
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════ */
+
+loadFromStorage();
+renderList();
+
+// Show most recent entry or empty state
+if (entries.length) {
+  viewEntry(entries[0].id);
+} else {
+  showEmpty();
+}
+</script>
+
+</body>
+</html>
