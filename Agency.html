@@ -1759,6 +1759,18 @@ if (entries.length) {
   showEmpty();
 }
 
+
+/* Expose handlers to window scope for inline onclick/oninput/onchange */
+window.newEntry = newEntry;
+window.exportData = exportData;
+window.importData = importData;
+window.confirmPurgeAll = confirmPurgeAll;
+window.openDrawer = openDrawer;
+window.closeDrawer = closeDrawer;
+window.renderDrawerList = renderDrawerList;
+window.renderList = renderList;
+window.closeModal = closeModal;
+
 }); // end DOMContentLoaded
 </script>
 
