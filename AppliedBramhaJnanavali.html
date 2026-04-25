@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brahma Jnānavalī Mālā — Reflection</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment:     #f5eedc;
+    --parchment-deep:#ede3c8;
+    --ink:           #2c1f0e;
+    --ink-light:     #5a3e28;
+    --ink-faint:     #8c6e4f;
+    --gold:          #9a6e2a;
+    --gold-light:    #c9973e;
+    --red:           #8b2020;
+    --shadow:        rgba(44,31,14,0.18);
+    --serif-display: 'Cinzel', serif;
+    --serif-body:    'EB Garamond', serif;
+    --serif-ui:      'Lora', serif;
+  }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: #d4c9a8;
+background-image:
+radial-gradient(ellipse at 20% 10%, #c8b98a 0%, transparent 60%),
+radial-gradient(ellipse at 80% 90%, #bfaf85 0%, transparent 60%);
+min-height: 100vh;
+display: flex;
+align-items: flex-start;
+justify-content: center;
+padding: 40px 20px 80px;
+font-family: var(–serif-body);
+color: var(–ink);
+}
+
+/* Grain overlay */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 0;
+opacity: 0.5;
+}
+
+.manuscript {
+position: relative;
+z-index: 1;
+width: 100%;
+max-width: 680px;
+}
+
+/* ── Header ── */
+.header {
+text-align: center;
+margin-bottom: 36px;
+padding-bottom: 24px;
+border-bottom: 1px solid var(–gold);
+position: relative;
+}
+
+.header::after {
+content: ‘❧’;
+display: block;
+position: absolute;
+bottom: -14px;
+left: 50%;
+transform: translateX(-50%);
+background: #d4c9a8;
+padding: 0 12px;
+color: var(–gold);
+font-size: 20px;
+}
+
+.header-eyebrow {
+font-family: var(–serif-ui);
+font-size: 11px;
+letter-spacing: 0.22em;
+text-transform: uppercase;
+color: var(–ink-faint);
+margin-bottom: 10px;
+}
+
+.header h1 {
+font-family: var(–serif-display);
+font-size: clamp(20px, 4vw, 28px);
+font-weight: 500;
+color: var(–ink);
+letter-spacing: 0.04em;
+line-height: 1.3;
+margin-bottom: 6px;
+}
+
+.header h1 span {
+color: var(–gold);
+}
+
+.header-sub {
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 14px;
+color: var(–ink-light);
+}
+
+/* ── Progress ── */
+.progress-bar-wrap {
+margin-bottom: 32px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.progress-bar {
+flex: 1;
+height: 3px;
+background: var(–parchment-deep);
+border-radius: 2px;
+overflow: hidden;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(–gold), var(–gold-light));
+border-radius: 2px;
+transition: width 0.6s ease;
+}
+
+.progress-label {
+font-family: var(–serif-ui);
+font-size: 12px;
+color: var(–ink-faint);
+white-space: nowrap;
+}
+
+/* ── Verse Card ── */
+.verse-card {
+background: var(–parchment);
+border: 1px solid #c8b070;
+border-radius: 2px;
+box-shadow:
+0 2px 4px var(–shadow),
+0 8px 32px rgba(44,31,14,0.10),
+inset 0 0 60px rgba(200,176,112,0.08);
+padding: 44px 48px 40px;
+margin-bottom: 28px;
+position: relative;
+animation: pageIn 0.5s ease both;
+}
+
+@keyframes pageIn {
+from { opacity: 0; transform: translateY(12px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Corner ornaments */
+.verse-card::before,
+.verse-card::after {
+content: ‘’;
+position: absolute;
+width: 28px;
+height: 28px;
+border-color: var(–gold);
+border-style: solid;
+opacity: 0.5;
+}
+.verse-card::before { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+.verse-card::after  { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
+
+.verse-number {
+font-family: var(–serif-display);
+font-size: 11px;
+letter-spacing: 0.2em;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.verse-number::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: linear-gradient(90deg, var(–gold-light), transparent);
+opacity: 0.4;
+}
+
+.verse-sanskrit {
+font-family: var(–serif-body);
+font-size: clamp(17px, 2.8vw, 20px);
+line-height: 1.9;
+color: var(–ink);
+text-align: center;
+margin-bottom: 10px;
+font-weight: 500;
+}
+
+.verse-transliteration {
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 14px;
+color: var(–ink-faint);
+text-align: center;
+margin-bottom: 24px;
+line-height: 1.8;
+}
+
+.divider {
+display: flex;
+align-items: center;
+gap: 14px;
+margin-bottom: 22px;
+}
+
+.divider::before,
+.divider::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: var(–gold);
+opacity: 0.25;
+}
+
+.divider span {
+color: var(–gold);
+font-size: 14px;
+opacity: 0.7;
+}
+
+.verse-meaning {
+font-family: var(–serif-body);
+font-size: 16px;
+line-height: 1.85;
+color: var(–ink-light);
+margin-bottom: 18px;
+}
+
+.verse-insight {
+background: var(–parchment-deep);
+border-left: 3px solid var(–gold);
+padding: 14px 18px;
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 14px;
+color: var(–ink-faint);
+line-height: 1.7;
+border-radius: 0 2px 2px 0;
+}
+
+/* ── Journal ── */
+.journal-section {
+background: var(–parchment);
+border: 1px solid #c8b070;
+border-radius: 2px;
+box-shadow: 0 2px 8px var(–shadow);
+padding: 32px 48px 36px;
+margin-bottom: 28px;
+animation: pageIn 0.5s 0.1s ease both;
+}
+
+.journal-label {
+font-family: var(–serif-display);
+font-size: 12px;
+letter-spacing: 0.18em;
+color: var(–gold);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.journal-prompt {
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 15px;
+color: var(–ink-faint);
+margin-bottom: 16px;
+line-height: 1.6;
+}
+
+.journal-textarea {
+width: 100%;
+min-height: 130px;
+background: transparent;
+border: none;
+border-bottom: 1px solid #c8b070;
+padding: 10px 4px;
+font-family: var(–serif-body);
+font-size: 16px;
+line-height: 1.85;
+color: var(–ink);
+resize: vertical;
+outline: none;
+transition: border-color 0.3s;
+}
+
+.journal-textarea::placeholder {
+color: #b09a72;
+font-style: italic;
+}
+
+.journal-textarea:focus {
+border-bottom-color: var(–gold);
+}
+
+/* Lined paper effect */
+.journal-lines {
+position: relative;
+}
+
+.journal-lines::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background-image: repeating-linear-gradient(
+transparent,
+transparent calc(1.85em * 16px / 16 - 1px),
+rgba(200,176,112,0.18) calc(1.85em * 16px / 16 - 1px),
+rgba(200,176,112,0.18) calc(1.85em * 16px / 16)
+);
+pointer-events: none;
+}
+
+/* ── Actions ── */
+.actions {
+display: flex;
+gap: 14px;
+flex-wrap: wrap;
+animation: pageIn 0.5s 0.2s ease both;
+}
+
+.btn {
+font-family: var(–serif-display);
+font-size: 12px;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+padding: 12px 28px;
+border-radius: 1px;
+cursor: pointer;
+transition: all 0.25s;
+border: 1px solid;
+}
+
+.btn-primary {
+background: var(–ink);
+color: var(–parchment);
+border-color: var(–ink);
+}
+
+.btn-primary:hover {
+background: var(–gold);
+border-color: var(–gold);
+color: var(–ink);
+}
+
+.btn-secondary {
+background: transparent;
+color: var(–ink-faint);
+border-color: #c8b070;
+}
+
+.btn-secondary:hover {
+border-color: var(–gold);
+color: var(–gold);
+}
+
+.btn:active { transform: scale(0.97); }
+
+/* ── Completion ── */
+.completion {
+text-align: center;
+padding: 60px 40px;
+background: var(–parchment);
+border: 1px solid #c8b070;
+border-radius: 2px;
+box-shadow: 0 2px 8px var(–shadow);
+animation: pageIn 0.6s ease both;
+}
+
+.completion-symbol {
+font-size: 36px;
+margin-bottom: 20px;
+color: var(–gold);
+}
+
+.completion h2 {
+font-family: var(–serif-display);
+font-size: 22px;
+font-weight: 400;
+letter-spacing: 0.06em;
+color: var(–ink);
+margin-bottom: 14px;
+}
+
+.completion p {
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 16px;
+color: var(–ink-faint);
+line-height: 1.8;
+max-width: 420px;
+margin: 0 auto 28px;
+}
+
+/* ── Saved entries ── */
+.saved-count {
+font-family: var(–serif-ui);
+font-size: 12px;
+color: var(–ink-faint);
+text-align: right;
+margin-bottom: 8px;
+font-style: italic;
+}
+
+/* ── Intro Screen ── */
+.intro {
+background: var(–parchment);
+border: 1px solid #c8b070;
+border-radius: 2px;
+box-shadow: 0 2px 8px var(–shadow);
+padding: 52px 48px;
+text-align: center;
+animation: pageIn 0.5s ease both;
+}
+
+.intro-symbol {
+font-size: 32px;
+color: var(–gold);
+margin-bottom: 24px;
+display: block;
+}
+
+.intro h2 {
+font-family: var(–serif-display);
+font-size: 18px;
+font-weight: 400;
+letter-spacing: 0.1em;
+color: var(–ink);
+margin-bottom: 20px;
+}
+
+.intro p {
+font-family: var(–serif-body);
+font-size: 16px;
+line-height: 1.85;
+color: var(–ink-light);
+margin-bottom: 14px;
+text-align: left;
+}
+
+.intro-quote {
+font-family: var(–serif-body);
+font-style: italic;
+font-size: 15px;
+color: var(–ink-faint);
+border-left: 3px solid var(–gold);
+padding: 12px 18px;
+text-align: left;
+margin: 20px 0 32px;
+line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+.verse-card, .journal-section, .intro { padding: 28px 24px; }
+.actions { flex-direction: column; }
+.btn { text-align: center; }
+}
+</style>
+
+</head>
+<body>
+<div class="manuscript">
+
+  <div class="header">
+    <div class="header-eyebrow">Adi Shankaracharya</div>
+    <h1>Brahma Jnānavalī <span>Mālā</span></h1>
+    <div class="header-sub">A Garland of the Knowledge of Brahman</div>
+  </div>
+
+  <div id="app"></div>
+
+</div>
+
+<script>
+const verses = [
+  {
+    number: 1,
+    sanskrit: "सकृत् श्रवणमात्रेण ब्रह्मज्ञानं यतो भवेत् ।\nब्रह्मज्ञानावलीमाला सर्वेषां मोक्षसिद्धये ॥",
+    transliteration: "sakṛt śravaṇamātreṇa brahmajñānaṃ yato bhavet\nbrahmajñānāvalīmālā sarveshāṃ mokṣasiddhaye",
+    meaning: "This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.",
+    insight: "This is not a text to be studied — it is a text to be heard inwardly. Even once. The promise is built into the opening.",
+  },
+  {
+    number: 2,
+    sanskrit: "असङ्गोऽहमसङ्गोऽहमसङ्गोऽहं पुनः पुनः ।\nसच्चिदानन्दरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "asaṅgo'ham asaṅgo'ham asaṅgo'haṃ punaḥ punaḥ\nsaccidānandarūpo'ham ahamevāham avyayaḥ",
+    meaning: "Unattached am I, unattached am I, unattached am I — again and again. I am of the nature of Existence-Consciousness-Bliss. I am the very Self, indestructible and ever unchanging.",
+    insight: "The triple repetition is not poetic decoration — it is the method itself. The mind needs to hear the truth three times before it loosens its grip on the false."
+  },
+  {
+    number: 3,
+    sanskrit: "नित्यशुद्धविमुक्तोऽहं निराकारोऽहमव्ययः ।\nभूमानन्दस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "nityaśuddhavimukto'haṃ nirākāro'ham avyayaḥ\nbhūmānandasvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am eternally pure, I am liberated, I am formless, I am indestructible. I am of the nature of infinite, boundless bliss. I am the very Self, indestructible and changeless.",
+    insight: "Purity here is not moral — it is ontological. Not 'I have become pure' but 'I am, by nature, never impure.' The liberation is not future — it is a recognition of what already is."
+  },
+  {
+    number: 4,
+    sanskrit: "विज्ञानघनरूपोऽहं चिदाकाशोऽहमव्ययः ।\nकेवलानन्दरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "vijñānaghanarūpo'haṃ cidākāśo'ham avyayaḥ\nkevalānandarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am of the nature of dense, solid awareness. I am the sky of consciousness, indestructible. I am pure, unconditioned bliss. I am the very Self, indestructible and changeless.",
+    insight: "Cidākāśa — the sky of consciousness — nothing sticks to it. Clouds pass. The sky remains. You are the sky, not the cloud."
+  },
+  {
+    number: 5,
+    sanskrit: "नित्यानन्दस्वरूपोऽहं परमानन्दरूपधृक् ।\nमुक्तानन्दस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "nityānandasvarūpo'haṃ paramānandarūpadhṛk\nmuktānandasvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am of the nature of eternal bliss. I am the bearer of the form of supreme bliss. I am the bliss of liberation. I am the very Self, indestructible and changeless.",
+    insight: "Three flavors of ānanda in one verse: nitya (eternal), parama (supreme), mukta (free). Shankara is not repeating — he is descending, like three steps into the same ocean."
+  },
+  {
+    number: 6,
+    sanskrit: "सत्स्वरूपोऽहमित्येवं यः करोति सदा जपम् ।\nभवपाशविनिर्मुक्तः स याति परमां गतिम् ॥",
+    transliteration: "satsvarūpo'ham ityevaṃ yaḥ karoti sadā japam\nbhavapāśavinirmuktaḥ sa yāti paramāṃ gatim",
+    meaning: "One who constantly repeats as japa 'I am of the nature of pure existence' — freed from the bonds of worldly existence, that one attains the supreme state.",
+    insight: "Here the text turns toward practice. The japa is not a request to become. It is a remembering of what you already are. The repetition wears down the false, not builds the true."
+  },
+  {
+    number: 7,
+    sanskrit: "अहमेव परं ब्रह्म अहमेव परं पदम् ।\nअहमेवाहमेवाहमहमेवाहमव्ययः ॥",
+    transliteration: "ahameva paraṃ brahma ahameva paraṃ padam\nahamevāhamevāhaṃ ahamevāham avyayaḥ",
+    meaning: "I alone am the supreme Brahman. I alone am the supreme state. I am, I am, I am — I am the very Self, indestructible and changeless.",
+    insight: "The 'I' speaking here is not the ego. The ego cannot say 'I am Brahman' truthfully. Only Brahman can say it. To realize this verse is to realize who is speaking."
+  },
+  {
+    number: 8,
+    sanskrit: "अन्तरात्मस्वरूपोऽहं प्रत्यगात्मस्वरूपधृक् ।\nशुद्धचैतन्यरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "antarātmasvarūpo'haṃ pratyagātmasvarūpadhṛk\nśuddhacaitanyarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am the inner Self. I am the bearer of the form of the innermost Self, the awareness that turns back inward. I am pure consciousness itself. I am the very Self, indestructible and changeless.",
+    insight: "Pratyagātman — the Self that faces inward, toward its own source, against the outward current of the senses. This is the direction of self-inquiry."
+  },
+  {
+    number: 9,
+    sanskrit: "आत्मज्ञानप्रकाशोऽहं सत्तामात्रस्वरूपधृक् ।\nआनन्दामृतरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "ātmajñānaprakāśo'haṃ sattāmātrasvarūpadhṛk\nānandāmṛtarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am the luminosity of Self-knowledge. I am pure being itself. I am the immortal nectar of bliss. I am the very Self, indestructible and changeless.",
+    insight: "Light needs no source to illuminate itself. The Self is self-luminous — it does not require another awareness to know it. This is what makes Advaita's position radical."
+  },
+  {
+    number: 10,
+    sanskrit: "गुणत्रयव्यतीतोऽहं ब्रह्मादीनां च साक्ष्यहम् ।\nअनन्तानन्दरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "guṇatrayavyatīto'haṃ brahmādīnāṃ ca sākṣyaham\nanantānandarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am beyond the three guṇas — sattva, rajas, and tamas. I am the witness of even Brahmā and others. I am of the nature of infinite bliss. I am the very Self, indestructible and changeless.",
+    insight: "Not even Brahmā, the creator, is the ultimate witness — the Self witnesses all creative power itself. This is a staggering ontological claim, delivered quietly."
+  },
+  {
+    number: 11,
+    sanskrit: "अन्तर्यामिस्वरूपोऽहं कूटस्थः सर्वगोऽस्म्यहम् ।\nपरमात्मस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "antaryāmisvarūpo'haṃ kūṭasthaḥ sarvago'smyaham\nparamātmasvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am the inner controller. I am immutable, the unchanging anvil. I am all-pervading. I am myself the supreme Self. I am the very Self, indestructible and changeless.",
+    insight: "Kūṭastha — literally 'standing at the top of the anvil' — what strikes all things without being struck itself. The deepest stillness in the midst of all movement."
+  },
+  {
+    number: 12,
+    sanskrit: "निष्कलोऽहं निष्क्रियोऽहं सर्वात्मा आद्यः सनातनः ।\nअपरोक्षस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "niṣkalo'haṃ niṣkriyo'haṃ sarvātmā ādyaḥ sanātanaḥ\naparokṣasvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am without parts. I am actionless. I am the self of all. I am the primordial one. I am the ancient, eternal one. I am the directly intuited Self — not known through inference but directly. I am the very Self, indestructible and changeless.",
+    insight: "Aparokṣa — not mediated, not inferred, not heard about. The Self is the only knowledge that is its own object. All other knowledge is indirect."
+  },
+  {
+    number: 13,
+    sanskrit: "द्वन्द्वादिसाक्षिरूपोऽहमचलोऽहं सनातनः ।\nसर्वसाक्षिस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "dvandvādisākṣirūpo'haṃ acalo'haṃ sanātanaḥ\nsarvasākṣisvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am the witness of all pairs of opposites — pleasure and pain, heat and cold. I am immovable. I am eternal. I am the witness of everything. I am the very Self, indestructible and changeless.",
+    insight: "Dvandva — the pairs. The Self does not choose between opposites. It witnesses both. This is the root of equanimity — not the resolution of opposites, but the recognition of what stands behind them both."
+  },
+  {
+    number: 14,
+    sanskrit: "अकर्तृस्वरूपोऽहमभोक्तृस्वरूपधृक् ।\nकेवलस्वप्रकाशोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "akartṛsvarūpo'haṃ abhoktṛsvarūpadhṛk\nkevalasvaprākāśo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am not a doer. I am not an experiencer. I am pure self-luminosity alone. I am the very Self, indestructible and changeless.",
+    insight: "The deepest paradox: the one reading this is being told they are neither doing the reading nor experiencing it. And yet — there is awareness of both. That awareness is what is being pointed to."
+  },
+  {
+    number: 15,
+    sanskrit: "निराधारस्वरूपोऽहं सर्वाधारोऽहमेव च ।\nआप्तकामस्वरूपोऽहमहमेवाहमव्ययः ॥",
+    transliteration: "nirādhārasvarūpo'haṃ sarvādhāro'hameva ca\nāptakāmasvarūpo'haṃ ahamevāham avyayaḥ",
+    meaning: "I am without any support, and I am the support of all. I have no desires yet to be fulfilled. I am the very Self, indestructible and changeless.",
+    insight: "Both at once: the unsupported and the support of all. The desire-less and the fulfillment of all desire. Advaita holds contradiction not by resolving it, but by finding the level at which it dissolves."
+  },
+  {
+    number: 16,
+    sanskrit: "तापत्रयविनिर्मुक्तो देहत्रयविलक्षणः ।\nअवस्थात्रयसाक्ष्यस्मि चाहमेवाहमव्ययः ॥",
+    transliteration: "tāpatrayavinirmukto dehatrayavilakṣaṇaḥ\navasthātrayasākṣyasmi cāhamevāham avyayaḥ",
+    meaning: "I am free from the threefold afflictions — bodily, from other beings, and from cosmic forces. I am distinct from the three bodies — gross, subtle, causal. I am the witness of the three states — waking, dream, and deep sleep. I am the very Self, indestructible and changeless.",
+    insight: "Three threes: three afflictions, three bodies, three states — and in all of them, the same witness remains. The common thread across all conditions is the 'I' that notices them."
+  },
+  {
+    number: 17,
+    sanskrit: "दृग्दृश्यौ द्वौ पदार्थौ स्तः परस्परविलक्षणौ ।\nदृग्ब्रह्म दृश्यं मायेति सर्वेदान्तडिण्डिमः ॥",
+    transliteration: "dṛgdṛśyau dvau padārthau staḥ parasparavilakṣaṇau\ndṛgbrahma dṛśyaṃ māyeti sarvavedāntaḍiṇḍimaḥ",
+    meaning: "There are two things which are entirely different from each other: the seer and the seen. The seer is Brahman; the seen is Māyā. This is the drumbeat of all Vedanta.",
+    insight: "Ḍiṇḍima — a small drum announcing something important. All of Vedanta, Shankara says, can be beaten out in this one rhythm: the seer and the seen are not the same."
+  },
+  {
+    number: 18,
+    sanskrit: "अहं साक्षीति यो विद्यात् विविच्यैवं पुनः पुनः ।\nस एव मुक्तः सो विद्वान् इति वेदान्तडिण्डिमः ॥",
+    transliteration: "ahaṃ sākṣīti yo vidyāt vivicyevaṃ punaḥ punaḥ\nsa eva muktaḥ so vidvān iti vedāntaḍiṇḍimaḥ",
+    meaning: "One who realizes — through repeated discrimination — that 'I am the witness': that one alone is liberated. That one is the wise one. This is the drumbeat of Vedanta.",
+    insight: "Liberation is not a distant event. It is the recognition, repeated, deepened, stabilized. Punaḥ punaḥ — again and again. Not once, but until it becomes the ground you stand on."
+  },
+  {
+    number: 19,
+    sanskrit: "घटकुड्यादिकं सर्वं मृत्तिकामात्रमेव च ।\nतद्वद् ब्रह्म जगत् सर्वमिति वेदान्तडिण्डिमः ॥",
+    transliteration: "ghaṭakuḍyādikaṃ sarvaṃ mṛttikāmātrameva ca\ntadvad brahma jagat sarvamiti vedāntaḍiṇḍimaḥ",
+    meaning: "The pot, the wall, and everything else are nothing but clay. Likewise, the entire universe is nothing but Brahman. This is the drumbeat of Vedanta.",
+    insight: "The pot and the wall appear different. In name and form, yes. But their substance is one. The universe and Brahman — same logic. The many in the one."
+  },
+  {
+    number: 20,
+    sanskrit: "ब्रह्म सत्यं जगन्मिथ्या जीवो ब्रह्मैव नापरः ।\nअनेन वेद्यं सच्छास्त्रमिति वेदान्तडिण्डिमः ॥",
+    transliteration: "brahma satyaṃ jaganmithyā jīvo brahmaiva nāparaḥ\nanena vedyaṃ sacchāstramiti vedāntaḍiṇḍimaḥ",
+    meaning: "Brahman is real. The universe is mithyā — neither real nor unreal, but dependent. The individual soul is Brahman itself — not other. This is what true scripture reveals. This is the drumbeat of Vedanta.",
+    insight: "The mahāvākya in summary form. Mithyā is not 'false' — it is 'dependent reality,' like a dream that is real while you are in it. The jīva's separation from Brahman is the dream. This verse is the awakening."
+  }
+];
+
+// ─────────────────────────────────────────────
+//  STORAGE LAYER  — namespaced, sanitized, safe
+// ─────────────────────────────────────────────
+const STORE_KEY = 'bjm_v1';          // brahma-jnanavali-mala version 1
+const MAX_ENTRY = 20000;             // chars per journal entry (safety cap)
+
+function storageAvailable() {
+  try {
+    const t = '__bjm_test__';
+    localStorage.setItem(t, t);
+    localStorage.removeItem(t);
+    return true;
+  } catch { return false; }
+}
+
+function loadState() {
+  if (!storageAvailable()) return null;
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    // Validate shape
+    if (typeof parsed !== 'object' || parsed === null) return null;
+    return {
+      currentIndex:   Number.isInteger(parsed.currentIndex)   ? parsed.currentIndex   : 0,
+      showIntro:      typeof parsed.showIntro === 'boolean'    ? parsed.showIntro      : true,
+      journalEntries: (typeof parsed.journalEntries === 'object' && parsed.journalEntries !== null)
+                        ? parsed.journalEntries : {},
+      lastSaved:      parsed.lastSaved || null
+    };
+  } catch { return null; }
+}
+
+function persistState() {
+  if (!storageAvailable()) return;
+  try {
+    const payload = JSON.stringify({
+      currentIndex,
+      showIntro,
+      journalEntries,
+      lastSaved: new Date().toISOString()
+    });
+    localStorage.setItem(STORE_KEY, payload);
+  } catch (e) {
+    // Quota exceeded — fail silently, state lives in memory
+    console.warn('BJM: localStorage write failed', e);
+  }
+}
+
+function sanitize(text) {
+  // Trim, cap length, strip null bytes
+  return text.replace(/\0/g, '').slice(0, MAX_ENTRY);
+}
+
+// ─────────────────────────────────────────────
+//  STATE  — hydrated from localStorage on load
+// ─────────────────────────────────────────────
+const saved = loadState();
+let currentIndex   = saved ? saved.currentIndex   : 0;
+let showIntro      = saved ? saved.showIntro      : true;
+let journalEntries = saved ? saved.journalEntries : {};
+let lastSaved      = saved ? saved.lastSaved      : null;
+
+// Autosave timer
+let autosaveTimer = null;
+function scheduleAutosave() {
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => {
+    const input = document.getElementById('journal-input');
+    if (input) flushEntry(currentIndex, input.value);
+  }, 800);
+}
+
+function flushEntry(index, text) {
+  const clean = sanitize(text);
+  if (clean) {
+    journalEntries[index] = clean;
+  } else {
+    delete journalEntries[index];
+  }
+  persistState();
+  updateSavedIndicator();
+}
+
+function getSavedCount() {
+  return Object.keys(journalEntries).length;
+}
+
+function formatLastSaved(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch { return ''; }
+}
+
+function updateSavedIndicator() {
+  const el = document.getElementById('saved-indicator');
+  if (!el) return;
+  const count = getSavedCount();
+  const ts = formatLastSaved(lastSaved);
+  el.textContent = count > 0
+    ? `${count} reflection${count > 1 ? 's' : ''} saved · ${ts}`
+    : '';
+}
+
+// ─────────────────────────────────────────────
+//  EXPORT  — plain-text journal download
+// ─────────────────────────────────────────────
+function exportJournal() {
+  const lines = [];
+  lines.push('Brahma Jnānavalī Mālā — Personal Reflection Journal');
+  lines.push('══════════════════════════════════════════════════════');
+  lines.push('Exported: ' + new Date().toLocaleString());
+  lines.push('');
+
+  verses.forEach((v, i) => {
+    const entry = journalEntries[i];
+    if (!entry) return;
+    lines.push(`Verse ${v.number}`);
+    lines.push('──────────────────────────────────────────────────────');
+    lines.push(v.transliteration.replace(/\n/g, ' '));
+    lines.push('');
+    lines.push(entry);
+    lines.push('');
+  });
+
+  if (lines.length <= 4) {
+    alert('No reflections written yet.');
+    return;
+  }
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'brahma-jnanavali-reflections.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+}
+
+// ─────────────────────────────────────────────
+//  CLEAR  — wipe with confirmation
+// ─────────────────────────────────────────────
+function clearJournal() {
+  if (!confirm('Clear all reflections and begin fresh?\n\nThis cannot be undone.')) return;
+  journalEntries = {};
+  currentIndex   = 0;
+  showIntro      = true;
+  lastSaved      = null;
+  if (storageAvailable()) localStorage.removeItem(STORE_KEY);
+  render();
+}
+
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+function renderIntro() {
+  const resumed   = saved && !saved.showIntro;
+  const count     = getSavedCount();
+  const resumeVerse = saved ? saved.currentIndex : 0;
+
+  return `
+    <div class="intro">
+      <span class="intro-symbol">ॐ</span>
+      <h2>${resumed ? 'Welcome Back' : 'Begin the Reflection'}</h2>
+      <p>The <em>Brahma Jnānavalī Mālā</em> is a garland of 20 verses composed by Adi Shankaracharya. Each verse is an assertion — not a prayer, not a petition — but a declaration of what you already are.</p>
+      <p>This is not a study exercise. It is an <em>abhyāsa</em> — a practice of inward repetition. Move through one verse at a time. Read. Sit. Write whatever arises.</p>
+      <div class="intro-quote">
+        "Sakṛt śravaṇamātreṇa brahmajñānaṃ yato bhavet" —<br>
+        By hearing even once, the knowledge of Brahman arises.
+      </div>
+      ${resumed && resumeVerse < verses.length ? `
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <button class="btn btn-primary" onclick="resumeJourney()">Continue — Verse ${resumeVerse + 1}</button>
+          <button class="btn btn-secondary" onclick="beginFresh()">Start from Verse I</button>
+        </div>
+        ${count > 0 ? `<div class="saved-count" style="margin-top:16px;text-align:center">${count} reflection${count > 1 ? 's' : ''} held from your last sitting</div>` : ''}
+      ` : `
+        <button class="btn btn-primary" onclick="beginJourney()">Begin — Verse I</button>
+      `}
+      ${count > 0 ? `
+        <div style="margin-top:20px;display:flex;gap:10px;justify-content:center">
+          <button class="btn btn-secondary" onclick="exportJournal()" style="font-size:11px;padding:8px 18px">Export Journal ↓</button>
+          <button class="btn btn-secondary" onclick="clearJournal()" style="font-size:11px;padding:8px 18px;color:var(--red);border-color:var(--red)">Clear All</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderVerse(index) {
+  const v       = verses[index];
+  const progress = (index / verses.length) * 100;
+
+  return `
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+      <span class="progress-label">Verse ${index + 1} of ${verses.length}</span>
+    </div>
+
+    <div class="verse-card">
+      <div class="verse-number">Verse ${v.number} &nbsp;·&nbsp; ब्रह्मज्ञानावलीमाला</div>
+      <div class="verse-sanskrit">${v.sanskrit.replace(/\n/g, '<br>')}</div>
+      <div class="verse-transliteration">${v.transliteration.replace(/\n/g, '<br>')}</div>
+      <div class="divider"><span>✦</span></div>
+      <div class="verse-meaning">${v.meaning}</div>
+      <div class="verse-insight">${v.insight}</div>
+    </div>
+
+    <div class="journal-section">
+      <div class="journal-label">Reflection</div>
+      <div class="journal-lines">
+        <textarea
+          class="journal-textarea"
+          id="journal-input"
+          placeholder="Write whatever arises — no right answer, no performance..."
+          rows="6"
+          oninput="scheduleAutosave()"
+        >${escHtml(journalEntries[index] || '')}</textarea>
+
+```
+  </div>
+  <div id="saved-indicator" class="saved-count" style="margin-top:8px"></div>
+</div>
+
+<div class="actions">
+  ${index < verses.length - 1
+    ? `<button class="btn btn-primary" onclick="nextVerse()">Next Verse →</button>`
+    : `<button class="btn btn-primary" onclick="complete()">Complete the Mālā ✦</button>`
+  }
+  ${index > 0 ? `<button class="btn btn-secondary" onclick="prevVerse()">← Previous</button>` : ''}
+  <button class="btn btn-secondary" onclick="goHome()" style="margin-left:auto;font-size:11px;padding:8px 14px">⌂ Home</button>
+</div>
+
+<div style="display:flex;gap:10px;margin-top:12px">
+  <button class="btn btn-secondary" onclick="exportJournal()" style="font-size:11px;padding:7px 14px">Export Journal ↓</button>
+  <button class="btn btn-secondary" onclick="clearJournal()" style="font-size:11px;padding:7px 14px;color:var(--red);border-color:var(--red)">Clear All</button>
+</div>
+```
+
+`;
+}
+
+function renderCompletion() {
+const count = getSavedCount();
+return `<div class="completion"> <div class="completion-symbol">✦</div> <h2>The Mālā is Complete</h2> <p>You have sat with all twenty verses. ${count > 0 ?`${count} reflection${count > 1 ? ‘s’ : ‘’} now live in your journal.`: ''} The garland has been offered.</p> <p style="font-style:normal;font-size:14px;color:var(--ink-faint)"> <em>"Brahma satyaṃ jaganmithyā jīvo brahmaiva nāparaḥ"</em><br> Brahman is real. The universe is appearance. The self is Brahman alone. </p> <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px"> <button class="btn btn-primary" onclick="restart()">Begin Again</button> ${count > 0 ?`<button class="btn btn-secondary" onclick="exportJournal()">Export Journal ↓</button>`: ''} </div> ${count > 0 ?`<button class="btn btn-secondary" onclick="clearJournal()" style="font-size:11px;padding:7px 14px;color:var(--red);border-color:var(--red)">Clear All Reflections</button>`: ''} </div>`;
+}
+
+function escHtml(str) {
+return str
+.replace(/&/g, ‘&’)
+.replace(/</g, ‘<’)
+.replace(/>/g, ‘>’)
+.replace(/”/g, ‘"’);
+}
+
+function render() {
+const app = document.getElementById(‘app’);
+if (showIntro) {
+app.innerHTML = renderIntro();
+} else if (currentIndex >= verses.length) {
+persistState();
+app.innerHTML = renderCompletion();
+} else {
+app.innerHTML = renderVerse(currentIndex);
+updateSavedIndicator();
+window.scrollTo({ top: 0, behavior: ‘smooth’ });
+}
+}
+
+// ─────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────
+function beginJourney() {
+showIntro    = false;
+currentIndex = 0;
+persistState();
+render();
+}
+
+function beginFresh() {
+if (getSavedCount() > 0) {
+if (!confirm(‘Start from Verse I?\n\nYour existing reflections will be kept — only your position resets.’)) return;
+}
+showIntro    = false;
+currentIndex = 0;
+persistState();
+render();
+}
+
+function resumeJourney() {
+showIntro = false;
+persistState();
+render();
+}
+
+function goHome() {
+const input = document.getElementById(‘journal-input’);
+if (input) flushEntry(currentIndex, input.value);
+showIntro = true;
+persistState();
+render();
+}
+
+function nextVerse() {
+const input = document.getElementById(‘journal-input’);
+if (input) flushEntry(currentIndex, input.value);
+currentIndex++;
+persistState();
+render();
+}
+
+function prevVerse() {
+const input = document.getElementById(‘journal-input’);
+if (input) flushEntry(currentIndex, input.value);
+currentIndex–;
+persistState();
+render();
+}
+
+function complete() {
+const input = document.getElementById(‘journal-input’);
+if (input) flushEntry(currentIndex, input.value);
+currentIndex = verses.length;
+persistState();
+render();
+}
+
+function restart() {
+currentIndex = 0;
+showIntro    = true;
+persistState();
+render();
+}
+
+render();
+</script>
+
+</body>
+</html>
