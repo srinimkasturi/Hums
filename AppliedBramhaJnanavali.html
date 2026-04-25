@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brahma Jnānavalī Mālā — Reflection</title>
+<title>Brahma Jn&#257;naval&#299; M&#257;l&#257; &#8212; Reflection</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -373,124 +373,124 @@ body { padding: 20px 12px 60px; }
 
   <div class="header">
     <div class="eyebrow">Adi Shankaracharya</div>
-    <h1>Brahma Jnānavalī <em>Mālā</em></h1>
+    <h1>Brahma Jn&#257;naval&#299; <em>M&#257;l&#257;</em></h1>
     <div class="header-sub">A Garland of the Knowledge of Brahman</div>
-    <span class="header-fleuron">❧</span>
+    <span class="header-fleuron">&#10087;</span>
   </div>
 
   <div id="app"></div>
 
 </div>
 <script>
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  VERSE DATA
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 const V = [
   { n:1,
-    sk:"सकृत् श्रवणमात्रेण ब्रह्मज्ञानं यतो भवेत् ।\nब्रह्मज्ञानावलीमाला सर्वेषां मोक्षसिद्धये ॥",
-    ro:"sakṛt śravaṇamātreṇa brahmajñānaṃ yato bhavet\nbrahmajñānāvalīmālā sarveshāṃ mokṣasiddhaye",
+    sk:"\u0938\u0915\u0943\u0924\u094d \u0936\u094d\u0930\u0935\u0923\u092e\u093e\u0924\u094d\u0930\u0947\u0923 \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u0902 \u092f\u0924\u094b \u092d\u0935\u0947\u0924\u094d \u0964\n\u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e \u0938\u0930\u094d\u0935\u0947\u0937\u093e\u0902 \u092e\u094b\u0915\u094d\u0937\u0938\u093f\u0926\u094d\u0927\u092f\u0947 \u0965",
+    ro:"sak\u1e5bt \u015brava\u1e47am\u0101tre\u1e47a brahmaj\u00f1\u0101na\u1e43 yato bhavet\nbrahmaj\u00f1\u0101n\u0101val\u012bm\u0101l\u0101 sarvesh\u0101\u1e43 mok\u1e63asiddhaye",
     me:"This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.",
-    ins:"This is not a text to be studied — it is a text to be heard inwardly. Even once. The promise is built into the opening." },
+    ins:"This is not a text to be studied \u2014 it is a text to be heard inwardly. Even once. The promise is built into the opening." },
   { n:2,
-    sk:"असङ्गोऽहमसङ्गोऽहमसङ्गोऽहं पुनः पुनः ।\nसच्चिदानन्दरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"asaṅgo'ham asaṅgo'ham asaṅgo'haṃ punaḥ punaḥ\nsaccidānandarūpo'ham ahamevāham avyayaḥ",
-    me:"Unattached am I, unattached am I, unattached am I — again and again. I am of the nature of Existence-Consciousness-Bliss. I am the very Self, indestructible and ever unchanging.",
-    ins:"The triple repetition is not poetic decoration — it is the method itself. The mind needs to hear the truth three times before it loosens its grip on the false." },
+    sk:"\u0905\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938\u091a\u094d\u091a\u093f\u0926\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"asa\u1e45go'ham asa\u1e45go'ham asa\u1e45go'ha\u1e43 puna\u1e25 puna\u1e25\nsaccid\u0101nandar\u016bpo'ham ahamev\u0101ham avyaya\u1e25",
+    me:"Unattached am I, unattached am I, unattached am I \u2014 again and again. I am of the nature of Existence-Consciousness-Bliss. I am the very Self, indestructible and ever unchanging.",
+    ins:"The triple repetition is not poetic decoration \u2014 it is the method itself. The mind needs to hear the truth three times before it loosens its grip on the false." },
   { n:3,
-    sk:"नित्यशुद्धविमुक्तोऽहं निराकारोऽहमव्ययः ।\nभूमानन्दस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"nityaśuddhavimukto'haṃ nirākāro'ham avyayaḥ\nbhūmānandasvarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0928\u093f\u0924\u094d\u092f\u0936\u0941\u0926\u094d\u0927\u0935\u093f\u092e\u0941\u0915\u094d\u0924\u094b\u093d\u0939\u0902 \u0928\u093f\u0930\u093e\u0915\u093e\u0930\u094b\u093d\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u092d\u0942\u092e\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"nitya\u015buddhavimukto'ha\u1e43 nir\u0101k\u0101ro'ham avyaya\u1e25\nbh\u016bm\u0101nandasvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am eternally pure, I am liberated, I am formless, I am indestructible. I am of the nature of infinite, boundless bliss. I am the very Self, indestructible and changeless.",
-    ins:"Purity here is not moral — it is ontological. Not 'I have become pure' but 'I am, by nature, never impure.' The liberation is not future — it is a recognition of what already is." },
+    ins:"Purity here is not moral \u2014 it is ontological. Not 'I have become pure' but 'I am, by nature, never impure.' The liberation is not future \u2014 it is a recognition of what already is." },
   { n:4,
-    sk:"विज्ञानघनरूपोऽहं चिदाकाशोऽहमव्ययः ।\nकेवलानन्दरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"vijñānaghanarūpo'haṃ cidākāśo'ham avyayaḥ\nkevalānandarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0935\u093f\u091c\u094d\u091e\u093e\u0928\u0918\u0928\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u091a\u093f\u0926\u093e\u0915\u093e\u0936\u094b\u093d\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u0915\u0947\u0935\u0932\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"vij\u00f1\u0101naghanar\u016bpo'ha\u1e43 cid\u0101k\u0101\u015bo'ham avyaya\u1e25\nkeval\u0101nandar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am of the nature of dense, solid awareness. I am the sky of consciousness, indestructible. I am pure, unconditioned bliss. I am the very Self, indestructible and changeless.",
-    ins:"Cidākāśa — the sky of consciousness — nothing sticks to it. Clouds pass. The sky remains. You are the sky, not the cloud." },
+    ins:"Cid\u0101k\u0101\u015ba \u2014 the sky of consciousness \u2014 nothing sticks to it. Clouds pass. The sky remains. You are the sky, not the cloud." },
   { n:5,
-    sk:"नित्यानन्दस्वरूपोऽहं परमानन्दरूपधृक् ।\nमुक्तानन्दस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"nityānandasvarūpo'haṃ paramānandarūpadhṛk\nmuktānandasvarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0928\u093f\u0924\u094d\u092f\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u092a\u0930\u092e\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u092e\u0941\u0915\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"nity\u0101nandasvar\u016bpo'ha\u1e43 param\u0101nandar\u016bpadh\u1e5bk\nmukt\u0101nandasvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am of the nature of eternal bliss. I am the bearer of the form of supreme bliss. I am the bliss of liberation. I am the very Self, indestructible and changeless.",
-    ins:"Three flavors of ānanda in one verse: nitya (eternal), parama (supreme), mukta (free). Shankara is not repeating — he is descending, like three steps into the same ocean." },
+    ins:"Three flavors of \u0101nanda in one verse: nitya (eternal), parama (supreme), mukta (free). Shankara is not repeating \u2014 he is descending, like three steps into the same ocean." },
   { n:6,
-    sk:"सत्स्वरूपोऽहमित्येवं यः करोति सदा जपम् ।\nभवपाशविनिर्मुक्तः स याति परमां गतिम् ॥",
-    ro:"satsvarūpo'ham ityevaṃ yaḥ karoti sadā japam\nbhavapāśavinirmuktaḥ sa yāti paramāṃ gatim",
-    me:"One who constantly repeats as japa 'I am of the nature of pure existence' — freed from the bonds of worldly existence, that one attains the supreme state.",
+    sk:"\u0938\u0924\u094d\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u093f\u0924\u094d\u092f\u0947\u0935\u0902 \u092f\u0903 \u0915\u0930\u094b\u0924\u093f \u0938\u0926\u093e \u091c\u092a\u092e\u094d \u0964\n\u092d\u0935\u092a\u093e\u0936\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u0903 \u0938 \u092f\u093e\u0924\u093f \u092a\u0930\u092e\u093e\u0902 \u0917\u0924\u093f\u092e\u094d \u0965",
+    ro:"satsvar\u016bpo'ham ityeva\u1e43 ya\u1e25 karoti sad\u0101 japam\nbhavap\u0101\u015bavinirmukta\u1e25 sa y\u0101ti param\u0101\u1e43 gatim",
+    me:"One who constantly repeats as japa 'I am of the nature of pure existence' \u2014 freed from the bonds of worldly existence, that one attains the supreme state.",
     ins:"The japa is not a request to become. It is a remembering of what you already are. The repetition wears down the false, not builds the true." },
   { n:7,
-    sk:"अहमेव परं ब्रह्म अहमेव परं पदम् ।\nअहमेवाहमेवाहमहमेवाहमव्ययः ॥",
-    ro:"ahameva paraṃ brahma ahameva paraṃ padam\nahamevāhamevāhaṃ ahamevāham avyayaḥ",
-    me:"I alone am the supreme Brahman. I alone am the supreme state. I am, I am, I am — I am the very Self, indestructible and changeless.",
+    sk:"\u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092c\u094d\u0930\u0939\u094d\u092e \u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092a\u0926\u092e\u094d \u0964\n\u0905\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"ahameva para\u1e43 brahma ahameva para\u1e43 padam\nahamev\u0101hamev\u0101ha\u1e43 ahamev\u0101ham avyaya\u1e25",
+    me:"I alone am the supreme Brahman. I alone am the supreme state. I am, I am, I am \u2014 I am the very Self, indestructible and changeless.",
     ins:"The 'I' speaking here is not the ego. The ego cannot say 'I am Brahman' truthfully. Only Brahman can say it. To realize this verse is to realize who is speaking." },
   { n:8,
-    sk:"अन्तरात्मस्वरूपोऽहं प्रत्यगात्मस्वरूपधृक् ।\nशुद्धचैतन्यरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"antarātmasvarūpo'haṃ pratyagātmasvarūpadhṛk\nśuddhacaitanyarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0905\u0928\u094d\u0924\u0930\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u092a\u094d\u0930\u0924\u094d\u092f\u0917\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0936\u0941\u0926\u094d\u0927\u091a\u0948\u0924\u0928\u094d\u092f\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"antar\u0101tmasvar\u016bpo'ha\u1e43 pratyag\u0101tmasvar\u016bpadh\u1e5bk\n\u015buddhacaitanyar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am the inner Self. I am the bearer of the form of the innermost Self, the awareness that turns back inward. I am pure consciousness itself. I am the very Self, indestructible and changeless.",
-    ins:"Pratyagātman — the Self that faces inward, toward its own source, against the outward current of the senses. This is the direction of self-inquiry." },
+    ins:"Pratyag\u0101tman \u2014 the Self that faces inward, toward its own source, against the outward current of the senses. This is the direction of self-inquiry." },
   { n:9,
-    sk:"आत्मज्ञानप्रकाशोऽहं सत्तामात्रस्वरूपधृक् ।\nआनन्दामृतरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"ātmajñānaprakāśo'haṃ sattāmātrasvarūpadhṛk\nānandāmṛtarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0906\u0924\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u093d\u0939\u0902 \u0938\u0924\u094d\u0924\u093e\u092e\u093e\u0924\u094d\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0906\u0928\u0928\u094d\u0926\u093e\u092e\u0943\u0924\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"\u0101tmaj\u00f1\u0101naprak\u0101\u015bo'ha\u1e43 satt\u0101m\u0101trasvar\u016bpadh\u1e5bk\n\u0101nand\u0101m\u1e5btar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am the luminosity of Self-knowledge. I am pure being itself. I am the immortal nectar of bliss. I am the very Self, indestructible and changeless.",
-    ins:"Light needs no source to illuminate itself. The Self is self-luminous — it does not require another awareness to know it. This is what makes Advaita's position radical." },
+    ins:"Light needs no source to illuminate itself. The Self is self-luminous \u2014 it does not require another awareness to know it. This is what makes Advaita's position radical." },
   { n:10,
-    sk:"गुणत्रयव्यतीतोऽहं ब्रह्मादीनां च साक्ष्यहम् ।\nअनन्तानन्दरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"guṇatrayavyatīto'haṃ brahmādīnāṃ ca sākṣyaham\nanantānandarūpo'haṃ ahamevāham avyayaḥ",
-    me:"I am beyond the three guṇas — sattva, rajas, and tamas. I am the witness of even Brahmā and others. I am of the nature of infinite bliss. I am the very Self, indestructible and changeless.",
-    ins:"Not even Brahmā, the creator, is the ultimate witness — the Self witnesses all creative power itself. This is a staggering ontological claim, delivered quietly." },
+    sk:"\u0917\u0941\u0923\u0924\u094d\u0930\u092f\u0935\u094d\u092f\u0924\u0940\u0924\u094b\u093d\u0939\u0902 \u092c\u094d\u0930\u0939\u094d\u092e\u093e\u0926\u0940\u0928\u093e\u0902 \u091a \u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0939\u092e\u094d \u0964\n\u0905\u0928\u0928\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"gu\u1e47atrayavyat\u012bto'ha\u1e43 brahm\u0101d\u012bn\u0101\u1e43 ca s\u0101k\u1e63yaham\nanant\u0101nandar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
+    me:"I am beyond the three gu\u1e47as \u2014 sattva, rajas, and tamas. I am the witness of even Brahm\u0101 and others. I am of the nature of infinite bliss. I am the very Self, indestructible and changeless.",
+    ins:"Not even Brahm\u0101, the creator, is the ultimate witness \u2014 the Self witnesses all creative power itself. This is a staggering ontological claim, delivered quietly." },
   { n:11,
-    sk:"अन्तर्यामिस्वरूपोऽहं कूटस्थः सर्वगोऽस्म्यहम् ।\nपरमात्मस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"antaryāmisvarūpo'haṃ kūṭasthaḥ sarvago'smyaham\nparamātmasvarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0905\u0928\u094d\u0924\u0930\u094d\u092f\u093e\u092e\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u0915\u0942\u091f\u0938\u094d\u0925\u0903 \u0938\u0930\u094d\u0935\u0917\u094b\u093d\u0938\u094d\u092e\u094d\u092f\u0939\u092e\u094d \u0964\n\u092a\u0930\u092e\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"antary\u0101misvar\u016bpo'ha\u1e43 k\u016b\u1e6dastha\u1e25 sarvago'smyaham\nparam\u0101tmasvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am the inner controller. I am immutable, the unchanging anvil. I am all-pervading. I am myself the supreme Self. I am the very Self, indestructible and changeless.",
-    ins:"Kūṭastha — literally 'standing at the top of the anvil' — what strikes all things without being struck itself. The deepest stillness in the midst of all movement." },
+    ins:"K\u016b\u1e6dastha \u2014 literally 'standing at the top of the anvil' \u2014 what strikes all things without being struck itself. The deepest stillness in the midst of all movement." },
   { n:12,
-    sk:"निष्कलोऽहं निष्क्रियोऽहं सर्वात्मा आद्यः सनातनः ।\nअपरोक्षस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"niṣkalo'haṃ niṣkriyo'haṃ sarvātmā ādyaḥ sanātanaḥ\naparokṣasvarūpo'haṃ ahamevāham avyayaḥ",
-    me:"I am without parts. I am actionless. I am the self of all, the primordial, the ancient, the eternal. I am the directly intuited Self — not known through inference but directly. I am the very Self, indestructible and changeless.",
-    ins:"Aparokṣa — not mediated, not inferred, not heard about. The Self is the only knowledge that is its own object. All other knowledge is indirect." },
+    sk:"\u0928\u093f\u0937\u094d\u0915\u0932\u094b\u093d\u0939\u0902 \u0928\u093f\u0937\u094d\u0915\u094d\u0930\u093f\u092f\u094b\u093d\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0924\u094d\u092e\u093e \u0906\u0926\u094d\u092f\u0903 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0905\u092a\u0930\u094b\u0915\u094d\u0937\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"ni\u1e63kalo'ha\u1e43 ni\u1e63kriyo'ha\u1e43 sarv\u0101tm\u0101 \u0101dya\u1e25 san\u0101tana\u1e25\naparok\u1e63asvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
+    me:"I am without parts. I am actionless. I am the self of all, the primordial, the ancient, the eternal. I am the directly intuited Self \u2014 not known through inference but directly. I am the very Self, indestructible and changeless.",
+    ins:"Aparok\u1e63a \u2014 not mediated, not inferred, not heard about. The Self is the only knowledge that is its own object. All other knowledge is indirect." },
   { n:13,
-    sk:"द्वन्द्वादिसाक्षिरूपोऽहमचलोऽहं सनातनः ।\nसर्वसाक्षिस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"dvandvādisākṣirūpo'haṃ acalo'haṃ sanātanaḥ\nsarvasākṣisvarūpo'haṃ ahamevāham avyayaḥ",
-    me:"I am the witness of all pairs of opposites — pleasure and pain, heat and cold. I am immovable. I am eternal. I am the witness of everything. I am the very Self, indestructible and changeless.",
-    ins:"Dvandva — the pairs. The Self does not choose between opposites. It witnesses both. This is the root of equanimity — not the resolution of opposites, but the recognition of what stands behind them both." },
+    sk:"\u0926\u094d\u0935\u0928\u094d\u0926\u094d\u0935\u093e\u0926\u093f\u0938\u093e\u0915\u094d\u0937\u093f\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u091a\u0932\u094b\u093d\u0939\u0902 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0938\u0930\u094d\u0935\u0938\u093e\u0915\u094d\u0937\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"dvandv\u0101dis\u0101k\u1e63ir\u016bpo'ha\u1e43 acalo'ha\u1e43 san\u0101tana\u1e25\nsarvas\u0101k\u1e63isvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
+    me:"I am the witness of all pairs of opposites \u2014 pleasure and pain, heat and cold. I am immovable. I am eternal. I am the witness of everything. I am the very Self, indestructible and changeless.",
+    ins:"Dvandva \u2014 the pairs. The Self does not choose between opposites. It witnesses both. This is the root of equanimity \u2014 not the resolution of opposites, but the recognition of what stands behind them both." },
   { n:14,
-    sk:"अकर्तृस्वरूपोऽहमभोक्तृस्वरूपधृक् ।\nकेवलस्वप्रकाशोऽहमहमेवाहमव्ययः ॥",
-    ro:"akartṛsvarūpo'haṃ abhoktṛsvarūpadhṛk\nkevalasvaprākāśo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0905\u0915\u0930\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u092d\u094b\u0915\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0915\u0947\u0935\u0932\u0938\u094d\u0935\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"akart\u1e5bsvar\u016bpo'ha\u1e43 abhokt\u1e5bsvar\u016bpadh\u1e5bk\nkevalasvapr\u0101k\u0101\u015bo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am not a doer. I am not an experiencer. I am pure self-luminosity alone. I am the very Self, indestructible and changeless.",
-    ins:"The deepest paradox: the one reading this is told they are neither doing the reading nor experiencing it. And yet — there is awareness of both. That awareness is what is being pointed to." },
+    ins:"The deepest paradox: the one reading this is told they are neither doing the reading nor experiencing it. And yet \u2014 there is awareness of both. That awareness is what is being pointed to." },
   { n:15,
-    sk:"निराधारस्वरूपोऽहं सर्वाधारोऽहमेव च ।\nआप्तकामस्वरूपोऽहमहमेवाहमव्ययः ॥",
-    ro:"nirādhārasvarūpo'haṃ sarvādhāro'hameva ca\nāptakāmasvarūpo'haṃ ahamevāham avyayaḥ",
+    sk:"\u0928\u093f\u0930\u093e\u0927\u093e\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0927\u093e\u0930\u094b\u093d\u0939\u092e\u0947\u0935 \u091a \u0964\n\u0906\u092a\u094d\u0924\u0915\u093e\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"nir\u0101dh\u0101rasvar\u016bpo'ha\u1e43 sarv\u0101dh\u0101ro'hameva ca\n\u0101ptak\u0101masvar\u016bpo'ha\u1e43 ahamev\u0101ham avyaya\u1e25",
     me:"I am without any support, and I am the support of all. I have no desires yet to be fulfilled. I am the very Self, indestructible and changeless.",
     ins:"Both at once: the unsupported and the support of all. The desire-less and the fulfillment of all desire. Advaita holds contradiction not by resolving it, but by finding the level at which it dissolves." },
   { n:16,
-    sk:"तापत्रयविनिर्मुक्तो देहत्रयविलक्षणः ।\nअवस्थात्रयसाक्ष्यस्मि चाहमेवाहमव्ययः ॥",
-    ro:"tāpatrayavinirmukto dehatrayavilakṣaṇaḥ\navasthātrayasākṣyasmi cāhamevāham avyayaḥ",
-    me:"I am free from the threefold afflictions. I am distinct from the three bodies — gross, subtle, causal. I am the witness of the three states — waking, dream, and deep sleep. I am the very Self, indestructible and changeless.",
-    ins:"Three threes: three afflictions, three bodies, three states — and in all of them, the same witness remains. The common thread across all conditions is the 'I' that notices them." },
+    sk:"\u0924\u093e\u092a\u0924\u094d\u0930\u092f\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u094b \u0926\u0947\u0939\u0924\u094d\u0930\u092f\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u0903 \u0964\n\u0905\u0935\u0938\u094d\u0925\u093e\u0924\u094d\u0930\u092f\u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0938\u094d\u092e\u093f \u091a\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965",
+    ro:"t\u0101patrayavinirmukto dehatrayavilak\u1e63a\u1e47a\u1e25\navasth\u0101trayas\u0101k\u1e63yasmi c\u0101hamev\u0101ham avyaya\u1e25",
+    me:"I am free from the threefold afflictions. I am distinct from the three bodies \u2014 gross, subtle, causal. I am the witness of the three states \u2014 waking, dream, and deep sleep. I am the very Self, indestructible and changeless.",
+    ins:"Three threes: three afflictions, three bodies, three states \u2014 and in all of them, the same witness remains. The common thread across all conditions is the 'I' that notices them." },
   { n:17,
-    sk:"दृग्दृश्यौ द्वौ पदार्थौ स्तः परस्परविलक्षणौ ।\nदृग्ब्रह्म दृश्यं मायेति सर्वेदान्तडिण्डिमः ॥",
-    ro:"dṛgdṛśyau dvau padārthau staḥ parasparavilakṣaṇau\ndṛgbrahma dṛśyaṃ māyeti sarvavedāntaḍiṇḍimaḥ",
-    me:"There are two things entirely different from each other: the seer and the seen. The seer is Brahman; the seen is Māyā. This is the drumbeat of all Vedanta.",
-    ins:"Ḍiṇḍima — a small drum announcing something important. All of Vedanta, Shankara says, can be beaten out in this one rhythm: the seer and the seen are not the same." },
+    sk:"\u0926\u0943\u0917\u094d\u0926\u0943\u0936\u094d\u092f\u094c \u0926\u094d\u0935\u094c \u092a\u0926\u093e\u0930\u094d\u0925\u094c \u0938\u094d\u0924\u0903 \u092a\u0930\u0938\u094d\u092a\u0930\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u094c \u0964\n\u0926\u0943\u0917\u094d\u092c\u094d\u0930\u0939\u094d\u092e \u0926\u0943\u0936\u094d\u092f\u0902 \u092e\u093e\u092f\u0947\u0924\u093f \u0938\u0930\u094d\u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965",
+    ro:"d\u1e5bgd\u1e5b\u015byau dvau pad\u0101rthau sta\u1e25 parasparavilak\u1e63a\u1e47au\nd\u1e5bgbrahma d\u1e5b\u015bya\u1e43 m\u0101yeti sarvaved\u0101nta\u1e0di\u1e47\u1e0dima\u1e25",
+    me:"There are two things entirely different from each other: the seer and the seen. The seer is Brahman; the seen is M\u0101y\u0101. This is the drumbeat of all Vedanta.",
+    ins:"\u1e0ci\u1e47\u1e0dima \u2014 a small drum announcing something important. All of Vedanta, Shankara says, can be beaten out in this one rhythm: the seer and the seen are not the same." },
   { n:18,
-    sk:"अहं साक्षीति यो विद्यात् विविच्यैवं पुनः पुनः ।\nस एव मुक्तः सो विद्वान् इति वेदान्तडिण्डिमः ॥",
-    ro:"ahaṃ sākṣīti yo vidyāt vivicyevaṃ punaḥ punaḥ\nsa eva muktaḥ so vidvān iti vedāntaḍiṇḍimaḥ",
-    me:"One who realizes — through repeated discrimination — that 'I am the witness': that one alone is liberated. That one is the wise one. This is the drumbeat of Vedanta.",
-    ins:"Liberation is not a distant event. It is the recognition, repeated, deepened, stabilized. Punaḥ punaḥ — again and again. Not once, but until it becomes the ground you stand on." },
+    sk:"\u0905\u0939\u0902 \u0938\u093e\u0915\u094d\u0937\u0940\u0924\u093f \u092f\u094b \u0935\u093f\u0926\u094d\u092f\u093e\u0924\u094d \u0935\u093f\u0935\u093f\u091a\u094d\u092f\u0948\u0935\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938 \u090f\u0935 \u092e\u0941\u0915\u094d\u0924\u0903 \u0938\u094b \u0935\u093f\u0926\u094d\u0935\u093e\u0928\u094d \u0907\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965",
+    ro:"aha\u1e43 s\u0101k\u1e63\u012bti yo vidy\u0101t vivicyeva\u1e43 puna\u1e25 puna\u1e25\nsa eva mukta\u1e25 so vidv\u0101n iti ved\u0101nta\u1e0di\u1e47\u1e0dima\u1e25",
+    me:"One who realizes \u2014 through repeated discrimination \u2014 that 'I am the witness': that one alone is liberated. That one is the wise one. This is the drumbeat of Vedanta.",
+    ins:"Liberation is not a distant event. It is the recognition, repeated, deepened, stabilized. Puna\u1e25 puna\u1e25 \u2014 again and again. Not once, but until it becomes the ground you stand on." },
   { n:19,
-    sk:"घटकुड्यादिकं सर्वं मृत्तिकामात्रमेव च ।\nतद्वद् ब्रह्म जगत् सर्वमिति वेदान्तडिण्डिमः ॥",
-    ro:"ghaṭakuḍyādikaṃ sarvaṃ mṛttikāmātrameva ca\ntadvad brahma jagat sarvamiti vedāntaḍiṇḍimaḥ",
+    sk:"\u0918\u091f\u0915\u0941\u0921\u094d\u092f\u093e\u0926\u093f\u0915\u0902 \u0938\u0930\u094d\u0935\u0902 \u092e\u0943\u0924\u094d\u0924\u093f\u0915\u093e\u092e\u093e\u0924\u094d\u0930\u092e\u0947\u0935 \u091a \u0964\n\u0924\u0926\u094d\u0935\u0926\u094d \u092c\u094d\u0930\u0939\u094d\u092e \u091c\u0917\u0924\u094d \u0938\u0930\u094d\u0935\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965",
+    ro:"gha\u1e6daku\u1e0dy\u0101dika\u1e43 sarva\u1e43 m\u1e5bttik\u0101m\u0101trameva ca\ntadvad brahma jagat sarvamiti ved\u0101nta\u1e0di\u1e47\u1e0dima\u1e25",
     me:"The pot, the wall, and everything else are nothing but clay. Likewise, the entire universe is nothing but Brahman. This is the drumbeat of Vedanta.",
-    ins:"The pot and the wall appear different. In name and form, yes. But their substance is one. The universe and Brahman — same logic. The many in the one." },
+    ins:"The pot and the wall appear different. In name and form, yes. But their substance is one. The universe and Brahman \u2014 same logic. The many in the one." },
   { n:20,
-    sk:"ब्रह्म सत्यं जगन्मिथ्या जीवो ब्रह्मैव नापरः ।\nअनेन वेद्यं सच्छास्त्रमिति वेदान्तडिण्डिमः ॥",
-    ro:"brahma satyaṃ jaganmithyā jīvo brahmaiva nāparaḥ\nanena vedyaṃ sacchāstramiti vedāntaḍiṇḍimaḥ",
-    me:"Brahman is real. The universe is mithyā — neither real nor unreal, but dependent. The individual soul is Brahman itself — not other. This is what true scripture reveals. This is the drumbeat of Vedanta.",
-    ins:"The mahāvākya in summary form. Mithyā is not 'false' — it is 'dependent reality,' like a dream that is real while you are in it. The jīva's separation from Brahman is the dream. This verse is the awakening." }
+    sk:"\u092c\u094d\u0930\u0939\u094d\u092e \u0938\u0924\u094d\u092f\u0902 \u091c\u0917\u0928\u094d\u092e\u093f\u0925\u094d\u092f\u093e \u091c\u0940\u0935\u094b \u092c\u094d\u0930\u0939\u094d\u092e\u0948\u0935 \u0928\u093e\u092a\u0930\u0903 \u0964\n\u0905\u0928\u0947\u0928 \u0935\u0947\u0926\u094d\u092f\u0902 \u0938\u091a\u094d\u091b\u093e\u0938\u094d\u0924\u094d\u0930\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965",
+    ro:"brahma satya\u1e43 jaganmithy\u0101 j\u012bvo brahmaiva n\u0101para\u1e25\nanena vedya\u1e43 sacch\u0101stramiti ved\u0101nta\u1e0di\u1e47\u1e0dima\u1e25",
+    me:"Brahman is real. The universe is mithy\u0101 \u2014 neither real nor unreal, but dependent. The individual soul is Brahman itself \u2014 not other. This is what true scripture reveals. This is the drumbeat of Vedanta.",
+    ins:"The mah\u0101v\u0101kya in summary form. Mithy\u0101 is not 'false' \u2014 it is 'dependent reality,' like a dream that is real while you are in it. The j\u012bva's separation from Brahman is the dream. This verse is the awakening." }
 ];
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  STORAGE
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 const KEY     = ‘bjm_v1’;
 const MAX_CH  = 20000;
 
@@ -531,9 +531,9 @@ try { return new Date(iso).toLocaleString(undefined,{month:‘short’,day:‘nu
 catch { return ‘’; }
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  STATE
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 const b = load();
 let idx  = b ? b.idx  : 0;
 let home = b ? b.home : true;
@@ -559,22 +559,22 @@ function refreshInd() {
 const el = document.getElementById(‘si’);
 if (!el) return;
 const c = cnt();
-el.textContent = c > 0 ? `${c} reflection${c>1?'s':''} saved · ${fmtTs(ts)}` : ‘’;
+el.textContent = c > 0 ? `${c} reflection${c>1?'s':''} saved \u00b7 ${fmtTs(ts)}` : ‘’;
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  EXPORT
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function exportJ() {
 const lines = [
-‘Brahma Jnānavalī Mālā — Personal Reflection Journal’,
-‘══════════════════════════════════════════════════════’,
+‘Brahma Jn\u0101naval\u012b M\u0101l\u0101 \u2014 Personal Reflection Journal’,
+‘\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550’,
 ‘Exported: ’ + new Date().toLocaleString(), ‘’
 ];
 V.forEach((v,i) => {
 if (!ent[i]) return;
 lines.push(‘Verse ‘+v.n);
-lines.push(‘──────────────────────────────────────────────────────’);
+lines.push(’\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500’);
 lines.push(v.ro.replace(/\n/g,’ ‘)); lines.push(’’);
 lines.push(ent[i]); lines.push(’’);
 });
@@ -586,35 +586,35 @@ document.body.appendChild(a); a.click();
 setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 800);
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  CLEAR
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function clearAll() {
 if (!confirm(‘Clear all reflections and begin fresh?\n\nThis cannot be undone.’)) return;
 ent={}; idx=0; home=true; ts=null; purge(); render();
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  UTILITY ROW
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function utilRow() {
 if (cnt()===0) return ‘’;
 return `<div class="util-row">
-<button class="btn btn-secondary btn-sm" onclick="exportJ()">Export Journal ↓</button>
+<button class="btn btn-secondary btn-sm" onclick="exportJ()">Export Journal \u2193</button>
 <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
 
   </div>`;
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  SCREENS
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function rIntro() {
 const c  = cnt();
 const ri = Math.min(idx, V.length-1);
 const hasProgress = ri > 0 || c > 0;
-return `<div class="intro"> <span class="intro-om">ॐ</span> <h2>${hasProgress ? 'Welcome Back' : 'Begin the Reflection'}</h2> <p>The <em>Brahma Jnānavalī Mālā</em> is a garland of 20 verses composed by Adi Shankaracharya. Each verse is an assertion — not a prayer, not a petition — but a declaration of what you already are.</p> <p>This is not a study exercise. It is an <em>abhyāsa</em> — a practice of inward repetition. Move through one verse at a time. Read. Sit. Write whatever arises.</p> <div class="intro-quote"> "Sakṛt śravaṇamātreṇa brahmajñānaṃ yato bhavet" —<br> By hearing even once, the knowledge of Brahman arises. </div> <div class="btn-row"> ${ri > 0 ? `<button class="btn btn-primary" onclick="resumeAt(${ri})">Continue — Verse ${ri+1}</button>
-<button class="btn btn-secondary" onclick="fresh()">From Verse I</button>`:`<button class="btn btn-primary" onclick="fresh()">Begin — Verse I</button>`} </div> ${c>0 ? `<p class="resume-note">${c} reflection${c>1?‘s’:’’} held · ${fmtTs(ts)}</p>` : ‘’}
+return `<div class="intro"> <span class="intro-om">\u0950</span> <h2>${hasProgress ? 'Welcome Back' : 'Begin the Reflection'}</h2> <p>The <em>Brahma Jn\u0101naval\u012b M\u0101l\u0101</em> is a garland of 20 verses composed by Adi Shankaracharya. Each verse is an assertion \u2014 not a prayer, not a petition \u2014 but a declaration of what you already are.</p> <p>This is not a study exercise. It is an <em>abhy\u0101sa</em> \u2014 a practice of inward repetition. Move through one verse at a time. Read. Sit. Write whatever arises.</p> <div class="intro-quote"> "Sak\u1e5bt \u015brava\u1e47am\u0101tre\u1e47a brahmaj\u00f1\u0101na\u1e43 yato bhavet" \u2014<br> By hearing even once, the knowledge of Brahman arises. </div> <div class="btn-row"> ${ri > 0 ? `<button class="btn btn-primary" onclick="resumeAt(${ri})">Continue \u2014 Verse ${ri+1}</button>
+<button class="btn btn-secondary" onclick="fresh()">From Verse I</button>`:`<button class="btn btn-primary" onclick="fresh()">Begin \u2014 Verse I</button>`} </div> ${c>0 ? `<p class="resume-note">${c} reflection${c>1?‘s’:’’} held \u00b7 ${fmtTs(ts)}</p>` : ‘’}
 ${utilRow()}
 
   </div>`;
@@ -623,19 +623,19 @@ ${utilRow()}
 function rVerse(i) {
 const v   = V[i];
 const pct = Math.round((i/V.length)*100);
-return `<div class="progress-wrap"> <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div> <span class="progress-label">Verse ${i+1} of ${V.length}</span> </div> <div class="card verse-card"> <div class="verse-tag">Verse ${v.n} &nbsp;·&nbsp; ब्रह्मज्ञानावलीमाला</div> <div class="verse-sk">${v.sk.replace(/\n/g,'<br>')}</div> <div class="verse-ro">${v.ro.replace(/\n/g,'<br>')}</div> <div class="divider"><span>✦</span></div> <div class="verse-me">${v.me}</div> <div class="verse-in">${v.ins}</div> </div> <div class="card journal-card"> <div class="journal-label">Reflection</div> <textarea id="ji" class="journal-ta" placeholder="Write whatever arises — no right answer, no performance..." rows="6" oninput="schedAutosave()" >${esc(ent[i]||'')}</textarea> <div id="si" class="saved-ind"></div> </div> <div class="actions"> ${i>0 ?`<button class="btn btn-secondary" onclick="go(${i-1})">← Previous</button>`: ''} ${i<V.length-1 ?`<button class="btn btn-primary" onclick="go(${i+1})">Next Verse →</button>`:`<button class="btn btn-primary" onclick="finish()">Complete the Mālā ✦</button>`} <button class="btn btn-secondary btn-sm ml-auto" onclick="goHome()">⌂ Home</button> </div> ${utilRow()}`;
+return `<div class="progress-wrap"> <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div> <span class="progress-label">Verse ${i+1} of ${V.length}</span> </div> <div class="card verse-card"> <div class="verse-tag">Verse ${v.n} &nbsp;\u00b7&nbsp; \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e</div> <div class="verse-sk">${v.sk.replace(/\n/g,'<br>')}</div> <div class="verse-ro">${v.ro.replace(/\n/g,'<br>')}</div> <div class="divider"><span>\u2726</span></div> <div class="verse-me">${v.me}</div> <div class="verse-in">${v.ins}</div> </div> <div class="card journal-card"> <div class="journal-label">Reflection</div> <textarea id="ji" class="journal-ta" placeholder="Write whatever arises \u2014 no right answer, no performance..." rows="6" oninput="schedAutosave()" >${esc(ent[i]||'')}</textarea> <div id="si" class="saved-ind"></div> </div> <div class="actions"> ${i>0 ?`<button class="btn btn-secondary" onclick="go(${i-1})">\u2190 Previous</button>`: ''} ${i<V.length-1 ?`<button class="btn btn-primary" onclick="go(${i+1})">Next Verse \u2192</button>`:`<button class="btn btn-primary" onclick="finish()">Complete the M\u0101l\u0101 \u2726</button>`} <button class="btn btn-secondary btn-sm ml-auto" onclick="goHome()">\u2302 Home</button> </div> ${utilRow()}`;
 }
 
 function rCompletion() {
 const c = cnt();
-return `<div class="completion"> <div class="comp-star">✦</div> <h2>The Mālā is Complete</h2> <p>${c>0 ? `${c} reflection${c>1?‘s’:’’} now live in your journal.`: 'The garland has been offered.'}</p> <div class="comp-maha"> <em>"Brahma satyaṃ jaganmithyā jīvo brahmaiva nāparaḥ"</em><br> Brahman is real. The universe is appearance. The self is Brahman alone. </div> <div class="btn-row" style="margin-bottom:14px"> <button class="btn btn-primary" onclick="fresh()">Begin Again</button> ${c>0 ?`<button class="btn btn-secondary" onclick="exportJ()">Export Journal ↓</button>`: ''} </div> ${c>0 ?`<button class="btn btn-danger" onclick="clearAll()">Clear All Reflections</button>` : ‘’}
+return `<div class="completion"> <div class="comp-star">\u2726</div> <h2>The M\u0101l\u0101 is Complete</h2> <p>${c>0 ? `${c} reflection${c>1?‘s’:’’} now live in your journal.`: 'The garland has been offered.'}</p> <div class="comp-maha"> <em>"Brahma satya\u1e43 jaganmithy\u0101 j\u012bvo brahmaiva n\u0101para\u1e25"</em><br> Brahman is real. The universe is appearance. The self is Brahman alone. </div> <div class="btn-row" style="margin-bottom:14px"> <button class="btn btn-primary" onclick="fresh()">Begin Again</button> ${c>0 ?`<button class="btn btn-secondary" onclick="exportJ()">Export Journal \u2193</button>`: ''} </div> ${c>0 ?`<button class="btn btn-danger" onclick="clearAll()">Clear All Reflections</button>` : ‘’}
 
   </div>`;
 }
 
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 //  NAVIGATION
-// ─────────────────────────────
+// \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function render() {
 const app = document.getElementById(‘app’);
 if (!app) return;
