@@ -5,544 +5,82 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brahma Jnanavali Mala</title>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400&display=swap" rel="stylesheet"></noscript>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; }
-
-body {
-background: #d4c9a8;
-min-height: 100vh;
-font-family: ‘EB Garamond’, Georgia, serif;
-color: #2c1f0e;
-padding: 32px 16px 64px;
-display: flex;
-justify-content: center;
-}
-
-.wrap { width: 100%; max-width: 640px; }
-
-/* Header */
-.header {
-text-align: center;
-margin-bottom: 28px;
-padding-bottom: 20px;
-border-bottom: 1px solid #9a6e2a;
-}
-.eyebrow {
-font-size: 11px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: #8c6e4f;
-margin-bottom: 8px;
-font-family: Georgia, serif;
-}
-.title {
-font-family: ‘Cinzel’, Georgia, serif;
-font-size: 24px;
-font-weight: 400;
-color: #2c1f0e;
-margin-bottom: 4px;
-}
-.title span { color: #9a6e2a; }
-.subtitle { font-style: italic; font-size: 14px; color: #5a3e28; }
-
-/* Progress */
-.prog-wrap {
-display: flex; align-items: center; gap: 10px;
-margin-bottom: 20px;
-}
-.prog-bar {
-flex: 1; height: 3px;
-background: #ede3c8; border-radius: 2px; overflow: hidden;
-}
-.prog-fill {
-height: 100%;
-background: #9a6e2a;
-border-radius: 2px;
-transition: width 0.4s;
-}
-.prog-label { font-size: 12px; color: #8c6e4f; white-space: nowrap; }
-
-/* Card */
-.card {
-background: #f5eedc;
-border: 1px solid #c8b070;
-border-radius: 2px;
-box-shadow: 0 2px 8px rgba(44,31,14,0.12);
-padding: 32px 36px;
-margin-bottom: 18px;
-}
-
-/* Verse */
-.verse-num {
-font-family: ‘Cinzel’, Georgia, serif;
-font-size: 11px;
-letter-spacing: 0.18em;
-color: #9a6e2a;
-text-transform: uppercase;
-margin-bottom: 16px;
-}
-.verse-sk {
-font-size: 18px;
-line-height: 2;
-text-align: center;
-margin-bottom: 8px;
-font-weight: 500;
-}
-.verse-ro {
-font-style: italic;
-font-size: 13px;
-color: #8c6e4f;
-text-align: center;
-margin-bottom: 20px;
-line-height: 1.8;
-}
-.divider {
-text-align: center;
-color: #9a6e2a;
-margin-bottom: 16px;
-opacity: 0.6;
-}
-.verse-me {
-font-size: 15px;
-line-height: 1.85;
-color: #5a3e28;
-margin-bottom: 14px;
-}
-.verse-in {
-background: #ede3c8;
-border-left: 3px solid #9a6e2a;
-padding: 12px 14px;
-font-style: italic;
-font-size: 13px;
-color: #8c6e4f;
-line-height: 1.7;
-}
-
-/* Journal */
-.jlabel {
-font-family: ‘Cinzel’, Georgia, serif;
-font-size: 11px;
-letter-spacing: 0.16em;
-color: #9a6e2a;
-text-transform: uppercase;
-margin-bottom: 12px;
-}
-textarea {
-width: 100%;
-min-height: 110px;
-background: transparent;
-border: none;
-border-bottom: 1px solid #c8b070;
-padding: 6px 2px;
-font-family: ‘EB Garamond’, Georgia, serif;
-font-size: 16px;
-line-height: 1.8;
-color: #2c1f0e;
-resize: vertical;
-outline: none;
--webkit-appearance: none;
-}
-textarea::placeholder { color: #b09a72; font-style: italic; }
-textarea:focus { border-bottom-color: #9a6e2a; }
-.saved-note {
-margin-top: 8px;
-font-size: 11px;
-color: #8c6e4f;
-font-style: italic;
-min-height: 14px;
-}
-
-/* Buttons */
-.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-.util-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-button {
-font-family: ‘Cinzel’, Georgia, serif;
-font-size: 11px;
-letter-spacing: 0.12em;
-text-transform: uppercase;
-padding: 10px 22px;
-border-radius: 1px;
-cursor: pointer;
-border: 1px solid;
-transition: all 0.2s;
--webkit-tap-highlight-color: transparent;
-background: transparent;
-}
-.btn-p { background: #2c1f0e; color: #f5eedc; border-color: #2c1f0e; }
-.btn-p:hover { background: #9a6e2a; border-color: #9a6e2a; }
-.btn-s { color: #8c6e4f; border-color: #c8b070; }
-.btn-s:hover { border-color: #9a6e2a; color: #9a6e2a; }
-.btn-d { color: #8b2020; border-color: #c47070; font-size: 10px; padding: 7px 14px; }
-.btn-sm { font-size: 10px; padding: 7px 14px; }
-button:active { transform: scale(0.97); }
-.ml { margin-left: auto; }
-
-/* Intro */
-.intro-om { font-size: 28px; color: #9a6e2a; display: block; text-align: center; margin-bottom: 16px; }
-.intro h2 { font-family: ‘Cinzel’, Georgia, serif; font-size: 16px; font-weight: 400; letter-spacing: 0.1em; text-align: center; margin-bottom: 16px; }
-.intro p { font-size: 15px; line-height: 1.85; color: #5a3e28; margin-bottom: 10px; }
-.intro-quote {
-font-style: italic; font-size: 13px; color: #8c6e4f;
-border-left: 3px solid #9a6e2a;
-padding: 10px 14px; margin: 14px 0 24px; line-height: 1.7;
-}
-.resume-note { text-align: center; font-size: 11px; color: #8c6e4f; font-style: italic; margin-top: 12px; }
-
-/* Completion */
-.comp-star { font-size: 28px; color: #9a6e2a; text-align: center; margin-bottom: 14px; }
-.comp h2 { font-family: ‘Cinzel’, Georgia, serif; font-size: 18px; font-weight: 400; text-align: center; margin-bottom: 12px; }
-.comp p { font-style: italic; font-size: 14px; color: #8c6e4f; line-height: 1.8; text-align: center; margin-bottom: 20px; }
-
-@media (max-width: 500px) {
-.card { padding: 20px 18px; }
-.btn-row { flex-direction: column; }
-.btn-row button { width: 100%; text-align: center; }
-.ml { margin-left: 0; }
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#d4c9a8;min-height:100vh;font-family:Georgia,serif;color:#2c1f0e;padding:28px 14px 60px;}
+.w{max-width:600px;margin:0 auto;}
+.hdr{text-align:center;border-bottom:1px solid #9a6e2a;padding-bottom:16px;margin-bottom:24px;}
+.ey{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8c6e4f;margin-bottom:6px;}
+.ti{font-size:24px;color:#2c1f0e;margin-bottom:4px;font-family:Georgia,serif;}
+.ti b{color:#9a6e2a;font-weight:normal;}
+.su{font-style:italic;font-size:14px;color:#5a3e28;}
+.card{background:#f5eedc;border:1px solid #c8b070;border-radius:2px;padding:26px 28px;margin-bottom:14px;box-shadow:0 2px 6px rgba(44,31,14,.1);}
+.pw{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.pb{flex:1;height:3px;background:#ede3c8;border-radius:2px;overflow:hidden;}
+.pf{height:100%;background:#9a6e2a;border-radius:2px;}
+.pl{font-size:11px;color:#8c6e4f;white-space:nowrap;}
+.vt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9a6e2a;margin-bottom:12px;}
+.vsk{font-size:17px;line-height:2.1;text-align:center;margin-bottom:8px;font-weight:500;}
+.vro{font-style:italic;font-size:12px;color:#8c6e4f;text-align:center;margin-bottom:16px;line-height:1.75;}
+.vdv{text-align:center;color:#9a6e2a;margin-bottom:12px;}
+.vme{font-size:14px;line-height:1.85;color:#5a3e28;margin-bottom:11px;}
+.vi{background:#ede3c8;border-left:3px solid #9a6e2a;padding:9px 12px;font-style:italic;font-size:12px;color:#8c6e4f;line-height:1.7;}
+.jl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9a6e2a;margin-bottom:9px;}
+textarea{width:100%;min-height:95px;background:transparent;border:none;border-bottom:1px solid #c8b070;padding:5px 2px;font-family:Georgia,serif;font-size:15px;line-height:1.8;color:#2c1f0e;resize:vertical;outline:none;display:block;}
+textarea:focus{border-bottom-color:#9a6e2a;}
+.si{margin-top:7px;font-size:11px;color:#8c6e4f;font-style:italic;min-height:14px;}
+.br{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px;align-items:center;}
+.ur{display:flex;gap:8px;flex-wrap:wrap;}
+button{font-family:Georgia,serif;font-size:12px;padding:9px 18px;border-radius:1px;cursor:pointer;border:1px solid;background:transparent;}
+.bp{background:#2c1f0e;color:#f5eedc;border-color:#2c1f0e;}
+.bs{color:#8c6e4f;border-color:#c8b070;}
+.bd{color:#8b2020;border-color:#c47070;font-size:11px;padding:6px 12px;}
+.bx{font-size:11px;padding:6px 12px;}
+.ml{margin-left:auto;}
+.om{font-size:26px;color:#9a6e2a;text-align:center;margin-bottom:12px;}
+h2{font-size:15px;font-weight:normal;text-align:center;margin-bottom:12px;letter-spacing:.05em;}
+.ip{font-size:14px;line-height:1.85;color:#5a3e28;margin-bottom:9px;}
+.iq{font-style:italic;font-size:12px;color:#8c6e4f;border-left:3px solid #9a6e2a;padding:9px 13px;margin:12px 0 20px;line-height:1.7;}
+.rn{text-align:center;font-size:11px;color:#8c6e4f;font-style:italic;margin-top:10px;}
+@media(max-width:460px){.card{padding:16px 14px;}.br{flex-direction:column;}.br button{width:100%;}.ml{margin-left:0;}}
 </style>
-
 </head>
 <body>
-<div class="wrap">
-
-  <div class="header">
-    <div class="eyebrow">Adi Shankaracharya</div>
-    <div class="title">Brahma Jn&#257;naval&#299; <span>M&#257;l&#257;</span></div>
-    <div class="subtitle">A Garland of the Knowledge of Brahman</div>
-  </div>
-
-  <div id="app"></div>
-
+<div class="w">
+<div class="hdr">
+<div class="ey">Adi Shankaracharya</div>
+<div class="ti">Brahma Jnanavali <b>Mala</b></div>
+<div class="su">A Garland of the Knowledge of Brahman</div>
 </div>
+<div id="app">Loading...</div>
+</div>
+<script id="vdata" type="application/json">[{"n":1,"sk":"\u0938\u0915\u0943\u0924\u094d \u0936\u094d\u0930\u0935\u0923\u092e\u093e\u0924\u094d\u0930\u0947\u0923 \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u0902 \u092f\u0924\u094b \u092d\u0935\u0947\u0924\u094d \u0964\n\u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e \u0938\u0930\u094d\u0935\u0947\u0937\u093e\u0902 \u092e\u094b\u0915\u094d\u0937\u0938\u093f\u0926\u094d\u0927\u092f\u0947 \u0965","ro":"sakrit shravanamaatrena brahmajnanam yato bhavet\nbrahmajnanavalimaala sarveshaam moksha-siddhaye","me":"This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.","ins":"This is not a text to be studied. It is a text to be heard inwardly. Even once. The promise is built into the opening."},{"n":2,"sk":"\u0905\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u093d\u0939\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938\u091a\u094d\u091a\u093f\u0926\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"asango-aham asango-aham asango-aham punah punah\nsaccidanandarupo-aham ahamevaaham avyayah","me":"Unattached am I, unattached am I, unattached am I - again and again. I am of the nature of Existence-Consciousness-Bliss. I am the very Self, indestructible.","ins":"The triple repetition is the method itself. The mind needs to hear the truth three times before it loosens its grip on the false."},{"n":3,"sk":"\u0928\u093f\u0924\u094d\u092f\u0936\u0941\u0926\u094d\u0927\u0935\u093f\u092e\u0941\u0915\u094d\u0924\u094b\u093d\u0939\u0902 \u0928\u093f\u0930\u093e\u0915\u093e\u0930\u094b\u093d\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u092d\u0942\u092e\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"nityashuddha-vimukto-aham niraakaro-aham avyayah\nbhumananda-svarupo-aham ahamevaaham avyayah","me":"I am eternally pure, I am liberated, I am formless, I am indestructible. I am of the nature of infinite, boundless bliss. I am the very Self, indestructible and changeless.","ins":"Purity here is not moral - it is ontological. Not I have become pure but I am by nature never impure. Liberation is not future - it is recognition of what already is."},{"n":4,"sk":"\u0935\u093f\u091c\u094d\u091e\u093e\u0928\u0918\u0928\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u091a\u093f\u0926\u093e\u0915\u093e\u0936\u094b\u093d\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u0915\u0947\u0935\u0932\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"vijnanaghanarupo-aham cidakasho-aham avyayah\nkevalaanandarupo-aham ahamevaaham avyayah","me":"I am of the nature of dense, solid awareness. I am the sky of consciousness, indestructible. I am pure, unconditioned bliss. I am the very Self, indestructible and changeless.","ins":"Cidakasha - the sky of consciousness - nothing sticks to it. Clouds pass. The sky remains. You are the sky, not the cloud."},{"n":5,"sk":"\u0928\u093f\u0924\u094d\u092f\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u092a\u0930\u092e\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u092e\u0941\u0915\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"nityaanandasvarupo-aham paramaanandarupadhrik\nmuktaanandasvarupo-aham ahamevaaham avyayah","me":"I am of the nature of eternal bliss. I am the bearer of supreme bliss. I am the bliss of liberation. I am the very Self, indestructible and changeless.","ins":"Three flavors of ananda: nitya (eternal), parama (supreme), mukta (free). Shankara descends like three steps into the same ocean."},{"n":6,"sk":"\u0938\u0924\u094d\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u093f\u0924\u094d\u092f\u0947\u0935\u0902 \u092f\u0903 \u0915\u0930\u094b\u0924\u093f \u0938\u0926\u093e \u091c\u092a\u092e\u094d \u0964\n\u092d\u0935\u092a\u093e\u0936\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u0903 \u0938 \u092f\u093e\u0924\u093f \u092a\u0930\u092e\u093e\u0902 \u0917\u0924\u093f\u092e\u094d \u0965","ro":"satsvarupo-aham ityevam yah karoti sada japam\nbhavapashaavinirmuktah sa yaati paramaam gatim","me":"One who constantly repeats as japa - freed from the bonds of worldly existence, that one attains the supreme state.","ins":"The japa is not a request to become. It is a remembering of what you already are. Repetition wears down the false."},{"n":7,"sk":"\u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092c\u094d\u0930\u0939\u094d\u092e \u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092a\u0926\u092e\u094d \u0964\n\u0905\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"ahameva param brahma ahameva param padam\nahamevaahamevaaham ahamevaaham avyayah","me":"I alone am the supreme Brahman. I alone am the supreme state. I am, I am, I am - I am the very Self, indestructible and changeless.","ins":"The I speaking here is not the ego. Only Brahman can say I am Brahman truthfully. To realize this verse is to realize who is speaking."},{"n":8,"sk":"\u0905\u0928\u094d\u0924\u0930\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u092a\u094d\u0930\u0924\u094d\u092f\u0917\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0936\u0941\u0926\u094d\u0927\u091a\u0948\u0924\u0928\u094d\u092f\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"antaraatmasvarupo-aham pratyagaatmasvarupadhrik\nshuddha-caitanyarupo-aham ahamevaaham avyayah","me":"I am the inner Self. I am the innermost Self, the awareness that turns back inward. I am pure consciousness itself. I am the very Self, indestructible and changeless.","ins":"Pratyagatman - the Self that faces inward, against the outward current of the senses. This is the direction of self-inquiry."},{"n":9,"sk":"\u0906\u0924\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u093d\u0939\u0902 \u0938\u0924\u094d\u0924\u093e\u092e\u093e\u0924\u094d\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0906\u0928\u0928\u094d\u0926\u093e\u092e\u0943\u0924\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"aatmajnaanaprakaasho-aham sattaamaatrasvarupadhrik\naanandamritarupo-aham ahamevaaham avyayah","me":"I am the luminosity of Self-knowledge. I am pure being itself. I am the immortal nectar of bliss. I am the very Self, indestructible and changeless.","ins":"The Self is self-luminous - it does not require another awareness to know it. This is what makes Advaita radical."},{"n":10,"sk":"\u0917\u0941\u0923\u0924\u094d\u0930\u092f\u0935\u094d\u092f\u0924\u0940\u0924\u094b\u093d\u0939\u0902 \u092c\u094d\u0930\u0939\u094d\u092e\u093e\u0926\u0940\u0928\u093e\u0902 \u091a \u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0939\u092e\u094d \u0964\n\u0905\u0928\u0928\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"gunatrayavyatiito-aham brahmaadiinam ca saakshyaham\nanantaanandarupo-aham ahamevaaham avyayah","me":"I am beyond the three gunas - sattva, rajas, and tamas. I am the witness of even Brahma and others. I am of the nature of infinite bliss.","ins":"Not even Brahma is the ultimate witness - the Self witnesses all creative power itself. A staggering claim, delivered quietly."},{"n":11,"sk":"\u0905\u0928\u094d\u0924\u0930\u094d\u092f\u093e\u092e\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u0915\u0942\u091f\u0938\u094d\u0925\u0903 \u0938\u0930\u094d\u0935\u0917\u094b\u093d\u0938\u094d\u092e\u094d\u092f\u0939\u092e\u094d \u0964\n\u092a\u0930\u092e\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"antaraamisvarupo-aham kuutasthah sarvago-asmyaham\nparamaatmasvarupo-aham ahamevaaham avyayah","me":"I am the inner controller. I am immutable, the unchanging anvil. I am all-pervading. I am the supreme Self. I am the very Self, indestructible and changeless.","ins":"Kutastha - what strikes all things without being struck itself. The deepest stillness in the midst of all movement."},{"n":12,"sk":"\u0928\u093f\u0937\u094d\u0915\u0932\u094b\u093d\u0939\u0902 \u0928\u093f\u0937\u094d\u0915\u094d\u0930\u093f\u092f\u094b\u093d\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0924\u094d\u092e\u093e \u0906\u0926\u094d\u092f\u0903 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0905\u092a\u0930\u094b\u0915\u094d\u0937\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"nishkalo-aham nishkriyo-aham sarvaatmaa aadyah sanaatanah\naparoksha-svarupo-aham ahamevaaham avyayah","me":"I am without parts. I am actionless. I am the self of all, the primordial, the ancient, the eternal. I am the directly intuited Self - not known through inference but directly.","ins":"Aparoksha - not mediated, not inferred, not heard about. The Self is the only knowledge that is its own object."},{"n":13,"sk":"\u0926\u094d\u0935\u0928\u094d\u0926\u094d\u0935\u093e\u0926\u093f\u0938\u093e\u0915\u094d\u0937\u093f\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u091a\u0932\u094b\u093d\u0939\u0902 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0938\u0930\u094d\u0935\u0938\u093e\u0915\u094d\u0937\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"dvandvaadisaakshirupo-aham acalo-aham sanaatanah\nsarvasaakshisvarupo-aham ahamevaaham avyayah","me":"I am the witness of all pairs of opposites - pleasure and pain, heat and cold. I am immovable. I am eternal. I am the witness of everything.","ins":"Dvandva - the pairs. The Self witnesses both without choosing. This is equanimity - not resolution of opposites, but what stands behind them both."},{"n":14,"sk":"\u0905\u0915\u0930\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u092d\u094b\u0915\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0915\u0947\u0935\u0932\u0938\u094d\u0935\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"akartrisvarupo-aham abhoktrisvarupadhrik\nkevalasvapraakaasho-aham ahamevaaham avyayah","me":"I am not a doer. I am not an experiencer. I am pure self-luminosity alone. I am the very Self, indestructible and changeless.","ins":"The one reading this is told they are neither doing the reading nor experiencing it. And yet there is awareness of both. That awareness is what is pointed to."},{"n":15,"sk":"\u0928\u093f\u0930\u093e\u0927\u093e\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0927\u093e\u0930\u094b\u093d\u0939\u092e\u0947\u0935 \u091a \u0964\n\u0906\u092a\u094d\u0924\u0915\u093e\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u093d\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"niraadharasvarupo-aham sarvaadhaaro-ahameva ca\naaptakamasvarupo-aham ahamevaaham avyayah","me":"I am without any support, and I am the support of all. I have no desires yet to be fulfilled. I am the very Self, indestructible and changeless.","ins":"Both at once: the unsupported and the support of all. Advaita holds contradiction not by resolving it, but by finding the level at which it dissolves."},{"n":16,"sk":"\u0924\u093e\u092a\u0924\u094d\u0930\u092f\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u094b \u0926\u0947\u0939\u0924\u094d\u0930\u092f\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u0903 \u0964\n\u0905\u0935\u0938\u094d\u0925\u093e\u0924\u094d\u0930\u092f\u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0938\u094d\u092e\u093f \u091a\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965","ro":"taapatrayavinirmukto dehatrayavilakshanah\navasthaatraya-saakshyasmi caahamevaaham avyayah","me":"I am free from the threefold afflictions. I am distinct from the three bodies - gross, subtle, causal. I am the witness of the three states - waking, dream, and deep sleep.","ins":"Three threes: three afflictions, three bodies, three states - and in all of them, the same witness remains."},{"n":17,"sk":"\u0926\u0943\u0917\u094d\u0926\u0943\u0936\u094d\u092f\u094c \u0926\u094d\u0935\u094c \u092a\u0926\u093e\u0930\u094d\u0925\u094c \u0938\u094d\u0924\u0903 \u092a\u0930\u0938\u094d\u092a\u0930\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u094c \u0964\n\u0926\u0943\u0917\u094d\u092c\u094d\u0930\u0939\u094d\u092e \u0926\u0943\u0936\u094d\u092f\u0902 \u092e\u093e\u092f\u0947\u0924\u093f \u0938\u0930\u094d\u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965","ro":"drig-drishyau dvau padaarthau stah parasparavilakshanau\ndrig-brahma drishyam maayeti sarva-vedaanta-dindimah","me":"There are two things entirely different: the seer and the seen. The seer is Brahman; the seen is Maya. This is the drumbeat of all Vedanta.","ins":"Dindima - a small drum. All of Vedanta can be beaten out in this one rhythm: the seer and the seen are not the same."},{"n":18,"sk":"\u0905\u0939\u0902 \u0938\u093e\u0915\u094d\u0937\u0940\u0924\u093f \u092f\u094b \u0935\u093f\u0926\u094d\u092f\u093e\u0924\u094d \u0935\u093f\u0935\u093f\u091a\u094d\u092f\u0948\u0935\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938 \u090f\u0935 \u092e\u0941\u0915\u094d\u0924\u0903 \u0938\u094b \u0935\u093f\u0926\u094d\u0935\u093e\u0928\u094d \u0907\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965","ro":"aham saakshiiti yo vidyaat vivicyevam punah punah\nsa eva muktah so vidvaan iti vedaanta-dindimah","me":"One who realizes through repeated discrimination that I am the witness - that one alone is liberated. That one is the wise one. This is the drumbeat of Vedanta.","ins":"Liberation is not distant. It is recognition, repeated, deepened, stabilized. Again and again - until it becomes the ground you stand on."},{"n":19,"sk":"\u0918\u091f\u0915\u0941\u0921\u094d\u092f\u093e\u0926\u093f\u0915\u0902 \u0938\u0930\u094d\u0935\u0902 \u092e\u0943\u0924\u094d\u0924\u093f\u0915\u093e\u092e\u093e\u0924\u094d\u0930\u092e\u0947\u0935 \u091a \u0964\n\u0924\u0926\u094d\u0935\u0926\u094d \u092c\u094d\u0930\u0939\u094d\u092e \u091c\u0917\u0924\u094d \u0938\u0930\u094d\u0935\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965","ro":"ghatakudyaadikam sarvam mrittikaamaatrameva ca\ntadvad brahma jagat sarvamiti vedaanta-dindimah","me":"The pot, the wall, and everything else are nothing but clay. Likewise, the entire universe is nothing but Brahman. This is the drumbeat of Vedanta.","ins":"The pot and the wall appear different in name and form. But their substance is one. The many in the one."},{"n":20,"sk":"\u092c\u094d\u0930\u0939\u094d\u092e \u0938\u0924\u094d\u092f\u0902 \u091c\u0917\u0928\u094d\u092e\u093f\u0925\u094d\u092f\u093e \u091c\u0940\u0935\u094b \u092c\u094d\u0930\u0939\u094d\u092e\u0948\u0935 \u0928\u093e\u092a\u0930\u0903 \u0964\n\u0905\u0928\u0947\u0928 \u0935\u0947\u0926\u094d\u092f\u0902 \u0938\u091a\u094d\u091b\u093e\u0938\u094d\u0924\u094d\u0930\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965","ro":"brahma satyam jaganmithyaa jiivo brahmaiva naaparah\nanena vedyam sacchaastramiti vedaanta-dindimah","me":"Brahman is real. The universe is mithya - dependent reality. The individual soul is Brahman itself, not other. This is what true scripture reveals. This is the drumbeat of Vedanta.","ins":"Mithya is not false - it is dependent reality, like a dream real while you are in it. The jiva's separation from Brahman is the dream. This verse is the awakening."}]</script>
 <script>
-//<![CDATA[
-
-var V = [
-{ sk: “\u0938\u0915\u0943\u0924\u094d \u0936\u094d\u0930\u0935\u0923\u092e\u093e\u0924\u094d\u0930\u0947\u0923 \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u0902 \u092f\u0924\u094b \u092d\u0935\u0947\u0924\u094d \u0964\n\u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e \u0938\u0930\u094d\u0935\u0947\u0937\u093e\u0902 \u092e\u094b\u0915\u094d\u0937\u0938\u093f\u0926\u094d\u0927\u092f\u0947 \u0965\u0965”,
-ro: “sak\u1e5bt \u015brava\u1e47am\u0101tre\u1e47a brahmaj\u00f1\u0101na\u1e43 yato bhavet\nbrahmaj\u00f1\u0101n\u0101val\u012bm\u0101l\u0101 sarve\u1e63\u0101\u1e43 mok\u1e63asiddhaye”,
-me: “This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.”,
-ins: “This is not a text to be studied \u2014 it is a text to be heard inwardly. Even once. The promise is built into the opening.” },
-
-{ sk: “\u0905\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938\u091a\u094d\u091a\u093f\u0926\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “asa\u1e45go\u2019ham asa\u1e45go\u2019ham asa\u1e45go\u2019ha\u1e43 puna\u1e25 puna\u1e25\nsaccid\u0101nandar\u016bpo\u2019ham ahamev\u0101ham avyaya\u1e25”,
-me: “Unattached am I, unattached am I, unattached am I \u2014 again and again. I am of the nature of Existence-Consciousness-Bliss. I am the very Self, indestructible and ever unchanging.”,
-ins: “The triple repetition is the method itself. The mind needs to hear the truth three times before it loosens its grip on the false.” },
-
-{ sk: “\u0928\u093f\u0924\u094d\u092f\u0936\u0941\u0926\u094d\u0927\u0935\u093f\u092e\u0941\u0915\u094d\u0924\u094b\u0027\u0939\u0902 \u0928\u093f\u0930\u093e\u0915\u093e\u0930\u094b\u0027\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u092d\u0942\u092e\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “nityasuddha\u0307vimukto\u2019ha\u1e43 nir\u0101k\u0101ro\u2019ham avyaya\u1e25\nbh\u016bm\u0101nandasvar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am eternally pure, I am liberated, I am formless, I am indestructible. I am of the nature of infinite, boundless bliss. I am the very Self, indestructible and changeless.”,
-ins: “Purity here is not moral \u2014 it is ontological. Not \u2018I have become pure\u2019 but \u2018I am, by nature, never impure.\u2019 Liberation is not future \u2014 it is a recognition of what already is.” },
-
-{ sk: “\u0935\u093f\u091c\u094d\u091e\u093e\u0928\u0918\u0928\u0930\u0942\u092a\u094b\u0027\u0939\u0902 \u091a\u093f\u0926\u093e\u0915\u093e\u0936\u094b\u0027\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0964\n\u0915\u0947\u0935\u0932\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “vij\u00f1\u0101naghanaroopo\u2019ha\u1e43 cid\u0101k\u0101\u015bo\u2019ham avyaya\u1e25\nkeval\u0101nandar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am of the nature of dense, solid awareness. I am the sky of consciousness, indestructible. I am pure, unconditioned bliss. I am the very Self, indestructible and changeless.”,
-ins: “Cid\u0101k\u0101\u015ba \u2014 the sky of consciousness \u2014 nothing sticks to it. Clouds pass. The sky remains. You are the sky, not the cloud.” },
-
-{ sk: “\u0928\u093f\u0924\u094d\u092f\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u0902 \u092a\u0930\u092e\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u092e\u0941\u0915\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “nity\u0101nandasvar\u016bpo\u2019ha\u1e43 param\u0101nandaro\u016bpadhrik\nmujkt\u0101nandasvar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am of the nature of eternal bliss. I am the bearer of the form of supreme bliss. I am the bliss of liberation. I am the very Self, indestructible and changeless.”,
-ins: “Three flavors of \u0101nanda in one verse: nitya (eternal), parama (supreme), mukta (free). Shankara is not repeating \u2014 he is descending, like three steps into the same ocean.” },
-
-{ sk: “\u0938\u0924\u094d\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u093f\u0924\u094d\u092f\u0947\u0935\u0902 \u092f\u0903 \u0915\u0930\u094b\u0924\u093f \u0938\u0926\u093e \u091c\u092a\u092e\u094d \u0964\n\u092d\u0935\u092a\u093e\u0936\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u0903 \u0938 \u092f\u093e\u0924\u093f \u092a\u0930\u092e\u093e\u0902 \u0917\u0924\u093f\u092e\u094d \u0965\u0965”,
-ro: “satsvar\u016bpo\u2019ham ityeva\u1e43 ya\u1e25 karoti sad\u0101 japam\nbhavap\u0101\u015bavinirmukta\u1e25 sa y\u0101ti param\u0101\u1e43 gatim”,
-me: “One who constantly repeats as japa \u2018I am of the nature of pure existence\u2019 \u2014 freed from the bonds of worldly existence, that one attains the supreme state.”,
-ins: “The japa is not a request to become. It is a remembering of what you already are. The repetition wears down the false, not builds the true.” },
-
-{ sk: “\u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092c\u094d\u0930\u0939\u094d\u092e \u0905\u0939\u092e\u0947\u0935 \u092a\u0930\u0902 \u092a\u0926\u092e\u094d \u0964\n\u0905\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “ahameva para\u1e43 brahma ahameva para\u1e43 padam\nahamev\u0101hamev\u0101ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I alone am the supreme Brahman. I alone am the supreme state. I am, I am, I am \u2014 I am the very Self, indestructible and changeless.”,
-ins: “The \u2018I\u2019 speaking here is not the ego. The ego cannot say \u2018I am Brahman\u2019 truthfully. Only Brahman can say it. To realize this verse is to realize who is speaking.” },
-
-{ sk: “\u0905\u0928\u094d\u0924\u0930\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u0902 \u092a\u094d\u0930\u0924\u094d\u092f\u0917\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0936\u0941\u0926\u094d\u0927\u091a\u0948\u0924\u0928\u094d\u092f\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “antar\u0101tmasvar\u016bpo\u2019ha\u1e43 pratyag\u0101tmasvar\u016bpadhrik\n\u015buddhaicaitanyar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am the inner Self. I am the bearer of the innermost Self, the awareness that turns back inward. I am pure consciousness itself. I am the very Self, indestructible and changeless.”,
-ins: “Pratyag\u0101tman \u2014 the Self that faces inward, toward its own source, against the outward current of the senses. This is the direction of self-inquiry.” },
-
-{ sk: “\u0906\u0924\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u0027\u0939\u0902 \u0938\u0924\u094d\u0924\u093e\u092e\u093e\u0924\u094d\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0906\u0928\u0928\u094d\u0926\u093e\u092e\u0943\u0924\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “\u0101tmaj\u00f1\u0101naprak\u0101\u015bo\u2019ha\u1e43 satt\u0101m\u0101trasvar\u016bpadhrik\n\u0101nand\u0101m\u1e5btaro\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am the luminosity of Self-knowledge. I am pure being itself. I am the immortal nectar of bliss. I am the very Self, indestructible and changeless.”,
-ins: “Light needs no source to illuminate itself. The Self is self-luminous \u2014 it does not require another awareness to know it. This is what makes Advaita\u2019s position radical.” },
-
-{ sk: “\u0917\u0941\u0923\u0924\u094d\u0930\u092f\u0935\u094d\u092f\u0924\u0940\u0924\u094b\u0027\u0939\u0902 \u092c\u094d\u0930\u0939\u094d\u092e\u093e\u0926\u0940\u0928\u093e\u0902 \u091a \u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0939\u092e\u094d \u0964\n\u0905\u0928\u0928\u094d\u0924\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “gu\u1e47atrayavyat\u012bto\u2019ha\u1e43 brahm\u0101d\u012bn\u0101\u1e43 ca s\u0101k\u1e63yaham\nanan\u1e6d\u0101nandar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am beyond the three gunas \u2014 sattva, rajas, and tamas. I am the witness of even Brahma and others. I am of the nature of infinite bliss. I am the very Self, indestructible and changeless.”,
-ins: “Not even Brahma, the creator, is the ultimate witness \u2014 the Self witnesses all creative power itself. This is a staggering ontological claim, delivered quietly.” },
-
-{ sk: “\u0905\u0928\u094d\u0924\u0930\u094d\u092f\u093e\u092e\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u0902 \u0915\u0942\u091f\u0938\u094d\u0925\u0903 \u0938\u0930\u094d\u0935\u0917\u094b\u0027\u0938\u094d\u092e\u094d\u092f\u0939\u092e\u094d \u0964\n\u092a\u0930\u092e\u093e\u0924\u094d\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “antar\u0101misvar\u016bpo\u2019ha\u1e43 k\u016b\u1e6dastha\u1e25 sarvago\u2019smyaham\nparam\u0101tmasvar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am the inner controller. I am immutable, the unchanging anvil. I am all-pervading. I am the supreme Self. I am the very Self, indestructible and changeless.”,
-ins: “Kutastha \u2014 literally \u2018standing at the top of the anvil\u2019 \u2014 what strikes all things without being struck itself. The deepest stillness in the midst of all movement.” },
-
-{ sk: “\u0928\u093f\u0937\u094d\u0915\u0932\u094b\u0027\u0939\u0902 \u0928\u093f\u0937\u094d\u0915\u094d\u0930\u093f\u092f\u094b\u0027\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0924\u094d\u092e\u093e \u0906\u0926\u094d\u092f\u0903 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0905\u092a\u0930\u094b\u0915\u094d\u0937\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “ni\u1e63kalo\u2019ha\u1e43 ni\u1e63kriyo\u2019ha\u1e43 sarv\u0101tm\u0101 \u0101dya\u1e25 san\u0101tana\u1e25\naparo\u2019k\u1e63asvar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am without parts. I am actionless. I am the self of all, the primordial, the ancient, the eternal. I am the directly intuited Self \u2014 not known through inference but directly. I am the very Self, indestructible and changeless.”,
-ins: “Aparoksha \u2014 not mediated, not inferred, not heard about. The Self is the only knowledge that is its own object. All other knowledge is indirect.” },
-
-{ sk: “\u0926\u094d\u0935\u0928\u094d\u0926\u094d\u0935\u093e\u0926\u093f\u0938\u093e\u0915\u094d\u0937\u093f\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u091a\u0932\u094b\u0027\u0939\u0902 \u0938\u0928\u093e\u0924\u0928\u0903 \u0964\n\u0938\u0930\u094d\u0935\u0938\u093e\u0915\u094d\u0937\u093f\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “dvandv\u0101dis\u0101k\u1e63ir\u016bpo\u2019ha\u1e43 acalo\u2019ha\u1e43 san\u0101tana\u1e25\nsarvas\u0101k\u1e63isvar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am the witness of all pairs of opposites \u2014 pleasure and pain, heat and cold. I am immovable. I am eternal. I am the witness of everything. I am the very Self, indestructible and changeless.”,
-ins: “Dvandva \u2014 the pairs. The Self does not choose between opposites. It witnesses both. This is the root of equanimity \u2014 not the resolution of opposites, but what stands behind them both.” },
-
-{ sk: “\u0905\u0915\u0930\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u092d\u094b\u0915\u094d\u0924\u0943\u0938\u094d\u0935\u0930\u0942\u092a\u0927\u0943\u0915\u094d \u0964\n\u0915\u0947\u0935\u0932\u0938\u094d\u0935\u092a\u094d\u0930\u0915\u093e\u0936\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “akart\u1e5bsvar\u016bpo\u2019ha\u1e43 abhokt\u1e5bsvar\u016bpadhrik\nkevalasvapr\u0101k\u0101\u015bo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am not a doer. I am not an experiencer. I am pure self-luminosity alone. I am the very Self, indestructible and changeless.”,
-ins: “The deepest paradox: the one reading this is told they are neither doing the reading nor experiencing it. And yet \u2014 there is awareness of both. That awareness is what is being pointed to.” },
-
-{ sk: “\u0928\u093f\u0930\u093e\u0927\u093e\u0930\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u0902 \u0938\u0930\u094d\u0935\u093e\u0927\u093e\u0930\u094b\u0027\u0939\u092e\u0947\u0935 \u091a \u0964\n\u0906\u092a\u094d\u0924\u0915\u093e\u092e\u0938\u094d\u0935\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “nir\u0101dh\u0101rasvar\u016bpo\u2019ha\u1e43 sarv\u0101dh\u0101ro\u2019hameva ca\n\u0101ptakam\u0101svar\u016bpo\u2019ha\u1e43 ahamev\u0101ham avyaya\u1e25”,
-me: “I am without any support, and I am the support of all. I have no desires yet to be fulfilled. I am the very Self, indestructible and changeless.”,
-ins: “Both at once: the unsupported and the support of all. Advaita holds contradiction not by resolving it, but by finding the level at which it dissolves.” },
-
-{ sk: “\u0924\u093e\u092a\u0924\u094d\u0930\u092f\u0935\u093f\u0928\u093f\u0930\u094d\u092e\u0941\u0915\u094d\u0924\u094b \u0926\u0947\u0939\u0924\u094d\u0930\u092f\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u0903 \u0964\n\u0905\u0935\u0938\u094d\u0925\u093e\u0924\u094d\u0930\u092f\u0938\u093e\u0915\u094d\u0937\u094d\u092f\u0938\u094d\u092e\u093f \u091a\u093e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
-ro: “t\u0101patrayavinirmukto dehatrayavilak\u1e63a\u1e47a\u1e25\navasth\u0101tray\u0101s\u0101k\u1e63yasmi c\u0101hamev\u0101ham avyaya\u1e25”,
-me: “I am free from the threefold afflictions. I am distinct from the three bodies \u2014 gross, subtle, causal. I am the witness of the three states \u2014 waking, dream, and deep sleep. I am the very Self, indestructible and changeless.”,
-ins: “Three threes: three afflictions, three bodies, three states \u2014 and in all of them, the same witness remains. The common thread across all conditions is the \u2018I\u2019 that notices them.” },
-
-{ sk: “\u0926\u0943\u0917\u094d\u0926\u0943\u0936\u094d\u092f\u094c \u0926\u094d\u0935\u094c \u092a\u0926\u093e\u0930\u094d\u0925\u094c \u0938\u094d\u0924\u0903 \u092a\u0930\u0938\u094d\u092a\u0930\u0935\u093f\u0932\u0915\u094d\u0937\u0923\u094c \u0964\n\u0926\u0943\u0917\u094d\u092c\u094d\u0930\u0939\u094d\u092e \u0926\u0943\u0936\u094d\u092f\u0902 \u092e\u093e\u092f\u0947\u0924\u093f \u0938\u0930\u094d\u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965\u0965”,
-ro: “d\u1e5bgd\u1e5b\u015byau dvau pad\u0101rthau sta\u1e25 parasparavilak\u1e63a\u1e47au\nd\u1e5bgbrahma d\u1e5b\u015bya\u1e43 m\u0101yeti sarvavedanta\u1e0di\u1e47\u1e0dima\u1e25”,
-me: “There are two things entirely different from each other: the seer and the seen. The seer is Brahman; the seen is Maya. This is the drumbeat of all Vedanta.”,
-ins: “Dindima \u2014 a small drum announcing something important. All of Vedanta, Shankara says, can be beaten out in this one rhythm: the seer and the seen are not the same.” },
-
-{ sk: “\u0905\u0939\u0902 \u0938\u093e\u0915\u094d\u0937\u0940\u0924\u093f \u092f\u094b \u0935\u093f\u0926\u094d\u092f\u093e\u0924\u094d \u0935\u093f\u0935\u093f\u091a\u094d\u092f\u0948\u0935\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938 \u090f\u0935 \u092e\u0941\u0915\u094d\u0924\u0903 \u0938\u094b \u0935\u093f\u0926\u094d\u0935\u093e\u0928\u094d \u0907\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965\u0965”,
-ro: “aha\u1e43 s\u0101k\u1e63\u012bti yo vidy\u0101t vivicyeva\u1e43 puna\u1e25 puna\u1e25\nsa eva mukta\u1e25 so vidv\u0101n iti vedanta\u1e0di\u1e47\u1e0dima\u1e25”,
-me: “One who realizes \u2014 through repeated discrimination \u2014 that \u2018I am the witness\u2019: that one alone is liberated. That one is the wise one. This is the drumbeat of Vedanta.”,
-ins: “Liberation is not a distant event. It is the recognition, repeated, deepened, stabilized. Punah punah \u2014 again and again. Not once, but until it becomes the ground you stand on.” },
-
-{ sk: “\u0918\u091f\u0915\u0941\u0921\u094d\u092f\u093e\u0926\u093f\u0915\u0902 \u0938\u0930\u094d\u0935\u0902 \u092e\u0943\u0924\u094d\u0924\u093f\u0915\u093e\u092e\u093e\u0924\u094d\u0930\u092e\u0947\u0935 \u091a \u0964\n\u0924\u0926\u094d\u0935\u0926\u094d \u092c\u094d\u0930\u0939\u094d\u092e \u091c\u0917\u0924\u094d \u0938\u0930\u094d\u0935\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965\u0965”,
-ro: “gha\u1e6daku\u1e0dy\u0101dika\u1e43 sarva\u1e43 m\u1e5bttik\u0101m\u0101trameva ca\ntadvad brahma jagat sarvamiti vedanta\u1e0di\u1e47\u1e0dima\u1e25”,
-me: “The pot, the wall, and everything else are nothing but clay. Likewise, the entire universe is nothing but Brahman. This is the drumbeat of Vedanta.”,
-ins: “The pot and the wall appear different. In name and form, yes. But their substance is one. The universe and Brahman \u2014 same logic. The many in the one.” },
-
-{ sk: “\u092c\u094d\u0930\u0939\u094d\u092e \u0938\u0924\u094d\u092f\u0902 \u091c\u0917\u0928\u094d\u092e\u093f\u0925\u094d\u092f\u093e \u091c\u0940\u0935\u094b \u092c\u094d\u0930\u0939\u094d\u092e\u0948\u0935 \u0928\u093e\u092a\u0930\u0903 \u0964\n\u0905\u0928\u0947\u0928 \u0935\u0947\u0926\u094d\u092f\u0902 \u0938\u091a\u094d\u091b\u093e\u0938\u094d\u0924\u094d\u0930\u092e\u093f\u0924\u093f \u0935\u0947\u0926\u093e\u0928\u094d\u0924\u0921\u093f\u0923\u094d\u0921\u093f\u092e\u0903 \u0965\u0965”,
-ro: “brahma satya\u1e43 jaganmith\u0101y\u0101 j\u012bvo brahmaiva n\u0101para\u1e25\nanena vedya\u1e43 sacchaastramiti vedanta\u1e0di\u1e47\u1e0dima\u1e25”,
-me: “Brahman is real. The universe is mithya \u2014 neither real nor unreal, but dependent. The individual soul is Brahman itself, not other. This is what true scripture reveals. This is the drumbeat of Vedanta.”,
-ins: “The mahavakya in summary form. Mithya is not \u2018false\u2019 \u2014 it is \u2018dependent reality,\u2019 like a dream that is real while you are in it. The jiva\u2019s separation from Brahman is the dream. This verse is the awakening.” }
-];
-
-// Storage
-var KEY = ‘bjm_v1’;
-function storeOK() {
-try { localStorage.setItem(’**t**’,‘1’); localStorage.removeItem(’**t**’); return true; }
-catch(e) { return false; }
-}
-function loadState() {
-if (!storeOK()) return null;
-try {
-var r = localStorage.getItem(KEY);
-if (!r) return null;
-var p = JSON.parse(r);
-if (!p || typeof p !== ‘object’) return null;
-return {
-idx:  typeof p.idx === ‘number’ ? Math.min(Math.max(Math.floor(p.idx), 0), V.length) : 0,
-home: typeof p.home === ‘boolean’ ? p.home : true,
-ent:  (p.ent && typeof p.ent === ‘object’) ? p.ent : {},
-ts:   typeof p.ts === ‘string’ ? p.ts : null
-};
-} catch(e) { return null; }
-}
-function saveState() {
-if (!storeOK()) return;
-try { localStorage.setItem(KEY, JSON.stringify({ idx: idx, home: home, ent: ent, ts: new Date().toISOString() })); }
-catch(e) {}
-}
-
-// State
-var b    = loadState();
-var idx  = b ? b.idx  : 0;
-var home = b ? b.home : true;
-var ent  = b ? b.ent  : {};
-var ts   = b ? b.ts   : null;
-
-// Autosave
-var timer = null;
-function schedSave() {
-clearTimeout(timer);
-timer = setTimeout(flush, 700);
-}
-function flush() {
-var el = document.getElementById(‘ji’);
-if (!el) return;
-var v = el.value.replace(/\0/g,’’).slice(0, 20000);
-if (v.trim()) ent[idx] = v;
-else delete ent[idx];
-ts = new Date().toISOString();
-saveState();
-refreshInd();
-}
-function cnt() { return Object.keys(ent).length; }
-function refreshInd() {
-var el = document.getElementById(‘si’);
-if (!el) return;
-var c = cnt();
-if (c > 0) {
-var d = ‘’;
-try { d = new Date(ts).toLocaleString(undefined,{month:‘short’,day:‘numeric’,hour:‘2-digit’,minute:‘2-digit’}); } catch(e) {}
-el.textContent = c + ’ reflection’ + (c>1?‘s’:’’) + ’ saved \u00b7 ’ + d;
-} else {
-el.textContent = ‘’;
-}
-}
-
-// Export
-function exportJ() {
-var lines = [
-‘Brahma Jnanavali Mala \u2014 Reflection Journal’,
-‘==============================================’,
-‘Exported: ’ + new Date().toLocaleString(), ‘’
-];
-for (var i = 0; V.length > i; i++) {
-if (!ent[i]) continue;
-lines.push(‘Verse ’ + (i+1));
-lines.push(’–––––––––––––––––––––––’);
-lines.push(V[i].ro.replace(/\n/g,’ ‘));
-lines.push(’’);
-lines.push(ent[i]);
-lines.push(’’);
-}
-if (lines.length <= 4) { alert(‘No reflections to export yet.’); return; }
-var blob = new Blob([lines.join(’\n’)], {type:‘text/plain;charset=utf-8’});
-var url  = URL.createObjectURL(blob);
-var a    = document.createElement(‘a’);
-a.href = url; a.download = ‘bjm-reflections.txt’;
-document.body.appendChild(a); a.click();
-setTimeout(function(){ URL.revokeObjectURL(url); a.parentNode.removeChild(a); }, 800);
-}
-
-// Clear
-function clearAll() {
-if (!confirm(‘Clear all reflections and begin fresh?\n\nThis cannot be undone.’)) return;
-ent = {}; idx = 0; home = true; ts = null;
-if (storeOK()) localStorage.removeItem(KEY);
+var V=JSON.parse(document.getElementById('vdata').textContent);
+var KEY='bjm_v1';
+function sok(){try{localStorage.setItem('t','1');localStorage.removeItem('t');return true;}catch(e){return false;}}
+function load(){if(!sok())return null;try{var r=localStorage.getItem(KEY);if(!r)return null;var p=JSON.parse(r);if(!p||typeof p!=='object')return null;return{idx:typeof p.idx==='number'?Math.min(Math.max(Math.floor(p.idx),0),V.length):0,home:typeof p.home==='boolean'?p.home:true,ent:(p.ent&&typeof p.ent==='object')?p.ent:{},ts:typeof p.ts==='string'?p.ts:null};}catch(e){return null;}}
+function save(){if(!sok())return;try{localStorage.setItem(KEY,JSON.stringify({idx:idx,home:home,ent:ent,ts:new Date().toISOString()}));}catch(e){}}
+var b=load();var idx=b?b.idx:0;var home=b?b.home:true;var ent=b?b.ent:{};var ts=b?b.ts:null;
+var timer=null;
+function sched(){clearTimeout(timer);timer=setTimeout(flush,700);}
+function flush(){var el=document.getElementById('ji');if(!el)return;var v=el.value.slice(0,20000);if(v.trim())ent[idx]=v;else delete ent[idx];ts=new Date().toISOString();save();upd();}
+function cnt(){return Object.keys(ent).length;}
+function upd(){var el=document.getElementById('si');if(!el)return;var c=cnt();if(c>0){var d='';try{d=new Date(ts).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){}el.textContent=c+' reflection'+(c>1?'s':'')+' saved - '+d;}else{el.textContent='';}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function exp(){var L=['Brahma Jnanavali Mala - Journal','=================================','Exported: '+new Date().toLocaleString(),''];for(var i=0;i<V.length;i++){if(!ent[i])continue;L.push('Verse '+(i+1));L.push('---------------------------------');L.push(V[i].ro.replace(/\n/g,' '));L.push('');L.push(ent[i]);L.push('');}if(L.length<=4){alert('No reflections yet.');return;}var b2=new Blob([L.join('\n')],{type:'text/plain;charset=utf-8'});var u=URL.createObjectURL(b2);var a=document.createElement('a');a.href=u;a.download='bjm-reflections.txt';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.parentNode.removeChild(a);},800);}
+function clr(){if(!confirm('Clear all reflections?'))return;ent={};idx=0;home=true;ts=null;if(sok())localStorage.removeItem(KEY);render();}
+function fresh(){home=false;idx=0;save();render();}
+function resume(i){home=false;idx=i;save();render();}
+function gohome(){flush();home=true;save();render();}
+function go(i){flush();idx=i;save();render();}
+function done(){flush();idx=V.length;save();render();}
+function urow(){if(cnt()===0)return'';return'<div class="ur" style="margin-top:11px"><button class="bs bx" onclick="exp()">Export Journal</button><button class="bd" onclick="clr()">Clear All</button></div>';}
+function rIntro(){var c=cnt();var ri=Math.min(idx,V.length-1);var back=ri>0||c>0;var h='<div class="card"><div class="om">&#2384;</div><h2>'+(back?'Welcome Back':'Begin the Reflection')+'</h2><p class="ip">The Brahma Jnanavali Mala is a garland of 20 verses by Adi Shankaracharya. Each verse is a declaration of what you already are.</p><p class="ip">Move through one verse at a time. Read. Sit. Write whatever arises.</p><div class="iq">Sakrit shravanamaatrena brahmajnanam yato bhavet - by hearing even once, the knowledge of Brahman arises.</div><div class="br">';if(ri>0){h+='<button class="bp" onclick="resume('+ri+')">Continue - Verse '+(ri+1)+'</button><button class="bs" onclick="fresh()">From Verse I</button>';}else{h+='<button class="bp" onclick="fresh()">Begin - Verse I</button>';}h+='</div>';if(c>0){var d='';try{d=new Date(ts).toLocaleString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){}h+='<p class="rn">'+c+' reflection'+(c>1?'s':'')+' held - '+d+'</p>';}h+=urow()+'</div>';return h;}
+function rVerse(i){var v=V[i];var pct=Math.round(i/V.length*100);var skLines=v.sk.split('\n').join('<br>');var roLines=v.ro.split('\n').join('<br>');var h='<div class="pw"><div class="pb"><div class="pf" style="width:'+pct+'%"></div></div><span class="pl">Verse '+(i+1)+' of '+V.length+'</span></div>';h+='<div class="card"><div class="vt">Verse '+v.n+'</div><div class="vsk">'+skLines+'</div><div class="vro">'+roLines+'</div><div class="vdv">* * *</div><div class="vme">'+v.me+'</div><div class="vi">'+v.ins+'</div></div>';h+='<div class="card"><div class="jl">Reflection</div><textarea id="ji" rows="5" oninput="sched()">'+esc(ent[i]||'')+'</textarea><div id="si" class="si"></div></div>';h+='<div class="br">';if(i>0)h+='<button class="bs" onclick="go('+(i-1)+')">Previous</button>';if(V.length-1>i)h+='<button class="bp" onclick="go('+(i+1)+')">Next Verse</button>';else h+='<button class="bp" onclick="done()">Complete the Mala</button>';h+='<button class="bs bx ml" onclick="gohome()">Home</button>';h+='</div>';h+=urow();return h;}
+function rComp(){var c=cnt();var h='<div class="card"><div class="om">&#10022;</div><h2>The Mala is Complete</h2><p>'+(c>0?c+' reflection'+(c>1?'s':'')+' in your journal.':'The garland has been offered.')+'</p><p style="font-size:13px">Brahma satyam, jaganmithya, jivo brahmaiva naparah</p><div class="br" style="justify-content:center;margin-bottom:10px"><button class="bp" onclick="fresh()">Begin Again</button>';if(c>0)h+='<button class="bs" onclick="exp()">Export Journal</button>';h+='</div>';if(c>0)h+='<div style="text-align:center"><button class="bd" onclick="clr()">Clear All</button></div>';h+='</div>';return h;}
+function render(){var app=document.getElementById('app');if(!app)return;if(home){app.innerHTML=rIntro();}else if(idx>=V.length){app.innerHTML=rComp();}else{app.innerHTML=rVerse(idx);upd();window.scrollTo(0,0);}}
 render();
-}
-
-// Navigation
-function fresh()     { home = false; idx = 0; saveState(); render(); }
-function resumeAt(i) { home = false; idx = i; saveState(); render(); }
-function goHome()    { flush(); home = true; saveState(); render(); }
-function go(i)       { flush(); idx = i; saveState(); render(); }
-function finish()    { flush(); idx = V.length; saveState(); render(); }
-
-// Render
-function render() {
-var app = document.getElementById(‘app’);
-if (!app) return;
-if (home) {
-app.innerHTML = renderIntro();
-} else if (idx >= V.length) {
-app.innerHTML = renderComp();
-} else {
-app.innerHTML = renderVerse(idx);
-refreshInd();
-window.scrollTo(0, 0);
-}
-}
-
-function esc(s) {
-return String(s)
-.replace(/&/g,’&’)
-.replace(/</g,’<’)
-.replace(/>/g,’>’)
-.replace(/”/g,’"’);
-}
-
-function utilRow() {
-if (cnt() === 0) return ‘’;
-return ‘<div class="util-row" style="margin-top:14px">’
-+ ‘<button class="btn-s btn-sm" onclick="exportJ()">Export Journal</button>’
-+ ‘<button class="btn-d" onclick="clearAll()">Clear All</button>’
-+ ‘</div>’;
-}
-
-function renderIntro() {
-var c  = cnt();
-var ri = Math.min(idx, V.length - 1);
-var back = (ri > 0 || c > 0);
-var h = ‘’;
-h += ‘<div class="card">’;
-h += ‘<div class="intro-om">\u0913\u0902</div>’;
-h += ‘<h2>’ + (back ? ‘Welcome Back’ : ‘Begin the Reflection’) + ‘</h2>’;
-h += ‘<p>The <em>Brahma Jnanavali Mala</em> is a garland of 20 verses by Adi Shankaracharya. Each verse is a declaration \u2014 not a prayer, not a petition \u2014 of what you already are.</p>’;
-h += ‘<p>Move through one verse at a time. Read. Sit. Write whatever arises.</p>’;
-h += ‘<div class="intro-quote">“Sakrit shravanamaatrena brahmajnanam yato bhavet” \u2014<br>By hearing even once, the knowledge of Brahman arises.</div>’;
-h += ‘<div class="btn-row">’;
-if (ri > 0) {
-h += ‘<button class="btn-p" onclick="resumeAt(' + ri + ')">Continue \u2014 Verse ’ + (ri+1) + ‘</button>’;
-h += ‘<button class="btn-s" onclick="fresh()">From Verse I</button>’;
-} else {
-h += ‘<button class="btn-p" onclick="fresh()">Begin \u2014 Verse I</button>’;
-}
-h += ‘</div>’;
-if (c > 0) {
-var d = ‘’;
-try { d = new Date(ts).toLocaleString(undefined,{month:‘short’,day:‘numeric’,hour:‘2-digit’,minute:‘2-digit’}); } catch(e) {}
-h += ‘<p class="resume-note">’ + c + ’ reflection’ + (c>1?‘s’:’’) + ’ held \u00b7 ’ + d + ‘</p>’;
-}
-h += utilRow();
-h += ‘</div>’;
-return h;
-}
-
-function renderVerse(i) {
-var v   = V[i];
-var pct = Math.round((i / V.length) * 100);
-var h = ‘’;
-
-h += ‘<div class="prog-wrap">’
-+ ‘<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>’
-+ ’<span class="prog-label">Verse ’ + (i+1) + ’ of ’ + V.length + ‘</span>’
-+ ‘</div>’;
-
-h += ‘<div class="card">’;
-h += ‘<div class="verse-num">Verse ’ + v.n + ’  ·  Brahma Jnanavali Mala</div>’;
-h += ‘<div class="verse-sk">’ + v.sk.replace(/\n/g,’<br>’) + ‘</div>’;
-h += ‘<div class="verse-ro">’ + v.ro.replace(/\n/g,’<br>’) + ‘</div>’;
-h += ‘<div class="divider">\u2756</div>’;
-h += ‘<div class="verse-me">’ + v.me + ‘</div>’;
-h += ‘<div class="verse-in">’ + v.ins + ‘</div>’;
-h += ‘</div>’;
-
-h += ‘<div class="card">’;
-h += ‘<div class="jlabel">Reflection</div>’;
-h += ‘<textarea id="ji" placeholder="Write whatever arises \u2014 no right answer, no performance..." rows="6" oninput="schedSave()">’ + esc(ent[i] || ‘’) + ‘</textarea>’;
-h += ‘<div id="si" class="saved-note"></div>’;
-h += ‘</div>’;
-
-h += ‘<div class="btn-row">’;
-if (i > 0)             h += ‘<button class="btn-s" onclick="go(' + (i-1) + ')">\u2190 Previous</button>’;
-if (V.length - 1 > i) h += ‘<button class="btn-p" onclick="go(' + (i+1) + ')">Next Verse \u2192</button>’;
-else                   h += ‘<button class="btn-p" onclick="finish()">Complete the Mala \u2756</button>’;
-h += ‘<button class="btn-s btn-sm ml" onclick="goHome()">\u2302 Home</button>’;
-h += ‘</div>’;
-h += utilRow();
-return h;
-}
-
-function renderComp() {
-var c = cnt();
-var h = ‘’;
-h += ‘<div class="card comp">’;
-h += ‘<div class="comp-star">\u2756</div>’;
-h += ‘<h2>The Mala is Complete</h2>’;
-h += ‘<p>’ + (c > 0 ? c + ’ reflection’ + (c>1?‘s’:’’) + ’ now live in your journal.’ : ‘The garland has been offered.’) + ‘</p>’;
-h += ‘<p style="font-size:13px">Brahma satyam, jaganmithya, jivo brahmaiva naparah</p>’;
-h += ‘<div class="btn-row" style="justify-content:center;margin-bottom:10px">’;
-h += ‘<button class="btn-p" onclick="fresh()">Begin Again</button>’;
-if (c > 0) h += ‘<button class="btn-s" onclick="exportJ()">Export Journal</button>’;
-h += ‘</div>’;
-if (c > 0) h += ‘<div style="text-align:center"><button class="btn-d" onclick="clearAll()">Clear All</button></div>’;
-h += ‘</div>’;
-return h;
-}
-
-render();
-
-//]]>
 </script>
-
 </body>
 </html>
