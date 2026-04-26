@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brahma Jnanavali Mala 4/26 11:45 am</title>
+<title>Brahma Jnanavali Mala</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400&display=swap" rel="stylesheet"></noscript>
 <style>
@@ -219,11 +219,13 @@ padding: 10px 14px; margin: 14px 0 24px; line-height: 1.7;
 
 </div>
 <script>
+//<![CDATA[
+
 var V = [
-  { sk: "\u0938\u0915\u0943\u0924\u094d \u0936\u094d\u0930\u0935\u0923\u092e\u093e\u0924\u094d\u0930\u0947\u0923 \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u0902 \u092f\u0924\u094b \u092d\u0935\u0947\u0924\u094d \u0964\n\u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e \u0938\u0930\u094d\u0935\u0947\u0937\u093e\u0902 \u092e\u094b\u0915\u094d\u0937\u0938\u093f\u0926\u094d\u0927\u092f\u0947 \u0965\u0965",
-    ro: "sak\u1e5bt \u015brava\u1e47am\u0101tre\u1e47a brahmaj\u00f1\u0101na\u1e43 yato bhavet\nbrahmaj\u00f1\u0101n\u0101val\u012bm\u0101l\u0101 sarve\u1e63\u0101\u1e43 mok\u1e63asiddhaye",
-    me: "This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.",
-    ins: "This is not a text to be studied \u2014 it is a text to be heard inwardly. Even once. The promise is built into the opening." },
+{ sk: “\u0938\u0915\u0943\u0924\u094d \u0936\u094d\u0930\u0935\u0923\u092e\u093e\u0924\u094d\u0930\u0947\u0923 \u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u0902 \u092f\u0924\u094b \u092d\u0935\u0947\u0924\u094d \u0964\n\u092c\u094d\u0930\u0939\u094d\u092e\u091c\u094d\u091e\u093e\u0928\u093e\u0935\u0932\u0940\u092e\u093e\u0932\u093e \u0938\u0930\u094d\u0935\u0947\u0937\u093e\u0902 \u092e\u094b\u0915\u094d\u0937\u0938\u093f\u0926\u094d\u0927\u092f\u0947 \u0965\u0965”,
+ro: “sak\u1e5bt \u015brava\u1e47am\u0101tre\u1e47a brahmaj\u00f1\u0101na\u1e43 yato bhavet\nbrahmaj\u00f1\u0101n\u0101val\u012bm\u0101l\u0101 sarve\u1e63\u0101\u1e43 mok\u1e63asiddhaye”,
+me: “This garland of the knowledge of Brahman, by hearing which just once the knowledge of Brahman is attained, is offered for the liberation of all.”,
+ins: “This is not a text to be studied \u2014 it is a text to be heard inwardly. Even once. The promise is built into the opening.” },
 
 { sk: “\u0905\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u092e\u0938\u0919\u094d\u0917\u094b\u0027\u0939\u0902 \u092a\u0941\u0928\u0903 \u092a\u0941\u0928\u0903 \u0964\n\u0938\u091a\u094d\u091a\u093f\u0926\u093e\u0928\u0928\u094d\u0926\u0930\u0942\u092a\u094b\u0027\u0939\u092e\u0939\u092e\u0947\u0935\u093e\u0939\u092e\u0935\u094d\u092f\u092f\u0903 \u0965\u0965”,
 ro: “asa\u1e45go\u2019ham asa\u1e45go\u2019ham asa\u1e45go\u2019ha\u1e43 puna\u1e25 puna\u1e25\nsaccid\u0101nandar\u016bpo\u2019ham ahamev\u0101ham avyaya\u1e25”,
@@ -392,7 +394,7 @@ var lines = [
 ‘==============================================’,
 ‘Exported: ’ + new Date().toLocaleString(), ‘’
 ];
-for (var i = 0; i < V.length; i++) {
+for (var i = 0; V.length > i; i++) {
 if (!ent[i]) continue;
 lines.push(‘Verse ’ + (i+1));
 lines.push(’–––––––––––––––––––––––’);
@@ -512,7 +514,7 @@ h += ‘</div>’;
 
 h += ‘<div class="btn-row">’;
 if (i > 0)             h += ‘<button class="btn-s" onclick="go(' + (i-1) + ')">\u2190 Previous</button>’;
-if (i < V.length - 1) h += ‘<button class="btn-p" onclick="go(' + (i+1) + ')">Next Verse \u2192</button>’;
+if (V.length - 1 > i) h += ‘<button class="btn-p" onclick="go(' + (i+1) + ')">Next Verse \u2192</button>’;
 else                   h += ‘<button class="btn-p" onclick="finish()">Complete the Mala \u2756</button>’;
 h += ‘<button class="btn-s btn-sm ml" onclick="goHome()">\u2302 Home</button>’;
 h += ‘</div>’;
@@ -538,6 +540,8 @@ return h;
 }
 
 render();
+
+//]]>
 </script>
 
 </body>
