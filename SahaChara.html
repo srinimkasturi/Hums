@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Saha Chara Chakra</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #1a3560;
+  --blue-mid: #2952a3;
+  --blue-soft: #e8eef8;
+  --yellow: #c8920a;
+  --yellow-soft: #fdf3dc;
+  --green: #1a6e45;
+  --green-soft: #e0f2ea;
+  --ink: #1e1e2e;
+  --mist: #8888a0;
+  --paper: #faf8f4;
+  --white: #ffffff;
+  --do-c: #2952a3;
+  --be-c: #b07a0a;
+  --ch-c: #1a6e45;
+  --do-s: #dce6f8;
+  --be-s: #faefd0;
+  --ch-s: #d0ede0;
+  --radius: 18px;
+  --shadow: 0 8px 32px rgba(30,30,60,0.10);
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+font-family: ‘DM Sans’, sans-serif;
+background: var(–paper);
+color: var(–ink);
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+max-width: 480px;
+margin: 0 auto;
+}
+
+/* ── TOP NAV ── */
+nav {
+background: var(–blue);
+padding: 0.9rem 1.2rem 0;
+display: flex;
+flex-direction: column;
+gap: 0;
+}
+.nav-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 300;
+font-size: 1.4rem;
+color: white;
+letter-spacing: 0.03em;
+}
+.nav-title em { color: #f0c84a; font-style: italic; }
+.nav-tabs {
+display: flex;
+margin-top: 0.7rem;
+gap: 0;
+}
+.nav-tab {
+flex: 1;
+text-align: center;
+padding: 0.5rem 0.3rem;
+font-size: 0.65rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.55);
+cursor: pointer;
+border-bottom: 3px solid transparent;
+transition: all 0.2s;
+font-weight: 500;
+}
+.nav-tab.active {
+color: #f0c84a;
+border-bottom-color: #f0c84a;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; flex-direction: column; flex: 1; padding: 1.2rem; gap: 1rem; }
+.screen.active { display: flex; }
+
+/* ── DAY CHECK-IN SCREEN ── */
+
+/* player indicator */
+.player-banner {
+border-radius: 12px;
+padding: 0.9rem 1.1rem;
+display: flex;
+align-items: center;
+gap: 0.8rem;
+animation: slideIn 0.35s ease;
+}
+@keyframes slideIn {
+from { opacity: 0; transform: translateY(-10px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+.player-avatar {
+width: 44px; height: 44px;
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.2rem;
+font-weight: 600;
+flex-shrink: 0;
+}
+.player-info { flex: 1; }
+.player-name {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.15rem;
+font-weight: 600;
+line-height: 1;
+}
+.player-role {
+font-size: 0.62rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+margin-top: 0.2rem;
+opacity: 0.7;
+}
+.player-B { background: var(–do-s); color: var(–do-c); }
+.player-B .player-avatar { background: var(–do-c); color: white; }
+.player-M { background: var(–be-s); color: var(–be-c); }
+.player-M .player-avatar { background: var(–be-c); color: white; }
+
+/* wheel rating cards */
+.wheel-card {
+background: white;
+border-radius: var(–radius);
+box-shadow: var(–shadow);
+padding: 1rem 1.1rem 1.1rem;
+display: flex;
+flex-direction: column;
+gap: 0.6rem;
+}
+.wheel-card-header {
+display: flex;
+align-items: center;
+gap: 0.6rem;
+}
+.wheel-dot {
+width: 10px; height: 10px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+.wheel-label {
+font-size: 0.62rem;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+font-weight: 500;
+}
+.wheel-prompt {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1rem;
+font-weight: 300;
+font-style: italic;
+color: var(–mist);
+line-height: 1.35;
+padding-left: 1.1rem;
+}
+
+/* tap rating buttons */
+.rating-row {
+display: flex;
+gap: 0.5rem;
+padding-left: 0.5rem;
+}
+.rating-btn {
+flex: 1;
+border: 2px solid #e0e0ea;
+background: white;
+border-radius: 10px;
+padding: 0.55rem 0.3rem;
+cursor: pointer;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.25rem;
+transition: all 0.18s;
+-webkit-tap-highlight-color: transparent;
+}
+.rating-btn .rb-icon { font-size: 1.3rem; }
+.rating-btn .rb-label {
+font-size: 0.58rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(–mist);
+font-weight: 500;
+}
+.rating-btn .rb-val {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 1.1rem;
+font-weight: 600;
+line-height: 1;
+}
+.rating-btn:hover { transform: translateY(-2px); }
+.rating-btn.selected-do { border-color: var(–do-c); background: var(–do-s); }
+.rating-btn.selected-do .rb-label { color: var(–do-c); }
+.rating-btn.selected-be { border-color: var(–be-c); background: var(–be-s); }
+.rating-btn.selected-be .rb-label { color: var(–be-c); }
+.rating-btn.selected-ch { border-color: var(–ch-c); background: var(–ch-s); }
+.rating-btn.selected-ch .rb-label { color: var(–ch-c); }
+
+/* action btn */
+.action-btn {
+width: 100%;
+padding: 0.9rem;
+border: none;
+border-radius: 12px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.85rem;
+font-weight: 500;
+letter-spacing: 0.06em;
+cursor: pointer;
+transition: all 0.2s;
+margin-top: 0.3rem;
+}
+.action-btn.primary {
+background: var(–blue);
+color: white;
+}
+.action-btn.primary:hover { background: var(–blue-mid); }
+.action-btn.primary:disabled { background: #ccc; cursor: default; }
+.action-btn.secondary {
+background: var(–yellow-soft);
+color: var(–yellow);
+border: 1px solid #e8d8a0;
+}
+
+/* done state */
+.done-panel {
+background: var(–blue);
+border-radius: var(–radius);
+padding: 1.5rem;
+text-align: center;
+color: white;
+animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn {
+from { opacity:0; transform:scale(0.9); }
+to   { opacity:1; transform:scale(1); }
+}
+.done-panel h2 {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 300;
+font-size: 1.6rem;
+font-style: italic;
+color: #f0c84a;
+margin-bottom: 0.4rem;
+}
+.done-panel p { font-size: 0.78rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
+.done-scores {
+display: flex;
+justify-content: center;
+gap: 1.2rem;
+margin: 1rem 0;
+}
+.done-score-item { text-align: center; }
+.done-score-val {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 2rem;
+line-height: 1;
+}
+.done-score-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.65; margin-top: 0.1rem; }
+
+/* ── WEEKLY WHEEL SCREEN ── */
+.week-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.week-header h2 {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 300;
+font-size: 1.3rem;
+font-style: italic;
+color: var(–blue);
+}
+.week-nav { display: flex; gap: 0.4rem; }
+.week-btn {
+background: var(–blue-soft);
+border: none;
+border-radius: 8px;
+width: 32px; height: 32px;
+cursor: pointer;
+font-size: 0.9rem;
+color: var(–blue);
+display: flex; align-items: center; justify-content: center;
+}
+
+.bicycle-container {
+background: white;
+border-radius: var(–radius);
+box-shadow: var(–shadow);
+padding: 1.2rem;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+}
+.bicycle-container canvas { width: 100%; max-width: 380px; }
+
+.week-day-strip {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 6px;
+width: 100%;
+}
+.wds-cell {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 3px;
+cursor: pointer;
+padding: 6px 2px;
+border-radius: 8px;
+transition: background 0.15s;
+}
+.wds-cell:hover { background: var(–blue-soft); }
+.wds-cell.today { background: var(–yellow-soft); }
+.wds-cell.selected { background: var(–blue-soft); outline: 2px solid var(–blue-mid); }
+.wds-label { font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(–mist); }
+.wds-num { font-size: 0.7rem; font-weight: 500; color: var(–ink); }
+.wds-dots { display: flex; gap: 2px; }
+.wds-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* legend */
+.legend {
+display: flex;
+justify-content: center;
+gap: 1.2rem;
+font-size: 0.62rem;
+color: var(–mist);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+}
+.legend-item { display: flex; align-items: center; gap: 4px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* player score table */
+.score-table {
+background: white;
+border-radius: var(–radius);
+box-shadow: var(–shadow);
+overflow: hidden;
+}
+.score-row {
+display: grid;
+grid-template-columns: 1fr 1.5fr 1.5fr;
+padding: 0.7rem 1rem;
+border-bottom: 1px solid #f0f0f5;
+align-items: center;
+font-size: 0.72rem;
+}
+.score-row:last-child { border-bottom: none; }
+.score-row.header { background: var(–blue-soft); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(–mist); font-weight: 500; }
+.score-pip { display: inline-flex; gap: 2px; }
+.pip { width: 10px; height: 10px; border-radius: 2px; border: 1px solid #dde; }
+.pip.filled-do { background: var(–do-c); border-color: var(–do-c); }
+.pip.filled-be { background: var(–be-c); border-color: var(–be-c); }
+.pip.filled-ch { background: var(–ch-c); border-color: var(–ch-c); }
+
+/* ── GUIDE SCREEN ── */
+.guide-card {
+background: white;
+border-radius: var(–radius);
+box-shadow: var(–shadow);
+overflow: hidden;
+}
+.guide-section {
+padding: 0.9rem 1rem;
+border-bottom: 1px solid #f0f0f5;
+}
+.guide-section:last-child { border-bottom: none; }
+.guide-section-title {
+font-size: 0.6rem;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}
+.guide-item {
+font-size: 0.72rem;
+line-height: 1.6;
+color: var(–ink);
+padding: 0.15rem 0;
+display: flex;
+gap: 0.5rem;
+}
+.guide-item .gi-ref { color: var(–mist); font-size: 0.62rem; white-space: nowrap; }
+.philosophy-box {
+background: var(–blue);
+border-radius: var(–radius);
+padding: 1.1rem;
+color: white;
+}
+.philosophy-box h3 {
+font-family: ‘Cormorant Garamond’, serif;
+font-weight: 300;
+font-style: italic;
+font-size: 1.1rem;
+color: #f0c84a;
+margin-bottom: 0.5rem;
+}
+.philosophy-box p { font-size: 0.72rem; line-height: 1.7; color: rgba(255,255,255,0.75); }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="nav-title">Saha Chara <em>Chakra</em></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showScreen('checkin')">Today</div>
+    <div class="nav-tab" onclick="showScreen('weekly')">This Week</div>
+    <div class="nav-tab" onclick="showScreen('guide')">Guide</div>
+  </div>
+</nav>
+
+<!-- ══ SCREEN 1: CHECK-IN ══ -->
+
+<div class="screen active" id="screen-checkin"></div>
+
+<!-- ══ SCREEN 2: WEEKLY ══ -->
+
+<div class="screen" id="screen-weekly">
+  <div class="week-header">
+    <h2>Weekly Bicycle</h2>
+    <div class="week-nav">
+      <button class="week-btn" onclick="shiftWeek(-1)">‹</button>
+      <button class="week-btn" onclick="shiftWeek(1)">›</button>
+    </div>
+  </div>
+
+  <div class="bicycle-container">
+    <canvas id="bicycleCanvas" height="200"></canvas>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--do-c)"></div>Do · B</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--be-c)"></div>Be · M</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ch-c)"></div>Check · I</div>
+    </div>
+  </div>
+
+  <div class="week-day-strip" id="weekStrip"></div>
+
+  <div class="score-table" id="scoreTable"></div>
+</div>
+
+<!-- ══ SCREEN 3: GUIDE ══ -->
+
+<div class="screen" id="screen-guide">
+  <div class="philosophy-box">
+    <h3>Wheel of Shared Journey</h3>
+    <p>Seek <strong style="color:#f0c84a">smoothness</strong> over size. Better a small smooth wheel than a large wobbly one. Each evening, take 60 seconds together — B rates first, hands device to M, M rates. The bicycle only rolls when both wheels turn.</p>
+  </div>
+
+  <div class="guide-card">
+    <div class="guide-section">
+      <div class="guide-section-title" style="color:var(--do-c)">🔵 Do · IMAGO · B — How did you practise dialogue today?</div>
+      <div class="guide-item">Repeat · Validate · Reflect · Reply</div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title" style="color:var(--be-c)">🟡 Be · PRIYA · M — Which qualities did you embody?</div>
+      <div class="guide-item">Mai Arpita Mano Buddhi — Help exhaust vasanas</div>
+      <div class="guide-item">Ksami, Maitri — Familiarity without contempt</div>
+      <div class="guide-item">Sama Dukha Sukha — Communicate, don't judge</div>
+      <div class="guide-item">Yata Atma — Intention before interaction</div>
+      <div class="guide-item">Mudita, Karuna — Joy in other's joy</div>
+      <div class="guide-item">Nirahankara — Own your dark side</div>
+      <div class="guide-item">Santushta, Nirmamaha — Satisfaction within</div>
+      <div class="guide-item">Drdha Niscayaha — God is strength within</div>
+      <div class="guide-item">Advesta Sarva Bhutanam — Become aware of your love</div>
+      <div class="guide-item">Satatam Yogi — Accept the challenge</div>
+    </div>
+    <div class="guide-section">
+      <div class="guide-section-title" style="color:var(--ch-c)">🟢 Check · GITA · I — Which actions did you do?</div>
+      <div class="guide-item"><span class="gi-ref">V09</span> Think before you ask</div>
+      <div class="guide-item"><span class="gi-ref">V10</span> Greet with love</div>
+      <div class="guide-item"><span class="gi-ref">V11</span> Keep each other informed</div>
+      <div class="guide-item"><span class="gi-ref">V12</span> Develop shared interests</div>
+      <div class="guide-item"><span class="gi-ref">V13</span> Visualize each-other's health</div>
+      <div class="guide-item"><span class="gi-ref">V14-15</span> Pray together</div>
+      <div class="guide-item"><span class="gi-ref">V16</span> Do this checklist</div>
+      <div class="guide-item"><span class="gi-ref">V17</span> Play together</div>
+      <div class="guide-item"><span class="gi-ref">V18</span> Decide for each other</div>
+      <div class="guide-item"><span class="gi-ref">V19</span> Bramharpanam before tasks</div>
+      <div class="guide-item"><span class="gi-ref">V20</span> Reduce complaining · criticizing · crying</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CONSTANTS ────────────────────────────────────────────────────────────
+const PLAYERS = [
+  { id: 'B', name: 'B', role: 'IMAGO · Do', emoji: '🌊', cls: 'player-B' },
+  { id: 'M', name: 'M', role: 'PRIYA · Be', emoji: '🌸', cls: 'player-M' },
+];
+
+const WHEELS = [
+  { id: 'do', label: 'Do', color: '#2952a3', soft: '#dce6f8',
+    prompt: 'Did you Repeat, Validate, Reflect, Reply in your dialogue today?',
+    selCls: 'selected-do' },
+  { id: 'be', label: 'Be', color: '#b07a0a', soft: '#faefd0',
+    prompt: 'Did you embody the Be qualities — patience, honesty, joy in other\'s joy?',
+    selCls: 'selected-be' },
+  { id: 'ch', label: 'Check', color: '#1a6e45', soft: '#d0ede0',
+    prompt: 'Did you do the Check actions — greet, pray, play, decide for each other?',
+    selCls: 'selected-ch' },
+];
+
+const RATINGS = [
+  { val: 0, icon: '○', label: 'Not today' },
+  { val: 1, icon: '◑', label: 'Partial' },
+  { val: 2, icon: '◕', label: 'Mostly' },
+  { val: 3, icon: '●', label: 'Fully' },
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+// data[dateStr] = { B: {do,be,ch}, M: {do,be,ch} }  values 0-3
+let data = {};
+let currentWeekOffset = 0; // 0 = this week
+
+function loadData() {
+  try { data = JSON.parse(localStorage.getItem('scc2_v1') || '{}'); } catch(e) { data = {}; }
+}
+function saveData() { localStorage.setItem('scc2_v1', JSON.stringify(data)); }
+
+function todayStr() {
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+
+function ensureDay(dateStr) {
+  if (!data[dateStr]) data[dateStr] = {};
+  PLAYERS.forEach(p => {
+    if (!data[dateStr][p.id]) data[dateStr][p.id] = { do: null, be: null, ch: null };
+  });
+}
+
+// ─── CHECK-IN FLOW ───────────────────────────────────────────────────────
+let ciStep = 0; // 0=player B, 1=player M, 2=done
+let ciRatings = {}; // {B:{do,be,ch}, M:{do,be,ch}}
+let ciDate = todayStr();
+
+function initCheckin() {
+  ciStep = 0;
+  ciDate = todayStr();
+  ensureDay(ciDate);
+  // pre-fill from saved if exists
+  ciRatings = {
+    B: { ...data[ciDate].B },
+    M: { ...data[ciDate].M },
+  };
+  renderCheckin();
+}
+
+function renderCheckin() {
+  const container = document.getElementById('screen-checkin');
+  container.innerHTML = '';
+
+  if (ciStep < 2) {
+    const player = PLAYERS[ciStep];
+    const ratings = ciRatings[player.id];
+    const allRated = WHEELS.every(w => ratings[w.id] !== null && ratings[w.id] !== undefined);
+
+    // player banner
+    const banner = document.createElement('div');
+    banner.className = `player-banner ${player.cls}`;
+    banner.innerHTML = `
+      <div class="player-avatar">${player.emoji}</div>
+      <div class="player-info">
+        <div class="player-name">${player.name}'s turn</div>
+        <div class="player-role">${player.role}</div>
+      </div>
+      <div style="font-size:0.68rem;opacity:0.6">${ciStep+1} of 2</div>
+    `;
+    container.appendChild(banner);
+
+    // wheel cards
+    WHEELS.forEach(wheel => {
+      const card = document.createElement('div');
+      card.className = 'wheel-card';
+
+      const header = document.createElement('div');
+      header.className = 'wheel-card-header';
+      header.innerHTML = `
+        <div class="wheel-dot" style="background:${wheel.color}"></div>
+        <div class="wheel-label" style="color:${wheel.color}">${wheel.label} Wheel</div>
+      `;
+      card.appendChild(header);
+
+      const prompt = document.createElement('div');
+      prompt.className = 'wheel-prompt';
+      prompt.textContent = wheel.prompt;
+      card.appendChild(prompt);
+
+      const row = document.createElement('div');
+      row.className = 'rating-row';
+
+      RATINGS.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'rating-btn';
+        const isSelected = ratings[wheel.id] === r.val;
+        if (isSelected) btn.classList.add(wheel.selCls);
+        btn.innerHTML = `
+          <div class="rb-icon">${r.icon}</div>
+          <div class="rb-val" style="color:${isSelected ? wheel.color : '#ccc'}">${r.val}</div>
+          <div class="rb-label">${r.label}</div>
+        `;
+        btn.addEventListener('click', () => {
+          ciRatings[player.id][wheel.id] = r.val;
+          renderCheckin();
+        });
+        row.appendChild(btn);
+      });
+
+      card.appendChild(row);
+      container.appendChild(card);
+    });
+
+    // CTA
+    const btn = document.createElement('button');
+    btn.className = 'action-btn primary';
+    btn.disabled = !allRated;
+
+    if (ciStep === 0) {
+      btn.textContent = 'Hand to M →';
+      btn.addEventListener('click', () => { ciStep = 1; renderCheckin(); });
+    } else {
+      btn.textContent = 'Save today ✓';
+      btn.addEventListener('click', () => {
+        ensureDay(ciDate);
+        data[ciDate].B = { ...ciRatings.B };
+        data[ciDate].M = { ...ciRatings.M };
+        saveData();
+        ciStep = 2;
+        renderCheckin();
+      });
+    }
+    container.appendChild(btn);
+
+  } else {
+    // done panel
+    const d = data[ciDate];
+    const avgB = avg([d.B.do, d.B.be, d.B.ch]);
+    const avgM = avg([d.M.do, d.M.be, d.M.ch]);
+    const combined = avg([d.B.do, d.B.be, d.B.ch, d.M.do, d.M.be, d.M.ch]);
+    const smoothness = Math.round((combined / 3) * 100);
+
+    const panel = document.createElement('div');
+    panel.className = 'done-panel';
+    panel.innerHTML = `
+      <h2>Wheel logged ✦</h2>
+      <div class="done-scores">
+        <div class="done-score-item">
+          <div class="done-score-val" style="color:#7ab4f5">${avgB.toFixed(1)}</div>
+          <div class="done-score-label">B · Do</div>
+        </div>
+        <div class="done-score-item">
+          <div class="done-score-val" style="color:#f5d07a">${avgM.toFixed(1)}</div>
+          <div class="done-score-label">M · Be</div>
+        </div>
+        <div class="done-score-item">
+          <div class="done-score-val" style="color:#7af5b0">${smoothness}%</div>
+          <div class="done-score-label">Smoothness</div>
+        </div>
+      </div>
+      <p>${smoothnessMessage(smoothness)}</p>
+    `;
+    container.appendChild(panel);
+
+    // mini wheel preview
+    const wrapCanvas = document.createElement('div');
+    wrapCanvas.style.cssText = 'display:flex;gap:1rem;justify-content:center;margin-top:0.5rem;';
+    ['B','M'].forEach(pid => {
+      const cv = document.createElement('canvas');
+      cv.width = 140; cv.height = 140;
+      wrapCanvas.appendChild(cv);
+      drawMiniWheel(cv, d[pid], pid === 'B' ? 'B' : 'M');
+    });
+    container.appendChild(wrapCanvas);
+
+    const redo = document.createElement('button');
+    redo.className = 'action-btn secondary';
+    redo.textContent = 'Edit today';
+    redo.style.marginTop = '0.5rem';
+    redo.addEventListener('click', () => { ciStep = 0; renderCheckin(); });
+    container.appendChild(redo);
+  }
+}
+
+function avg(arr) {
+  const valid = arr.filter(v => v !== null && v !== undefined);
+  if (!valid.length) return 0;
+  return valid.reduce((a,b) => a+b, 0) / valid.length;
+}
+
+function smoothnessMessage(pct) {
+  if (pct >= 90) return 'The bicycle rolls beautifully today. 🌟';
+  if (pct >= 70) return 'Good smoothness — keep connecting the dots.';
+  if (pct >= 50) return 'Partial motion. Tomorrow, a little more.';
+  if (pct >= 25) return 'The wheel wobbles — seek smoothness through prayer.';
+  return 'A still day. Every day is a new turn. 🙏';
+}
+
+// ─── MINI WHEEL DRAWING ──────────────────────────────────────────────────
+function drawMiniWheel(canvas, ratings, player) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = W/2 - 14;
+  const RINGS = 3;
+
+  ctx.clearRect(0,0,W,H);
+
+  // rings
+  for (let r = 1; r <= RINGS; r++) {
+    ctx.beginPath();
+    ctx.arc(cx,cy, R*r/RINGS, 0, Math.PI*2);
+    ctx.strokeStyle = r === RINGS ? '#c0c8d8' : '#e8eaf0';
+    ctx.lineWidth = r === RINGS ? 1.5 : 1;
+    ctx.stroke();
+  }
+
+  const wheels = ['do','be','ch'];
+  const colors = ['#2952a3','#b07a0a','#1a6e45'];
+  const n = 3;
+
+  // spokes
+  for (let i = 0; i < n; i++) {
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx + R*Math.cos(angle), cy + R*Math.sin(angle));
+    ctx.strokeStyle = '#e8eaf0';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // polygon
+  const pts = wheels.map((w,i) => {
+    const val = ratings[w] !== null && ratings[w] !== undefined ? ratings[w] : 0;
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    const r = R * val / 3;
+    return { x: cx + r*Math.cos(angle), y: cy + r*Math.sin(angle), color: colors[i] };
+  });
+
+  if (pts.length > 1) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.closePath();
+    const grad = player === 'B' ? '#2952a340' : '#b07a0a40';
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = player === 'B' ? '#2952a3' : '#b07a0a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  pts.forEach((p,i) => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+  });
+
+  // hub
+  ctx.beginPath();
+  ctx.arc(cx,cy,7,0,Math.PI*2);
+  ctx.fillStyle = player === 'B' ? '#2952a3' : '#b07a0a';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx,cy,3,0,Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  // label
+  ctx.fillStyle = player === 'B' ? '#2952a3' : '#b07a0a';
+  ctx.font = 'bold 11px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(player, cx, cy + R + 4);
+}
+
+// ─── WEEKLY BICYCLE ──────────────────────────────────────────────────────
+function getWeekDates(offsetWeeks) {
+  const today = new Date();
+  const dow = today.getDay(); // 0=Sun
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - ((dow + 6) % 7) + offsetWeeks * 7);
+  return Array.from({length:7}, (_,i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d.toISOString().slice(0,10);
+  });
+}
+
+function shiftWeek(dir) {
+  currentWeekOffset += dir;
+  renderWeekly();
+}
+
+let selectedWeekDay = todayStr();
+
+function renderWeekly() {
+  const dates = getWeekDates(currentWeekOffset);
+  renderWeekStrip(dates);
+  renderBicycle(dates);
+  renderScoreTable(dates);
+}
+
+function renderWeekStrip(dates) {
+  const strip = document.getElementById('weekStrip');
+  strip.innerHTML = '';
+  const dayNames = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  const today = todayStr();
+
+  dates.forEach((d, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'wds-cell';
+    if (d === today) cell.classList.add('today');
+    if (d === selectedWeekDay) cell.classList.add('selected');
+
+    const dayData = data[d];
+    const hasBoth = dayData && dayData.B && dayData.M;
+
+    cell.innerHTML = `
+      <div class="wds-label">${dayNames[i]}</div>
+      <div class="wds-num">${parseInt(d.slice(8))}</div>
+      <div class="wds-dots">
+        <div class="wds-dot" style="background:${hasBoth && dayData.B.do !== null ? '#2952a3' : '#e0e0ea'}"></div>
+        <div class="wds-dot" style="background:${hasBoth && dayData.B.be !== null ? '#b07a0a' : '#e0e0ea'}"></div>
+        <div class="wds-dot" style="background:${hasBoth && dayData.B.ch !== null ? '#1a6e45' : '#e0e0ea'}"></div>
+      </div>
+    `;
+    cell.addEventListener('click', () => { selectedWeekDay = d; renderWeekly(); });
+    strip.appendChild(cell);
+  });
+}
+
+function renderBicycle(dates) {
+  const canvas = document.getElementById('bicycleCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 380;
+  canvas.width = W; canvas.height = 200;
+
+  ctx.clearRect(0,0,W,200);
+
+  // Draw two wheels + axle
+  const r = 72;
+  const cy = 108;
+  const cx1 = r + 20;
+  const cx2 = W - r - 20;
+  const axleY = cy;
+
+  // axle
+  ctx.beginPath();
+  ctx.moveTo(cx1, axleY);
+  ctx.lineTo(cx2, axleY);
+  ctx.strokeStyle = '#c0c8d8';
+  ctx.lineWidth = 5;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // draw each wheel using week averages
+  drawBicycleWheel(ctx, cx1, cy, r, dates, 'B', 'Front · B');
+  drawBicycleWheel(ctx, cx2, cy, r, dates, 'M', 'Rear · M');
+}
+
+function drawBicycleWheel(ctx, cx, cy, R, dates, player, label) {
+  const RINGS = 3;
+  const wheels = ['do','be','ch'];
+  const colors = ['#2952a3','#b07a0a','#1a6e45'];
+
+  // compute weekly average per wheel
+  const avgs = wheels.map(w => {
+    const vals = dates
+      .filter(d => data[d] && data[d][player] && data[d][player][w] !== null && data[d][player][w] !== undefined)
+      .map(d => data[d][player][w]);
+    return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+  });
+
+  // rings
+  for (let r = 1; r <= RINGS; r++) {
+    ctx.beginPath();
+    ctx.arc(cx,cy, R*r/RINGS, 0, Math.PI*2);
+    ctx.strokeStyle = r === RINGS ? '#b0b8cc' : '#dde0ea';
+    ctx.lineWidth = r === RINGS ? 1.5 : 1;
+    ctx.stroke();
+  }
+
+  const n = 3;
+  for (let i = 0; i < n; i++) {
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx + R*Math.cos(angle), cy + R*Math.sin(angle));
+    ctx.strokeStyle = '#dde0ea';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // polygon from avgs
+  const pts = avgs.map((val,i) => {
+    const angle = (i/n)*Math.PI*2 - Math.PI/2;
+    const rad = R * val / 3;
+    return { x: cx + rad*Math.cos(angle), y: cy + rad*Math.sin(angle), color: colors[i] };
+  });
+
+  if (pts.some(p => p.x !== cx || p.y !== cy)) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    pts.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.closePath();
+    ctx.fillStyle = player === 'B' ? '#2952a322' : '#b07a0a22';
+    ctx.fill();
+    ctx.strokeStyle = player === 'B' ? '#2952a3' : '#b07a0a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  pts.forEach((p,i) => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+    ctx.fillStyle = colors[i];
+    ctx.fill();
+  });
+
+  // hub
+  ctx.beginPath();
+  ctx.arc(cx,cy,9,0,Math.PI*2);
+  ctx.fillStyle = player === 'B' ? '#2952a3' : '#b07a0a';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx,cy,4,0,Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+
+  // label
+  ctx.fillStyle = '#8888a0';
+  ctx.font = '10px DM Sans, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(label, cx, cy + R + 14);
+}
+
+function renderScoreTable(dates) {
+  const table = document.getElementById('scoreTable');
+  table.innerHTML = '';
+
+  const header = document.createElement('div');
+  header.className = 'score-row header';
+  header.innerHTML = '<div>Day</div><div>B (Do / Be / Ch)</div><div>M (Do / Be / Ch)</div>';
+  table.appendChild(header);
+
+  const dayNames = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  const today = todayStr();
+
+  dates.forEach((d,i) => {
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    if (d === today) row.style.background = 'var(--yellow-soft)';
+
+    const dayLabel = `${dayNames[i]} ${parseInt(d.slice(8))}`;
+    const dd = data[d];
+
+    function pips(pid) {
+      if (!dd || !dd[pid]) return '<span style="color:#dde;font-size:0.7rem;">—</span>';
+      const p = dd[pid];
+      const wheels = ['do','be','ch'];
+      const colors = ['filled-do','filled-be','filled-ch'];
+      return `<span class="score-pip">${wheels.map((w,j) => {
+        const v = p[w] !== null && p[w] !== undefined ? p[w] : 0;
+        return Array.from({length:3}, (_,k) =>
+          `<span class="pip ${k < v ? colors[j] : ''}"></span>`
+        ).join('');
+      }).join(' ')}</span>`;
+    }
+
+    row.innerHTML = `<div style="font-size:0.68rem;color:var(--mist)">${dayLabel}</div><div>${pips('B')}</div><div>${pips('M')}</div>`;
+    table.appendChild(row);
+  });
+}
+
+// ─── NAV ─────────────────────────────────────────────────────────────────
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'weekly') renderWeekly();
+  if (name === 'checkin') renderCheckin();
+}
+
+// ─── BOOT ────────────────────────────────────────────────────────────────
+loadData();
+initCheckin();
+renderWeekly();
+</script>
+
+</body>
+</html>
