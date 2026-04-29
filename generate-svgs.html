@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Generator · Useless Insights</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Courier New', monospace;
+    background: #0e0e0e; color: #f5f0e8;
+    min-height: 100vh; padding: 30px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  h1 { font-size: 1rem; color: #f5a623; letter-spacing: 0.15em; text-transform: uppercase; }
+  .sub { font-size: 0.7rem; color: #666; text-align: center; max-width: 440px; line-height: 1.6; }
+  .key-row {
+    display: flex; gap: 8px; width: 100%; max-width: 480px;
+  }
+  .key-row input {
+    flex: 1; background: #1a1a1a; border: 1px solid #333; color: #f5f0e8;
+    font-family: 'Courier New', monospace; font-size: 0.75rem;
+    padding: 8px 12px; outline: none; border-radius: 0;
+  }
+  .key-row input:focus { border-color: #f5a623; }
+  button {
+    background: #f5a623; border: none; color: #0e0e0e;
+    font-family: 'Courier New', monospace; font-size: 0.72rem;
+    font-weight: 700; padding: 8px 16px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  button:disabled { background: #333; color: #666; cursor: not-allowed; }
+  .progress-wrap { width: 100%; max-width: 480px; }
+  .prog-bar { height: 4px; background: #222; overflow: hidden; }
+  .prog-fill { height: 100%; width: 0%; background: #f5a623; transition: width 0.3s; }
+  .prog-label { font-size: 0.65rem; color: #888; margin-top: 6px; }
+  .log {
+    width: 100%; max-width: 480px; background: #111;
+    border: 1px solid #222; padding: 12px; height: 180px;
+    overflow-y: auto; font-size: 0.65rem; color: #666; line-height: 1.7;
+  }
+  .log .ok  { color: #4ade80; }
+  .log .err { color: #f87171; }
+  .log .inf { color: #f5a623; }
+  .preview-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, 80px);
+    gap: 8px; width: 100%; max-width: 640px;
+  }
+  .preview-item {
+    background: #f5f0e8; border: 1px solid #c8b89a;
+    padding: 4px; text-align: center;
+  }
+  .preview-item svg { width: 72px; height: 49px; }
+  .preview-item .pn { font-size: 0.5rem; color: #888; margin-top: 2px; }
+  .dl-btn {
+    background: #2c5282; color: #f5f0e8;
+    padding: 10px 24px; font-size: 0.75rem;
+  }
+  .dl-btn:disabled { background: #333; color: #666; }
+  .note {
+    font-size: 0.62rem; color: #555; max-width: 480px;
+    line-height: 1.6; text-align: center; border-top: 1px solid #222;
+    padding-top: 16px;
+  }
+  .note code { color: #f5a623; }
+</style>
+</head>
+<body>
+
+<h1>Useless Insights · SVG Generator</h1>
+<p class="sub">Run this once. It calls the Claude API from your browser, generates 117 icons, and downloads <code>insight_svgs.json</code>. Commit that file to your GitHub repo — the app loads it directly. Users never pay API costs.</p>
+
+<div class="key-row">
+  <input type="password" id="apiKey" placeholder="sk-ant-api03-…  (your Anthropic API key)" autocomplete="off">
+  <button id="startBtn" onclick="startGeneration()">Generate</button>
+</div>
+
+<div class="progress-wrap">
+  <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-label" id="progLabel">Ready — enter API key and click Generate</div>
+</div>
+
+<div class="log" id="log"></div>
+
+<div class="preview-grid" id="previewGrid"></div>
+
+<button class="dl-btn" id="dlBtn" disabled onclick="downloadJson()">⬇ Download insight_svgs.json</button>
+
+<p class="note">
+  After downloading, place <code>insight_svgs.json</code> in the same folder as your <code>index.html</code> (or <code>LASA.html</code>) on GitHub Pages.<br>
+  The app fetches it once on load and caches in localStorage — no repeat fetches.
+</p>
+
+<script>
+const DATA = [{"num":1,"useless":"What comes first chicken or egg?"},{"num":2,"useless":"A pooping dog does not bite"},{"num":3,"useless":"One who has Agreed has no greed to be right!"},{"num":4,"useless":"Walk your dog until it is playful"},{"num":5,"useless":"Eye sees more than I"},{"num":6,"useless":"A curtain screens me from life outside, it is a screen on which shadows play"},{"num":7,"useless":"Sun light escaping from the top of a curtain creates dark and bright lines"},{"num":8,"useless":"Living demands a lot"},{"num":9,"useless":"None can protect where they are not competent"},{"num":10,"useless":"Hollow Fallow leaves you shallow"},{"num":11,"useless":"Let woodpeckers peck your siding"},{"num":12,"useless":"Witless needs witness"},{"num":13,"useless":"Rat's smartness is in knowing how to get in and out"},{"num":14,"useless":"Body cells share a goal"},{"num":15,"useless":"Incite Insight is not friend of Insight"},{"num":16,"useless":"Perception colors principles"},{"num":17,"useless":"Passing driving test on 9th attempt is fine"},{"num":18,"useless":"Bind is no bind"},{"num":19,"useless":"One can't puncture a paint spray can to see what is inside"},{"num":20,"useless":"Rock at foot of fall have no moss"},{"num":21,"useless":"Change is inherent to currency"},{"num":22,"useless":"Shallow philosophy wallow needs drastic break mold"},{"num":23,"useless":"Cold coffee finds few takers"},{"num":24,"useless":"Inter-resting interesting"},{"num":25,"useless":"Insight in-sight love story"},{"num":26,"useless":"Relax, let a puppy chase all the leaves in breeze it wants"},{"num":27,"useless":"Watch birds and squirrels drunk on ripened fruit"},{"num":28,"useless":"Feeding ground is just above pooping ground for a bird feeder"},{"num":29,"useless":"Rights mindset is not always the right mindset"},{"num":30,"useless":"A deer in light says there are two in the bush"},{"num":31,"useless":"Perception is the influencer"},{"num":32,"useless":"Quite often Freedom is at the center of the Box"},{"num":33,"useless":"Sourness has its need"},{"num":34,"useless":"Eye on I is binder blinder"},{"num":35,"useless":"Wave bye bye to mind waves"},{"num":36,"useless":"Stand crossed legged on dog walk and let dog sniff"},{"num":37,"useless":"It is also what it is not based on what you think it is"},{"num":38,"useless":"Perception and reality are in a spectrum"},{"num":39,"useless":"Warmth of Compost nurtures"},{"num":40,"useless":"Timing and Time both are timeless"},{"num":41,"useless":"Nap snaps snaps"},{"num":42,"useless":"Tear drops wisdom"},{"num":43,"useless":"No fight in flight"},{"num":44,"useless":"Training wheels look best in the rear view mirror"},{"num":45,"useless":"Dear training wheels stay near"},{"num":46,"useless":"Training wheels are also cyclical"},{"num":47,"useless":"Knife cleans knife"},{"num":48,"useless":"Gray seeds green"},{"num":49,"useless":"Edison and the Wrights"},{"num":50,"useless":"Sole is soul boxed"},{"num":51,"useless":"Organs of perception by definition cloud reality"},{"num":52,"useless":"Mind is a painted pinched lens"},{"num":53,"useless":"Got is the present tense of Give"},{"num":54,"useless":"Sunshine and grey are buddies"},{"num":55,"useless":"O be 1 can you be"},{"num":56,"useless":"Body is evidence"},{"num":57,"useless":"Wobbly path is a gift"},{"num":58,"useless":"Failure is the only favor we need from the universe"},{"num":59,"useless":"Sleepless alarms"},{"num":60,"useless":"Queue up thinks if you have to wait in the queue"},{"num":61,"useless":"Be selfish with chewing"},{"num":62,"useless":"What sun gives moon cannot and moon gives sun cannot"},{"num":63,"useless":"Sibling peace is life's need"},{"num":64,"useless":"Wisdom minus Weight of wait equals Calmness"},{"num":65,"useless":"Trust sits on steps"},{"num":66,"useless":"Empathy embers sympathy smoke apathy ash"},{"num":67,"useless":"Tone is in sound listening"},{"num":68,"useless":"Use and maintenance need single tasking"},{"num":69,"useless":"What is the most slammed door in the world"},{"num":70,"useless":"Life with Clarity Charity in Parity"},{"num":71,"useless":"Living in dying is boss level"},{"num":72,"useless":"Breaching is only prologue"},{"num":73,"useless":"Some think then thing about"},{"num":74,"useless":"Living in dying"},{"num":75,"useless":"Informed ignorance is bliss"},{"num":76,"useless":"Only when water droplet gets in the way of light do we get a rainbow"},{"num":77,"useless":"Dogonomics 101 - dog invests 1500 steps into me"},{"num":78,"useless":"My family gives me opportunity to invest 1500 steps into them every day"},{"num":79,"useless":"Pissful dog is not peaceful"},{"num":80,"useless":"Elf Self - inner elf helps or hinders"},{"num":81,"useless":"Peers Peering glass"},{"num":82,"useless":"Seething till see things"},{"num":83,"useless":"Fear is dreams on life support"},{"num":84,"useless":"Sunrise is between midday and midnight"},{"num":85,"useless":"Monkey cheeks"},{"num":86,"useless":"Metaphor is a struggle"},{"num":87,"useless":"Peace is perception"},{"num":88,"useless":"Restless rest lest"},{"num":89,"useless":"Canopy calls climb"},{"num":90,"useless":"Insight out of sight"},{"num":91,"useless":"Selfbet selfhedge"},{"num":92,"useless":"Leg up dog is happy"},{"num":93,"useless":"Tired sole less tired soul"},{"num":94,"useless":"Shallow fallow hollow makes"},{"num":95,"useless":"White space is color full"},{"num":96,"useless":"Play parents insight"},{"num":97,"useless":"As be become"},{"num":98,"useless":"Err may be the seed of insight"},{"num":99,"useless":"Hyphenate distress"},{"num":100,"useless":"Freedom is in the center of the box"},{"num":101,"useless":"Stillness deepens"},{"num":102,"useless":"Obvious first obfuscates"},{"num":103,"useless":"Fight flight freeze breathe"},{"num":104,"useless":"Unbox to breathe to unbox"},{"num":105,"useless":"Rights are written responsibility not"},{"num":106,"useless":"Peace propeller"},{"num":107,"useless":"Waiting works fast"},{"num":108,"useless":"Baking rules"},{"num":109,"useless":"Responsibility starts with inhalation rest with exhalation"},{"num":110,"useless":"Be the board be the knife be the bread"},{"num":111,"useless":"Everyone is a continent"},{"num":112,"useless":"Heal heel"},{"num":113,"useless":"Perceived giants"},{"num":114,"useless":"Breathe to love"},{"num":115,"useless":"Change adds up to notes"},{"num":116,"useless":"Hope hop"},{"num":117,"useless":"Birth births more than birthed"}];
+
+const BATCH = 12;
+let allSvgs = {};
+let running = false;
+
+function log(msg, cls='') {
+  const el = document.getElementById('log');
+  const line = document.createElement('div');
+  if(cls) line.className = cls;
+  line.textContent = msg;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+
+function setProgress(done, total, label) {
+  document.getElementById('progFill').style.width = (done/total*100)+'%';
+  document.getElementById('progLabel').textContent = label;
+}
+
+function addPreview(num, svgInner) {
+  const grid = document.getElementById('previewGrid');
+  const item = document.createElement('div');
+  item.className = 'preview-item';
+  item.innerHTML = `<svg viewBox="0 0 110 75" xmlns="http://www.w3.org/2000/svg">${svgInner}</svg><div class="pn">#${num}</div>`;
+  grid.appendChild(item);
+}
+
+async function callApi(items, apiKey) {
+  const itemsStr = items.map(d => `${d.num}. "${d.useless}"`).join('\n');
+  const prompt = `You are a minimalist SVG icon artist. For each numbered insight, draw ONE tiny symbolic line-art icon.
+
+STRICT OUTPUT RULES:
+- Output ONLY a valid JSON object. No markdown. No explanation. Nothing else.
+- Keys = insight numbers as strings ("1", "2", etc.)
+- Values = SVG element string (NO <svg> wrapper, NO xmlns, NO style, NO class)
+- viewBox context: 0 0 110 75 (use full range)
+- Allowed elements only: <path>, <circle>, <ellipse>, <rect>, <line>
+- Every element MUST have: fill="none" stroke="#1a1208" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+- Max 3 elements per icon
+- Make icons symbolic and instantly recognisable (e.g. for "dog" draw a simple dog head, for "eye" draw an eye, for "wave" draw a wave)
+- Keep coordinates inside 10-100 x, 8-67 y range
+
+Insights:
+${itemsStr}`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-5',
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`HTTP ${res.status}: ${err.substring(0,120)}`);
+  }
+
+  const data = await res.json();
+  let text = data.content.map(b => b.text || '').join('').trim();
+  // Strip markdown fences if present
+  text = text.replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'').trim();
+  return JSON.parse(text);
+}
+
+async function startGeneration() {
+  if (running) return;
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey || !apiKey.startsWith('sk-ant')) {
+    log('⚠ Please enter a valid Anthropic API key (starts with sk-ant)', 'err');
+    return;
+  }
+
+  running = true;
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('previewGrid').innerHTML = '';
+  allSvgs = {};
+  log('Starting generation of 117 icons in batches of ' + BATCH + '…', 'inf');
+
+  const missing = DATA.filter(d => !allSvgs[String(d.num)]);
+  let done = 0;
+
+  for (let i = 0; i < missing.length; i += BATCH) {
+    const batch = missing.slice(i, i + BATCH);
+    const nums = batch.map(d => d.num);
+    log(`Batch ${Math.floor(i/BATCH)+1}: insights ${nums[0]}–${nums[nums.length-1]}…`);
+    setProgress(done, DATA.length, `Generating ${done}/${DATA.length}…`);
+
+    try {
+      const result = await callApi(batch, apiKey);
+      let got = 0;
+      for (const [k, v] of Object.entries(result)) {
+        allSvgs[k] = v;
+        addPreview(k, v);
+        got++;
+      }
+      done += got;
+      log(`  ✓ Got ${got} icons`, 'ok');
+    } catch(e) {
+      log(`  ✗ Error: ${e.message}`, 'err');
+      done += batch.length; // still advance progress
+    }
+
+    setProgress(done, DATA.length, `${done}/${DATA.length} icons generated`);
+    await new Promise(r => setTimeout(r, 800)); // brief pause between batches
+  }
+
+  const total = Object.keys(allSvgs).length;
+  log(`\nDone! ${total}/117 icons generated.`, 'inf');
+  setProgress(total, DATA.length, `Complete — ${total}/117 icons ready`);
+
+  if (total > 0) {
+    document.getElementById('dlBtn').disabled = false;
+    log('Click "Download insight_svgs.json" and commit to your GitHub repo.', 'inf');
+  }
+
+  running = false;
+  document.getElementById('startBtn').disabled = false;
+}
+
+function downloadJson() {
+  const blob = new Blob([JSON.stringify(allSvgs, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'insight_svgs.json';
+  a.click();
+}
+</script>
+</body>
+</html>

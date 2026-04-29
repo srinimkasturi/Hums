@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Useless Insights · IO</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; width: 100%; overflow: hidden; }
+  body {
+    font-family: 'Space Mono', monospace;
+    background-color: #f5f0e8; color: #1a1208;
+    display: flex; flex-direction: column;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* HEADER */
+  .hdr {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background-color: #1a1208; border-bottom: 2px solid #1a1208;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: #f5f0e8; letter-spacing: -0.02em; }
+  .logo em { color: #f5a623; font-style: italic; }
+  .hdr-count { font-size: 0.65rem; color: #999; letter-spacing: 0.1em; }
+
+  /* SEARCH */
+  .search-row {
+    flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; background-color: #e8dfc8; border-bottom: 1px solid #c8b89a;
+  }
+  .search-wrap { position: relative; flex: 1; }
+  .search-row input {
+    width: 100%; border: 1.5px solid #1a1208; background-color: #f5f0e8;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem; padding: 6px 10px;
+    outline: none; color: #1a1208; -webkit-appearance: none; border-radius: 0;
+  }
+  .search-row input:focus { border-color: #b8860b; }
+  .search-row input::placeholder { color: #aaa; }
+  .search-clear { background: none; border: none; cursor: pointer; font-size: 1rem; color: #888; padding: 4px 6px; line-height: 1; }
+  .search-drop {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background-color: #f5f0e8; border: 1.5px solid #1a1208; border-top: none;
+    max-height: 220px; overflow-y: auto; z-index: 99;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+  }
+  .search-drop.open { display: block; }
+  .drop-item { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #e8dfc8; }
+  .drop-item:hover { background-color: #e8dfc8; }
+  .drop-item .dn { font-size: 0.6rem; color: #999; }
+  .drop-item .dt { font-size: 0.75rem; color: #1a1208; margin-top: 2px; }
+  .drop-item mark { background-color: #f5a623; color: #1a1208; }
+
+  /* STAGE */
+  .stage {
+    flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    padding: 10px 14px; overflow: hidden; background-color: #f5f0e8; position: relative;
+  }
+  .empty { display: none; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; color: #999; font-style: italic; font-size: 0.8rem;
+    font-family: 'Playfair Display', serif; position: absolute; }
+  .empty.show { display: flex; }
+  .stack { position: relative; width: 100%; max-width: 520px; }
+  .ghost { position: absolute; inset: 0; border: 1.5px solid #c8b89a; background-color: #e8dfc8; }
+  .g1 { transform: rotate(2deg) translateY(5px); }
+  .g2 { transform: rotate(-1.5deg) translateY(10px); }
+
+  /* CARD */
+  .card {
+    position: relative; background-color: #f5f0e8; border: 2px solid #1a1208;
+    box-shadow: 4px 4px 0 #1a1208; display: flex; flex-direction: column;
+    cursor: grab; -webkit-user-select: none; user-select: none;
+  }
+  .card.dragging { cursor: grabbing; }
+  @keyframes outL { to   { transform: translateX(-110%) rotate(-7deg); opacity: 0; } }
+  @keyframes outR { to   { transform: translateX(110%)  rotate(7deg);  opacity: 0; } }
+  @keyframes inL  { from { transform: translateX(110%)  rotate(7deg);  opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes inR  { from { transform: translateX(-110%) rotate(-7deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .card.out-l { animation: outL 0.26s ease forwards; }
+  .card.out-r { animation: outR 0.26s ease forwards; }
+  .card.in-l  { animation: inL  0.26s ease forwards; }
+  .card.in-r  { animation: inR  0.26s ease forwards; }
+  .c-num {
+    position: absolute; top: 8px; right: 12px;
+    font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700;
+    color: rgba(26,18,8,0.07); line-height: 1; pointer-events: none;
+  }
+  .darrow { position: absolute; top: 14px; font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; opacity: 0; pointer-events: none; z-index: 5; }
+  .darrow-l { left: 12px; color: #2c5282; }
+  .darrow-r { right: 12px; color: #c0392b; }
+
+  /* SECTIONS */
+  .sec { padding: 12px 16px; flex: 1; }
+  .sec + .sec { border-top: 1px dashed #c8b89a; }
+  .tag {
+    display: inline-block; font-size: 0.55rem; font-family: 'Space Mono', monospace;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 7px;
+    font-weight: 700; border: 1.5px solid;
+  }
+  .tag-u-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .tag-u-row .tag { margin-bottom: 0; }
+  .sec-u .tag { border-color: #c0392b; color: #c0392b; background-color: rgba(192,57,43,0.06); }
+  .sec-o .tag { border-color: #556b2f; color: #556b2f; background-color: rgba(85,107,47,0.06); margin-bottom: 8px; display: inline-block; }
+  .sec-m .tag { border-color: #2c5282; color: #2c5282; background-color: rgba(44,82,130,0.06); }
+  .sec-m { background-color: rgba(44,82,130,0.03); }
+  .sec-text { font-family: 'Playfair Display', serif; line-height: 1.55; color: #1a1208; }
+  .sec-u .sec-text { font-size: 0.92rem; font-weight: 700; }
+  .sec-o .sec-text { font-size: 0.8rem; font-style: italic; }
+
+  /* SVG ICON */
+  #cardSvg {
+    width: 44px; height: 30px; flex-shrink: 0;
+    stroke: #1a1208; fill: none; stroke-linecap: round; stroke-linejoin: round;
+    opacity: 0.55;
+  }
+
+  /* MY SIGHT */
+  .tag-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .tag-row .tag { margin-bottom: 0; }
+  .saved-badge { font-size: 0.52rem; font-family: 'Space Mono', monospace; color: #556b2f;
+    letter-spacing: 0.06em; text-transform: uppercase; opacity: 0; transition: opacity 0.4s; }
+  .saved-badge.show { opacity: 1; }
+  #tM {
+    width: 100%; min-height: 52px; background: none; border: none;
+    border-bottom: 1px dashed #c8b89a; font-family: 'Playfair Display', serif;
+    font-size: 0.8rem; font-style: italic; color: #1a1208; line-height: 1.55;
+    resize: none; outline: none; padding: 0; -webkit-appearance: none;
+    border-radius: 0; caret-color: #2c5282;
+  }
+  #tM::placeholder { color: #bbb; font-size: 0.7rem; }
+  #tM:focus { border-bottom-color: #2c5282; }
+
+  /* HINT */
+  .hint {
+    position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+    font-size: 0.52rem; color: #bbb; letter-spacing: 0.08em; text-transform: uppercase;
+    pointer-events: none; white-space: nowrap; opacity: 0; transition: opacity 0.4s;
+  }
+  .hint.show { opacity: 1; }
+
+  /* NAV */
+  .nav {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px; background-color: #1a1208; border-top: 2px solid #1a1208; gap: 4px;
+  }
+  .nb {
+    background: none; border: 1.5px solid #444; color: #ccc;
+    font-family: 'Space Mono', monospace; font-size: 0.58rem; padding: 6px 8px;
+    cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase;
+    white-space: nowrap; -webkit-appearance: none; border-radius: 0;
+  }
+  .nb:active { border-color: #f5a623; color: #f5a623; }
+  .nb-rnd { background-color: #f5a623; border-color: #f5a623; color: #1a1208; font-weight: 700; }
+  .nb-rnd:active { background-color: #d4891a; border-color: #d4891a; color: #1a1208; }
+  .nav-mid { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .nav-nums { font-size: 0.58rem; color: #888; letter-spacing: 0.05em; }
+  .prog-bar { width: 72px; height: 2px; background-color: #333; overflow: hidden; }
+  .prog-fill { height: 100%; background-color: #f5a623; width: 0%; transition: width 0.25s ease; }
+
+  /* TIMER */
+  .timer-strip { flex-shrink: 0; background-color: #111; border-top: 1px solid #2a2218; }
+  .timer-bar { height: 3px; background-color: #222; overflow: hidden; }
+  .timer-fill { height: 100%; width: 0%; background-color: #f5a623; }
+  .timer-row { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 5px 10px 6px; }
+  .t-label { font-size: 0.52rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
+  .t-play {
+    background: none; border: 1.5px solid #444; color: #999; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    font-size: 0.65rem; -webkit-appearance: none; border-radius: 0; flex-shrink: 0;
+  }
+  .t-play.on { border-color: #f5a623; color: #f5a623; }
+  .t-spd {
+    background: none; border: 1px solid #333; color: #666;
+    font-family: 'Space Mono', monospace; font-size: 0.52rem; padding: 3px 7px;
+    cursor: pointer; -webkit-appearance: none; border-radius: 0;
+  }
+  .t-spd.on { border-color: #f5a623; color: #f5a623; background-color: rgba(245,166,35,0.08); }
+
+  /* COPYRIGHT */
+  .copyright {
+    flex-shrink: 0; text-align: center; padding: 5px 12px;
+    background-color: #0e0e0e; font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; color: #444; letter-spacing: 0.06em; border-top: 1px solid #1a1a1a;
+  }
+  .copyright a { color: #666; text-decoration: none; }
+  .copyright a:hover { color: #f5a623; }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">Useless <em>Insights</em></div>
+  <div class="hdr-count" id="hdrCount">1 / 117</div>
+</header>
+
+<div class="search-row">
+  <div class="search-wrap">
+    <input type="text" id="srch" placeholder="Search… dog, fear, perception" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="search-drop" id="srchDrop"></div>
+  </div>
+  <button class="search-clear" id="srchClear">&#x2715;</button>
+</div>
+
+<div class="stage">
+  <div class="empty" id="empty"><span>&#x1F50D;</span>Nothing found.</div>
+  <div class="stack" id="stack">
+    <div class="ghost g2"></div>
+    <div class="ghost g1"></div>
+    <div class="card" id="card">
+      <div class="darrow darrow-l" id="dL">&#x2190;</div>
+      <div class="darrow darrow-r" id="dR">&#x2192;</div>
+      <div class="c-num" id="cNum">1</div>
+      <div class="sec sec-u">
+        <div class="tag-u-row">
+          <div class="tag">Useless Insight</div>
+          <svg id="cardSvg" viewBox="0 0 110 75" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+        </div>
+        <div class="sec-text" id="tU"></div>
+      </div>
+      <div class="sec sec-o">
+        <div class="tag">Intentional Optimism</div>
+        <div class="sec-text" id="tO"></div>
+      </div>
+      <div class="sec sec-m">
+        <div class="tag-row">
+          <div class="tag">My Sight Insight</div>
+          <span class="saved-badge" id="savedBadge">saved &#x2713;</span>
+        </div>
+        <textarea id="tM" placeholder="Your reflection goes here&#x2026;" spellcheck="true"></textarea>
+      </div>
+    </div>
+    <div class="hint show" id="hint">&#x2190; swipe or use arrow keys &#x2192;</div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nb" id="bPrev">&#x2190; Prev</button>
+  <div class="nav-mid">
+    <div class="nav-nums" id="navNums">1 / 117</div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+  </div>
+  <button class="nb nb-rnd" id="bRnd">&#x26A1; Rnd</button>
+  <button class="nb" id="bNext">Next &#x2192;</button>
+</nav>
+
+<div class="timer-strip">
+  <div class="timer-bar"><div class="timer-fill" id="tFill"></div></div>
+  <div class="timer-row">
+    <span class="t-label">auto</span>
+    <button class="t-play" id="tPlay">&#x25B6;</button>
+    <button class="t-spd" data-ms="5000">5s</button>
+    <button class="t-spd on" data-ms="10000">10s</button>
+    <button class="t-spd" data-ms="20000">20s</button>
+    <button class="t-spd" data-ms="30000">30s</button>
+  </div>
+</div>
+
+<footer class="copyright">
+  &#xA9; 2025 Srinivasa M. Kasturi &middot; <a href="mailto:srini.m.kasturi@gmail.com">srini.m.kasturi@gmail.com</a>
+</footer>
+
+<script>
+const DATA = [{"num":1,"useless":"What comes first chicken or egg?","optimism":"Depends on what you’re ordered. History impacts answers, so know history.","mysight":""},{"num":2,"useless":"A pooping dog does not bite","optimism":"Help someone lighten their load, they will lighten the world’s load","mysight":""},{"num":3,"useless":"One who has Agreed has no greed to be right!","optimism":"Being right is wise. Wanting to be acknowledge as being right always, can become a vice.","mysight":""},{"num":4,"useless":"Walk your dog until it is playful","optimism":"Your best friend is best positioned to give you its best when it let’s go most (of its waste)!","mysight":""},{"num":5,"useless":"Eye sees more than I","optimism":"Ego prevents a wider vision","mysight":""},{"num":6,"useless":"A curtain that screens me from life outside is a screen on which shadows play","optimism":"What you let in lights your next steps, both good and bad, so let in more to see more to choose better","mysight":""},{"num":7,"useless":"Sun light escaping from the top of a curtain creates dark and bright lines","optimism":"Interference creates not only valleys but also peaks, so in all interferences, look for peaks as well","mysight":""},{"num":8,"useless":"Living demands a lot","optimism":"To become better at being good, you need demanding opportunities, so leverage life!","mysight":""},{"num":9,"useless":"None can protect where they are not competent","optimism":"Peace helps where proficiency cannot. Learn to Give Up (per your belief/faith), this is very different than giving up","mysight":""},{"num":10,"useless":"Hollow Fallow leaves you shallow","optimism":"Deep rest restores deep","mysight":""},{"num":11,"useless":"Let woodpeckers peck (your siding)","optimism":"Woodpeckers are homeowners early warning system. Without woodpeckers you may not detect rotting worm laden wood sidings of the house, to fix. Once you find the issues, fix them in a way that they won’t come back, like add a metal mesh that makes it hard to peck! Same goes with those who peck at your shortcomings. Listen to them. They are telling you what to fix to go to the next level, for free. Then hedge them in a way the peckers leave you alone!","mysight":""},{"num":12,"useless":"Witless needs witness","optimism":"When in trouble first be objective, about the problem you are facing","mysight":""},{"num":13,"useless":"Rat’s smartness is in knowing how to get in and out","optimism":"Think like a rat, to find all HVAC air ways to block","mysight":""},{"num":14,"useless":"Body cells share a goal (Cohesive Communicating Coordinating cells make a body)","optimism":"Family goal unites a family!","mysight":""},{"num":15,"useless":"Incite Insight (is not friend of Insight)","optimism":"Those who incite you cannot help gain insights until you separate from them and understand why you fell for incitement in the first place","mysight":""},{"num":16,"useless":"Perception colors (Perceivers perspective colors principles)","optimism":"To leverage a principle go beyond perspectives by leveraging them but not limiting yourselves to them","mysight":""},{"num":17,"useless":"Passing driving test on 9th attempt is fine","optimism":"True test of driving how safe you keep others while arriving at your destinations, so be patient for the authorities to assess your ability to keep others and yourself safe. Hasten slowly as a man of wisdom stated once!","mysight":""},{"num":18,"useless":"Bind is no bind","optimism":"That which binds us affirms continuity of life that supported us as an instance.","mysight":""},{"num":19,"useless":"One can’t puncture a paint spray can to see what is inside","optimism":"Understand what is worth looking into. Sometimes seeking deeper a look is a true distraction from usefulness.","mysight":""},{"num":20,"useless":"Rock at foot of fall have no moss","optimism":"Brain at foot of thundering flow of reflections gathers no selfishness crust","mysight":""},{"num":21,"useless":"Change is inherent to currency","optimism":"To stay better current better keep changing!","mysight":""},{"num":22,"useless":"Shallow philosophy wallow needs drastic break mold","optimism":"Shallow shoals don’t detether us enough to explorer with a do or die attitude to reach eternal happiness","mysight":""},{"num":23,"useless":"Cold coffee finds few takers","optimism":"Goal cold to you may still warm others hearts","mysight":""},{"num":24,"useless":"Inter-resting interesting","optimism":"Reflection deepens wisdom, in the inter-restings of interesting","mysight":""},{"num":25,"useless":"Insight in-sight love story","optimism":"When insights and action when goals are in-sight work together, it is match made in (your version of) heaven!","mysight":""},{"num":26,"useless":"Relax, let a puppy chase all the leaves in breeze it wants","optimism":"Puppy chases but  owns not hoards not. Just holds it for a moment it and let’s it go. Do the same with your (thoughts)Goals. See them and plan for them and then let them go, no need to personalize each (thought) goals achievement.","mysight":""},{"num":27,"useless":"If you get a chance watch birds and squirrels drunk on ripened fruit!","optimism":"To see the hilarity that ensues reminds you that sobriety is your friend!","mysight":""},{"num":28,"useless":"Feeding ground is just above pooping ground, for a bird feeder","optimism":"If you want to enjoy sight of birds be read to deal with poop","mysight":""},{"num":29,"useless":"Rights mindset is not always the right mindset","optimism":"Sometimes responsibilities trump rights","mysight":""},{"num":30,"useless":"A dear in light says there are two in the bush","optimism":"On seeking a red flag analyze the whole situation not just the apparent","mysight":""},{"num":31,"useless":"Perception is the influencer","optimism":"Krishna who transcends creation, to tell us we transcend creation, had to use creation idea in a creative way. In the end, Reality is in the eye of the perceiver, influencers should be aware of this perception.","mysight":""},{"num":32,"useless":"Quite often Freedom is at the center of the Box","optimism":"When you feel boxed in, take one more look at the box. The physical, emotional, intellectual and spiritual nature of the box. Quite often you see the freedom is at the heart of it. Think parenting is boxing you in physically perhaps? Then may be taking up the challenge to stay fit for your grand kids will prompt you to eat and exercise differently! Feeling suicidal, well every one has to give the body or give up the ghost some day. Why not look at the cause of exhaustion and find a way to loosen its grip. Perhaps breath out anxiety and breathe in calmness. In the process you will get healthier than one without as much anxiety. You may may even get to enjoy one more spicy dish, a zephyr of a breeze, or sight of a sun lite forest canopy, or a great book or movie! Or simply you get to see your loved ones mourn one less day.","mysight":""},{"num":33,"useless":"Sourness has its need","optimism":"Souring relationship, with self or with others, can lead to reflection on independent joy","mysight":""},{"num":34,"useless":"Eye on I is binder blinder","optimism":"When we see only ourselves we basically bind ourselves to blinders that reduce our aperture to wonders of nature and humanness","mysight":""},{"num":35,"useless":"Wave bye bye to mind waves","optimism":"Mind is like waves on water when there are no waves you can see water and see through water, when there are waves you see only the waves","mysight":""},{"num":36,"useless":"On a dog walk, stand crossed legged or stand on tippy toes or stand on tippy toes while cross legged, and let the dig sniff","optimism":"Sniffing dog is a dog they is reading the social media posts of its kind! Let it do so peacefully. It will be a better friend for it. You just stand cross legged etc and work on your balance. You see is most everything useles  there may be an opportunity, if nothing else get one more opportunity to practice to look for something good. By the way this method burns calories! Krishna statue anyone!!","mysight":""},{"num":37,"useless":"It is also what it is not, based what you think it is","optimism":"See your perception tells you that something is and you extrapolate that that thing is nothing more or nothing else, though perhaps all the while it was what you did not perceive it to be. It’s like Roman columns were thought to have adulterating lime chunks while  it always was a self healing ingredient.","mysight":""},{"num":38,"useless":"Perception and reality are in a spectrum","optimism":"Reality may be what exists but perceptions vary and so does perceived reality. Be mindful of perception blinders which may be preventing you from seeing from others eyes! Influencing needs you to see it this way anyways!","mysight":""},{"num":39,"useless":"Warmth of Compost nurtures","optimism":"Let go of old victories, in the decay of reminiscences of old victory, we may space for new goals","mysight":""},{"num":40,"useless":"Timing and Time both are timeless","optimism":"Timing may be understood but Time, that is an entirely different dimension","mysight":""},{"num":41,"useless":"Nap snap’s snaps","optimism":"Catch a good nap so you are not so snappy!","mysight":""},{"num":42,"useless":"Tear drops wisdom","optimism":"Tears are a language, many types are there and many nuances they hide! Be attentive when you see tears of any type.","mysight":""},{"num":43,"useless":"No fight in flight","optimism":"All the effort is in the jump, so keep pushing, for once you are in flight, you can enjoy the breeze. Just watch a small dog jump on to the sofa. Once the effort it made to jump, it is just soft cushions baby! A dog in flight shows no effort!!","mysight":""},{"num":44,"useless":"Training wheels look best in the rear view mirror","optimism":"Without training wheels we cannot learn, with training wheels off we can move faster either way you can see them in the rear view mirror, while using them and while leaving them","mysight":""},{"num":45,"useless":"Dear training wheels stay near","optimism":"Relearning is the need of this century, so keep your method of training and learning always ready to put into play!","mysight":""},{"num":45,"useless":"Training wheels are also cyclical","optimism":"Don’t develop fatigue of learning and don’t worry that others will see you with training wheels on again. Every time you need to learn something new or a new nuance, you need those training wheels.","mysight":""},{"num":46,"useless":"Knife cleans knife","optimism":"You know that curst on a knife, it is easy to slice it off with another knife. So keep your sharp eye and sharp wit together, always!","mysight":""},{"num":47,"useless":"Gray seeds green","optimism":"Don’t worry if something looks drab. Gray cloud look drab, they are a drag on our mood, but you see they are the ones that seed greenery on Earth. So see the growth in the colorless!","mysight":""},{"num":48,"useless":"Edison and the Wrights","optimism":"One vision may never be enough, we need synergy. Neither Edison nor Wright Brothers individually saw the Earth lit from space or even when a flight is landing during night.","mysight":""},{"num":49,"useless":"Sole is soul boxed","optimism":"Going solo is good for accomplishments that feed the soul, but it is unbalanced diet! You still need to unbox your soul to be society in a society","mysight":""},{"num":50,"useless":"Organs of perception by definition cloud reality","optimism":"That there is an organ the perceives should tell us that we are limited by the organ of perception. This is the case with any organ of perception, including social media as an organ of perception into some ones projection of themselves projected for others to see. Just go easy on what you think you are ‘seeing.’","mysight":""},{"num":51,"useless":"Mind is a painted pinches lens","optimism":"As is the paint and pinches in a lens, so is the distortion of reality that is perceived","mysight":""},{"num":51,"useless":"Got is the present tense of Give","optimism":"You see ‘got’ is the result of ‘give.’ So if you haven’t got something, think, did you give what you needed to give to get the ‘got.’","mysight":""},{"num":52,"useless":"Sunshine and grey are buddies","optimism":"Sunshine and grey rain clouds are part of the circle of life, seed to seed! So don’t worry about grey days they will make the sunshine days more productive","mysight":""},{"num":53,"useless":"O be 1 can you be","optimism":"Homage to Star Wars. You see a master is one who is reminding us all to realize that we are part of the whole. Until then we will have a hole in us!","mysight":""},{"num":54,"useless":"Body is evidence!","optimism":"Healthy Body is evidence that, all the time, mind prioritizes body over itself, so when a real need shows up body can prioritize mind over itself","mysight":""},{"num":55,"useless":"Wobbly path is a gift","optimism":"The wobbly seeds growth in stability","mysight":""},{"num":56,"useless":"Failure is the only favor we need from the universe, in it is the key to all progress","optimism":"","mysight":""},{"num":57,"useless":"Sleepless alarms","optimism":"It is alarming that we sleep less and since we sleep less we need alarms to breakup our sleepiness","mysight":""},{"num":58,"useless":"queue up thinks if you have to wait in the queue","optimism":"","mysight":""},{"num":59,"useless":"Be selfish with chewing","optimism":"You will appear altruistic to your body","mysight":""},{"num":60,"useless":"What sun gives moon cannot and moon gives sun cannot","optimism":"Sun Light and Tides, need I say more! So don’t just be hot and heavy in pursuit, be cool headed doing it!!","mysight":""},{"num":61,"useless":"Sibling peace is life’s need","optimism":"Survival of species is built into batching of siblings","mysight":""},{"num":62,"useless":"Wisdom – Weight of wait = Calmness in being","optimism":"Waiting is inevitable in some situations. What you think ahead of time to do with wait time, seeds calmness. Be it acceptance or to create optional paths!","mysight":""},{"num":63,"useless":"Trust sits on steps","optimism":"The more steps a team takes together, the greater the trust. It is not always that greater the trust greater the number of steps a team takes together.","mysight":""},{"num":64,"useless":"Empathy embers, sympathy smoke, apathy ash","optimism":"Apathy adds no energy because it has none, it just adds weight. Sympathy makes it hard to see and chokes. Empathy can lit a fire, heat the being, lead to moving forward!","mysight":""},{"num":65,"useless":"Tone is in sound listening","optimism":"Soundness of listening sets the tone in any working relationship.","mysight":""},{"num":66,"useless":"Use and maintenance need single tasking","optimism":"One can’t maintain/improve a tool when using and vice a versa. Same is the case with our emotional inner tools! Meditate before movement.","mysight":""},{"num":67,"useless":"What is the most slammed door in the world?","optimism":"Tie between Microwave door and Opportunity door! You choose!!","mysight":""},{"num":68,"useless":"Life with Clarity Charity in Parity","optimism":"When giving is a parallel action, your main path will gain clarity due to results of empathy in action.","mysight":""},{"num":69,"useless":"Living in dying is boss level","optimism":"Dying in living while earning a living as a norm can rob us on how to be the boss of our own lives. This by the way how some who want to become bosses while some those who want don’t.","mysight":""},{"num":70,"useless":"Breaching is only prologue","optimism":"It is when the whale falls back  do we know the size of the giant. So we when you see a breach of any type, be it breach of fabric of space-time or breaches of the kitchen perimeter,  speed up to study the impact radius to size up the action you need to take.","mysight":""},{"num":71,"useless":"Some think then thing about","optimism":"Thinking before engaging with nouns and pronouns could make our interactions more meaningful","mysight":""},{"num":72,"useless":"Living in dying?","optimism":"Life is a project with a end and a rough duration, even in the best of the situations. So plan to increase living in every day!","mysight":""},{"num":73,"useless":"Informed ignorance is bliss","optimism":"Chose wisely what to ignore. Choose to develop ability to ignore, promptly!","mysight":""},{"num":74,"useless":"only when water droplet gets in the way of light do we get a rainbow","optimism":"Refactor your approach taking refraction, being bent off your path a bit, and still continue in your journey. It will make this more interesting in reflection!","mysight":""},{"num":75,"useless":"Dogonimics 101","optimism":"I think I spend 1500 steps on my dog every day, then I realized My dog invests 1500 steps into me every day and that too walking around in chains and being reigned back from all natural instincts! Gratitude opens our eyes to truly see from those who favor or favored us!","mysight":""},{"num":76,"useless":"My family gives me opportunity invest 1500 steps into them every day","optimism":"Taking care of family is the easiest arena to grow in empathy, without having to step outside of your home! It really is a zero commute growth opportunity.","mysight":""},{"num":77,"useless":"Pissful dog is not peaceful","optimism":"Give room for those around to purge in peace. A better person will emerge! Of course don’t become their barf bag.","mysight":""},{"num":78,"useless":"Elf Self","optimism":"Elf helps or hinders. Same with your inner elf that goes along with you as your own Santa. Your Elf Self as Self Help!!","mysight":""},{"num":79,"useless":"Peers Peering glass","optimism":"Your peers compete and cooperate at the same time. Their insights about you that you don’t know about you is good! Learn of and leverage the same!! Corporates call this 360 feedback!","mysight":""},{"num":80,"useless":"seething till see things","optimism":"see from perspective of those who you falsely think harmed you, it is not always the case that others will harm you intentionally always, you can also move away from such persons over time","mysight":""},{"num":81,"useless":"Fear is dreams on life support","optimism":"Fear of success and failure keep pursuit of success on life support until it perishes. Let the fears go and allow pursuit to breathe free be free. This is one shade of efficiency from putting future results in the rear view mirror.","mysight":""},{"num":82,"useless":"sunrise is between midday and midnight","optimism":"During new beginnings don’t worry about future and past, use the light of now","mysight":""},{"num":83,"useless":"Monkey cheeks","optimism":"Monkey cheeks mindset! Monkeys hold food in their cheeks to eat when hungry. We can learn to taste but not gorge as a way to kelp control of what we consume, like a savings account than a checking account!","mysight":""},{"num":84,"useless":"Metaphor is a struggle","optimism":"any metaphor is a struggle to explain a concept, make a point, use it but don’t be boxed by it","mysight":""},{"num":85,"useless":"Peace is perception","optimism":"SurviveStrive Arrive Thrive Derive are just level of momentary peace. Feel it and let it fleet, in holding it fizzles anyways. When at peace with pulsing peace, you become a perceptor not receptor.","mysight":""},{"num":86,"useless":"restless rest lest","optimism":"","mysight":""},{"num":87,"useless":"Canopy calls climb","optimism":"Chimp cubs keep climbing only to fall back until they reach the canopy","mysight":""},{"num":88,"useless":"Insight out of sight","optimism":"When the distraction of sight recedes insights have a chance to dawn","mysight":""},{"num":89,"useless":"selfbet selfhedge","optimism":"Betting on ourselves needs knowing how to hedge against ourselves, knowing how to hedge our own path helps us stay in path so we may win bet placed on ourselves by ourselves","mysight":""},{"num":90,"useless":"leg up dog is happy","optimism":"don’t hold that which needs to get out and needs to be flushed! It will keep your dog and you equally happy","mysight":""},{"num":92,"useless":"Tired sole’ less tired soul","optimism":"travel of any kind grows us and that perception gives us an extra ounce of energy, after due rest and recovery of course","mysight":""},{"num":93,"useless":"Shallow fallow hollow makes","optimism":"rest well so rust falls off","mysight":""},{"num":94,"useless":"White space is color full","optimism":"When you have nothing to do or feel like you can do nothing, relax it’s time for insights to dawn","mysight":""},{"num":95,"useless":"play parents insight","optimism":"Insighting is neither art nor science it is at once succinct and elaborate, it is witnessed when space is made for it to occupy, so play when you struck out or are  stuck","mysight":""},{"num":96,"useless":"As be, become","optimism":"Accept being, aim becoming Don’t let being define becoming Accept who you are now but aim to become who you want to grow to be","mysight":""},{"num":97,"useless":"Err may be the seed of insight","optimism":"To Err is Human they say, to insight is human too, as of today. So be free to err!!","mysight":""},{"num":98,"useless":"Hyphenate distress","optimism":"When you put space in distress it becomes de stress. Play of words for sure. Test it though it has a nugget of personal experience.","mysight":""},{"num":99,"useless":"Freedom is in the center of the box as well","optimism":"When you know the core of a situation it is a bit easier to focus on solution options.","mysight":""},{"num":100,"useless":"Stillness deepens","optimism":"Still waters seep deep and so does a still mind. So if you need deep thinking take advantage of decreased distractions that come from stillness, including physical stillness","mysight":""},{"num":101,"useless":"Obvious first obfuscates","optimism":"What is obvious to us at first glance is conditioned by color of our past perceptions, give yourself a chance to see more","mysight":""},{"num":102,"useless":"Fight flight freeze breathe","optimism":"To unbox yourself trapped in fight flight freeze responses 3D box, try and leverage breathing, let life force of intelligence be made available to you again this way","mysight":""},{"num":103,"useless":"Unbox to breathe to unbox …..","optimism":"realize this, when you feel need for freedom unbox at least one of the physical emotional or intellectual dimension you are in now, this way you breathe in space to keep unboxing to new freshness","mysight":""},{"num":104,"useless":"rights are written responsibility not","optimism":"Responsibilities are right there in every situation, rights though have to be granted it you have to muscle in! Start with responsibilities then, why waste time in getting started right, right away!","mysight":""},{"num":105,"useless":"peace propeller","optimism":"Quite often peace is propeller of performance","mysight":""},{"num":106,"useless":"Waiting works fast","optimism":"waiting for anything needs with less frustration needs reflection which then helps display patience. So you are waiting works as fast as you choose to be less frustrated and engage thinking. Also waiting gives time to prepare.","mysight":""},{"num":107,"useless":"Baking rules","optimism":"We make rules. In following them we make or break ourselves. Basically we bake ourselves and depending upon what we are made is at that point, our becoming takes the cake or the crumbs. Next day we bake again!!","mysight":""},{"num":108,"useless":"Responsibility starts with inhalation rest with exhalation","optimism":"If what we take up is correct, we can produce, and then let out a sigh of relief! So be careful with what you intake! It determines what your sigh will say to you about life lived that day.","mysight":""},{"num":109,"useless":"Be the board be there knife be the bread","optimism":"Push back, sharp, yield, be what you need to be based on your responsibility and in line with your inner material’s nature","mysight":""},{"num":110,"useless":"Everyone is a continent","optimism":"we live because others are also alive, from food others produced to grave some one fills or fire some one lights. No one is of course an island.","mysight":""},{"num":111,"useless":"Heal heel","optimism":"Pause on mind’s wants that drive your heels so your body gets what is needs to heal. So, consider to cool heel to heal cool!","mysight":""},{"num":112,"useless":"perceived giants","optimism":"Giants’ shoulder produces perceived giants. Nothing wrong in it. It is just what learning process it. Problem is when one perceives themselves to be a giant! In fact AI democratized giant’s shoulder and it may produce more perceived giants!","mysight":""},{"num":114,"useless":"breathe to love","optimism":"Breathe in inner-peace so you can breathe out love to the world","mysight":""},{"num":115,"useless":"Change adds up to notes","optimism":"Put out positive change into society so it may multiply and when it’s multiplication factor returns you notes you can choose to put take back just the change you put in in the form of you changing. This is enough to give you peace of mind in a constantly changing world, positive and negative.","mysight":""},{"num":116,"useless":"hope hop","optimism":"Hoping game is a hopping roller coaster game from one partially fulfilled desire to the next","mysight":""},{"num":117,"useless":"birth births more than birthed","optimism":"In the very first breathe of one’s child responsibility pours out to help us become who we are capable deep inside","mysight":""}];
+
+// ── SVG loading ────────────────────────────────────────────
+// Fetches insight_svgs.json from same folder (GitHub Pages).
+// Falls back gracefully if file not yet present.
+const SVG_LS_KEY = 'ui_svgs_v2';
+let svgMap = {};
+
+async function loadSvgs() {
+  // 1. Check localStorage cache first
+  try {
+    const cached = localStorage.getItem(SVG_LS_KEY);
+    if (cached) { svgMap = JSON.parse(cached); setSvg(pool[cur].num); return; }
+  } catch(e) {}
+
+  // 2. Fetch from GitHub Pages (same directory)
+  try {
+    const res = await fetch('./insight_svgs.json');
+    if (res.ok) {
+      svgMap = await res.json();
+      try { localStorage.setItem(SVG_LS_KEY, JSON.stringify(svgMap)); } catch(e) {}
+      setSvg(pool[cur].num);
+      return;
+    }
+  } catch(e) {}
+
+  // 3. No SVGs available — show nothing (card still works fine)
+  setSvg(pool[cur].num);
+}
+
+function setSvg(num) {
+  const el = document.getElementById('cardSvg');
+  if (!el) return;
+  const inner = svgMap[String(num)];
+  if (inner) {
+    el.innerHTML = inner;
+    el.style.opacity = '0.55';
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+// ── Core ───────────────────────────────────────────────────
+let pool = [...DATA], cur = 0;
+
+const card=document.getElementById('card'),cNum=document.getElementById('cNum'),
+  tU=document.getElementById('tU'),tO=document.getElementById('tO'),tM=document.getElementById('tM'),
+  progFill=document.getElementById('progFill'),navNums=document.getElementById('navNums'),
+  hdrCount=document.getElementById('hdrCount'),srch=document.getElementById('srch'),
+  srchDrop=document.getElementById('srchDrop'),srchClear=document.getElementById('srchClear'),
+  stack=document.getElementById('stack'),empty=document.getElementById('empty'),
+  hint=document.getElementById('hint'),dL=document.getElementById('dL'),dR=document.getElementById('dR'),
+  tFill=document.getElementById('tFill'),tPlay=document.getElementById('tPlay'),
+  savedBadge=document.getElementById('savedBadge');
+
+// localStorage notes
+function noteKey(n){ return 'ui_note_'+n; }
+function loadNote(n){ try{ return localStorage.getItem(noteKey(n))||''; }catch(e){ return ''; } }
+function saveNote(n,v){ try{ v?localStorage.setItem(noteKey(n),v):localStorage.removeItem(noteKey(n)); }catch(e){} }
+let saveTimer=null;
+function flashSaved(){ savedBadge.classList.add('show'); clearTimeout(saveTimer); saveTimer=setTimeout(()=>savedBadge.classList.remove('show'),1800); }
+tM.addEventListener('input',()=>{ const d=pool[cur]; if(d){ saveNote(d.num,tM.value); flashSaved(); } });
+tM.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
+tM.addEventListener('mousedown',e=>e.stopPropagation());
+
+function render() {
+  if (!pool.length) return;
+  const d = pool[cur];
+  cNum.textContent = d.num;
+  tU.textContent = d.useless;
+  tO.textContent = d.optimism || '\u2026';
+  tM.value = loadNote(d.num);
+  savedBadge.classList.remove('show');
+  setSvg(d.num);
+  const pct = ((cur+1)/pool.length)*100;
+  progFill.style.width = pct+'%';
+  const lbl = `${cur+1} / ${pool.length}`;
+  navNums.textContent = lbl; hdrCount.textContent = lbl;
+}
+
+function go(n,dir) {
+  if (!pool.length) return;
+  n = ((n%pool.length)+pool.length)%pool.length;
+  if (n===cur && pool.length>1) return;
+  hint.classList.remove('show');
+  const oc=dir>=0?'out-l':'out-r', ic=dir>=0?'in-l':'in-r';
+  card.classList.add(oc);
+  setTimeout(()=>{ card.classList.remove(oc); cur=n; render(); card.classList.add(ic); setTimeout(()=>card.classList.remove(ic),280); },240);
+}
+function next(){ go(cur+1,1); }
+function prev(){ go(cur-1,-1); }
+
+document.getElementById('bNext').onclick=()=>{ next(); resetTimer(); };
+document.getElementById('bPrev').onclick=()=>{ prev(); resetTimer(); };
+document.getElementById('bRnd').onclick=()=>{ go(Math.floor(Math.random()*pool.length),1); resetTimer(); };
+
+document.addEventListener('keydown',e=>{
+  if(document.activeElement===srch||document.activeElement===tM) return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){ next(); resetTimer(); }
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ prev(); resetTimer(); }
+});
+
+// Swipe
+let sx=0,sy=0,drag=false,dx=0;
+card.addEventListener('touchstart',e=>{ if(e.target.closest('button,input,textarea')) return; sx=e.touches[0].clientX; sy=e.touches[0].clientY; drag=true; dx=0; card.classList.add('dragging'); },{passive:true});
+card.addEventListener('touchmove',e=>{ if(!drag) return; dx=e.touches[0].clientX-sx; const dy=e.touches[0].clientY-sy; if(Math.abs(dx)<Math.abs(dy)){ drag=false; card.classList.remove('dragging'); return; } e.preventDefault(); card.style.transform=`translateX(${dx}px) rotate(${dx*0.04}deg)`; dL.style.opacity=dx>30?Math.min((dx-30)/60,1):0; dR.style.opacity=dx<-30?Math.min((-dx-30)/60,1):0; },{passive:false});
+function endDrag(){ if(!drag) return; drag=false; card.classList.remove('dragging'); card.style.transform=''; dL.style.opacity=0; dR.style.opacity=0; if(dx>70){ prev(); resetTimer(); } else if(dx<-70){ next(); resetTimer(); } dx=0; }
+card.addEventListener('touchend',endDrag);
+card.addEventListener('mousedown',e=>{ if(e.target.closest('button,input,textarea')) return; sx=e.clientX; sy=e.clientY; drag=true; dx=0; card.classList.add('dragging'); });
+window.addEventListener('mousemove',e=>{ if(!drag) return; dx=e.clientX-sx; card.style.transform=`translateX(${dx}px) rotate(${dx*0.04}deg)`; dL.style.opacity=dx>30?Math.min((dx-30)/60,1):0; dR.style.opacity=dx<-30?Math.min((-dx-30)/60,1):0; });
+window.addEventListener('mouseup',endDrag);
+
+// Search
+function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function hi(t,q){ return t.replace(new RegExp(`(${esc(q)})`,'gi'),'<mark>$1</mark>'); }
+srch.addEventListener('input',()=>{
+  const q=srch.value.trim().toLowerCase();
+  if(!q){ srchDrop.classList.remove('open'); pool=[...DATA]; cur=0; stack.style.display=''; empty.classList.remove('show'); render(); return; }
+  const hits=DATA.filter(d=>d.useless.toLowerCase().includes(q)||d.optimism.toLowerCase().includes(q)||String(d.num).includes(q));
+  if(!hits.length){ srchDrop.innerHTML='<div class="drop-item" style="color:#aaa;font-style:italic;">No results</div>'; srchDrop.classList.add('open'); return; }
+  srchDrop.innerHTML=hits.slice(0,10).map(d=>`<div class="drop-item" data-i="${DATA.indexOf(d)}"><div class="dn">#${d.num}</div><div class="dt">${hi(d.useless.substring(0,72),q)}${d.useless.length>72?'\u2026':''}</div></div>`).join('');
+  srchDrop.classList.add('open');
+});
+srchDrop.addEventListener('click',e=>{ const item=e.target.closest('[data-i]'); if(!item) return; const di=parseInt(item.dataset.i); const q=srch.value.trim().toLowerCase(); pool=DATA.filter(d=>d.useless.toLowerCase().includes(q)||d.optimism.toLowerCase().includes(q)||String(d.num).includes(q)); cur=pool.findIndex(d=>DATA.indexOf(d)===di); if(cur<0) cur=0; srchDrop.classList.remove('open'); stack.style.display=''; empty.classList.remove('show'); render(); });
+srchClear.addEventListener('click',()=>{ srch.value=''; srchDrop.classList.remove('open'); pool=[...DATA]; cur=0; stack.style.display=''; empty.classList.remove('show'); render(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.search-wrap')&&!e.target.closest('#srchClear')) srchDrop.classList.remove('open'); });
+
+// Auto-timer
+let tDur=10000,tStart=null,tRAF=null,tOn=false;
+function timerTick(ts){ if(!tStart) tStart=ts; const pct=Math.min((ts-tStart)/tDur*100,100); tFill.style.width=pct+'%'; if(pct>=100){ tFill.style.width='0%'; tStart=null; go(Math.floor(Math.random()*pool.length),1); } tRAF=requestAnimationFrame(timerTick); }
+function startTimer(){ tOn=true; tStart=null; tFill.style.width='0%'; tPlay.textContent='\u23F8'; tPlay.classList.add('on'); if(tRAF) cancelAnimationFrame(tRAF); tRAF=requestAnimationFrame(timerTick); }
+function stopTimer(){ tOn=false; if(tRAF){ cancelAnimationFrame(tRAF); tRAF=null; } tFill.style.width='0%'; tStart=null; tPlay.textContent='\u25B6'; tPlay.classList.remove('on'); }
+function resetTimer(){ if(tOn){ tStart=null; tFill.style.width='0%'; } }
+tPlay.addEventListener('click',()=>tOn?stopTimer():startTimer());
+document.querySelectorAll('.t-spd').forEach(btn=>{ btn.addEventListener('click',()=>{ document.querySelectorAll('.t-spd').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); tDur=parseInt(btn.dataset.ms); if(tOn){ stopTimer(); startTimer(); } }); });
+
+// Init
+render();
+loadSvgs();
+</script>
+</body>
+</html>
