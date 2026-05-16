@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifecycle Goals Preparedness Assessment · Banyan Logic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --sand:#f0e6d0;--sand-lt:#fdf8ee;--sand-mid:#e4d4b4;--sand-dk:#c8b890;
+  --blue:#1a3a6e;--blue-mid:#2a5aac;--blue-soft:#4a7ac8;--blue-pale:#e8eef8;
+  --gold:#8b6018;--gold-lt:#c8a050;--gold-pale:#fdf3e0;
+  --green:#1a5a28;--green-soft:#3a8a48;--green-pale:#eaf4ec;
+  --red:#8b2020;--red-pale:#fdf0f0;
+  --ink:#2a1a08;--ink-soft:#5a4a2a;--ink-faint:#8a7a5a;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--sand);background-image:radial-gradient(ellipse 80% 50% at 50% 0%,#fdf6e8 0%,transparent 60%);font-family:'DM Sans',sans-serif;color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 60px;}
+.header{text-align:center;padding:32px 0 20px;width:100%;max-width:600px;}
+.header::after{content:'';display:block;height:1px;background:linear-gradient(to right,transparent,var(--sand-dk),transparent);margin-top:16px;}
+.kicker{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.28em;color:var(--blue-soft);text-transform:uppercase;display:block;margin-bottom:7px;opacity:0.65;}
+.title{font-family:'Cinzel',serif;font-size:clamp(1.05rem,3.2vw,1.45rem);font-weight:400;color:var(--blue);letter-spacing:0.08em;line-height:1.3;margin-bottom:5px;}
+.subtitle{font-family:'Cinzel',serif;font-size:0.6rem;color:var(--gold);letter-spacing:0.18em;display:block;margin-bottom:5px;}
+.tagline{font-size:0.88rem;font-weight:400;color:var(--ink-soft);opacity:0.85;line-height:1.6;}
+.screen{display:none;width:100%;max-width:600px;}
+.screen.active{display:block;animation:rise 0.4s ease both;}
+@keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* INTRO */
+.intro-card{background:var(–sand-lt);border:1px solid var(–sand-dk);padding:26px 30px;margin-bottom:14px;}
+.intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0;}
+.ig{background:var(–sand);border:1px solid var(–sand-dk);padding:11px 8px;text-align:center;}
+.ig-v{font-family:‘Cinzel’,serif;font-size:1.25rem;color:var(–blue);display:block;line-height:1;margin-bottom:3px;}
+.ig-l{font-family:‘DM Sans’,sans-serif;font-size:0.54rem;color:var(–ink-soft);opacity:0.6;text-transform:uppercase;letter-spacing:0.07em;display:block;}
+.prose{font-size:0.95rem;font-weight:400;color:var(–ink-soft);line-height:1.68;margin-bottom:9px;}
+.prose strong{color:var(–blue);font-weight:600;}
+.callout{border-left:3px solid var(–gold);background:var(–gold-pale);padding:10px 14px;margin:12px 0;}
+.callout p{font-size:0.87rem;font-weight:300;color:var(–ink-soft);line-height:1.72;}
+.callout p strong{color:var(–blue);font-weight:600;}
+
+/* BUTTONS */
+.btn{font-family:‘Cinzel’,serif;font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;padding:13px 30px;border:1.5px solid var(–blue);background:var(–blue);color:var(–sand-lt);cursor:pointer;transition:all 0.2s;display:inline-block;text-decoration:none;}
+.btn:hover{background:var(–blue-mid);}
+.btn-outline{background:transparent;color:var(–blue);}
+.btn-outline:hover{background:var(–blue-pale);}
+.btn-gold{background:var(–gold);border-color:var(–gold);}
+.btn-gold:hover{background:var(–gold-lt);}
+.btn-sm{padding:9px 20px;font-size:0.57rem;}
+
+/* TEST */
+.prog-wrap{height:4px;background:var(–sand-mid);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.prog-fill{height:100%;background:var(–blue-mid);border-radius:2px;transition:width 0.5s ease;}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:6px;}
+.q-counter{font-family:‘Cinzel’,serif;font-size:0.56rem;letter-spacing:0.18em;color:var(–blue-soft);text-transform:uppercase;opacity:0.65;}
+.q-theme{font-family:‘Cinzel’,serif;font-size:0.5rem;letter-spacing:0.1em;padding:2px 9px;border-radius:2px;text-transform:uppercase;}
+.q-card{background:var(–sand-lt);border:1px solid var(–sand-dk);padding:22px 26px;margin-bottom:12px;}
+.q-sit-label{font-family:‘Cinzel’,serif;font-size:0.48rem;letter-spacing:0.18em;color:var(–ink-faint);text-transform:uppercase;display:block;margin-bottom:5px;}
+.q-scenario{font-size:0.93rem;font-weight:400;color:var(–ink-soft);line-height:1.65;padding:11px 13px;background:var(–sand);border-left:3px solid var(–sand-dk);margin-bottom:13px;font-family:‘DM Sans’,sans-serif;}
+.q-stem{font-size:0.96rem;font-weight:600;color:var(–ink);line-height:1.5;margin-bottom:10px;font-family:‘DM Sans’,sans-serif;}
+.options{display:flex;flex-direction:column;gap:7px;}
+.option{display:flex;align-items:flex-start;gap:11px;padding:12px 15px;background:white;border:1.5px solid var(–sand-dk);cursor:pointer;transition:all 0.18s;text-align:left;}
+.option:hover:not(.disabled){border-color:var(–blue-soft);background:var(–blue-pale);}
+.option.correct{border-color:var(–green);background:var(–green-pale);}
+.option.wrong{border-color:var(–red);background:var(–red-pale);}
+.option.reveal{border-color:var(–green);background:var(–green-pale);opacity:1;}
+.option.disabled{cursor:default;opacity:0.7;}
+.opt-key{font-family:‘Cinzel’,serif;font-size:0.66rem;letter-spacing:0.1em;color:var(–blue-soft);min-width:19px;flex-shrink:0;padding-top:1px;opacity:0.65;}
+.option.correct .opt-key,.option.reveal .opt-key{color:var(–green);opacity:1;}
+.option.wrong .opt-key{color:var(–red);opacity:1;}
+.opt-text{font-size:0.9rem;font-weight:400;color:var(–ink-soft);line-height:1.58;flex:1;}
+.opt-icon{margin-left:auto;flex-shrink:0;font-size:0.82rem;align-self:center;}
+.feedback{display:none;margin-top:11px;padding:13px 15px;animation:rise 0.3s ease both;}
+.feedback.show{display:block;}
+.feedback.correct-fb{background:var(–green-pale);border:1px solid #b8d8bc;border-left:4px solid var(–green);}
+.feedback.wrong-fb{background:var(–red-pale);border:1px solid #e0b0b0;border-left:4px solid var(–red);}
+.fb-verdict{font-family:‘Cinzel’,serif;font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;display:block;margin-bottom:5px;}
+.feedback.correct-fb .fb-verdict{color:var(–green);}
+.feedback.wrong-fb .fb-verdict{color:var(–red);}
+.fb-explain{font-size:0.9rem;font-weight:400;color:var(–ink-soft);line-height:1.65;}
+.fb-explain strong{color:var(–blue);font-weight:600;}
+.fb-fw{margin-top:7px;font-family:‘DM Sans’,sans-serif;font-size:0.68rem;font-weight:500;color:var(–ink-soft);}
+.next-wrap{display:none;margin-top:12px;text-align:right;}
+.next-wrap.show{display:block;}
+
+/* RESULTS */
+.results-card{background:var(–sand-lt);border:1px solid var(–sand-dk);padding:30px;margin-bottom:14px;text-align:center;}
+.score-ring{width:108px;height:108px;border-radius:50%;border:3px solid var(–sand-dk);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;}
+.score-val{font-family:‘Cinzel’,serif;font-size:1.9rem;color:var(–blue);line-height:1;}
+.score-denom{font-family:‘DM Sans’,sans-serif;font-size:0.6rem;color:var(–ink-soft);opacity:0.55;}
+.score-label{font-family:‘Cinzel’,serif;font-size:0.92rem;color:var(–blue);letter-spacing:0.08em;margin-bottom:4px;}
+.score-sub{font-size:0.88rem;font-weight:400;color:var(–ink-soft);opacity:0.85;margin-bottom:20px;}
+.sdiv{display:flex;align-items:center;gap:9px;margin:16px 0 8px;text-align:left;}
+.sdiv-rule{flex:1;height:1px;background:var(–sand-dk);}
+.sdiv-t{font-family:‘Cinzel’,serif;font-size:0.54rem;letter-spacing:0.18em;color:var(–blue);text-transform:uppercase;opacity:0.6;white-space:nowrap;}
+.fw-reveal{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;text-align:left;}
+.fw-card{padding:11px 13px;border:1px solid var(–sand-dk);border-left:3px solid;}
+.fw-name{font-family:‘Cinzel’,serif;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:3px;opacity:0.75;}
+.fw-desc{font-size:0.82rem;font-weight:400;color:var(–ink-soft);line-height:1.6;}
+.verdict{padding:13px 16px;margin:10px 0;text-align:left;}
+.verdict.pass{background:var(–green-pale);border-left:4px solid var(–green);}
+.verdict.partial{background:var(–gold-pale);border-left:4px solid var(–gold);}
+.verdict.entry{background:var(–blue-pale);border-left:4px solid var(–blue-mid);}
+.verdict-title{font-family:‘Cinzel’,serif;font-size:0.6rem;letter-spacing:0.16em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.verdict.pass .verdict-title{color:var(–green);}
+.verdict.partial .verdict-title{color:var(–gold);}
+.verdict.entry .verdict-title{color:var(–blue-mid);}
+.verdict p{font-size:0.9rem;font-weight:400;color:var(–ink-soft);line-height:1.65;}
+.review-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(–sand-mid);text-align:left;}
+.review-item:last-child{border-bottom:none;}
+.rv-icon{font-size:0.82rem;flex-shrink:0;margin-top:2px;}
+.rv-body{flex:1;}
+.rv-q{font-size:0.84rem;font-weight:400;color:var(–ink-soft);line-height:1.52;margin-bottom:2px;}
+.rv-a{font-family:‘DM Sans’,sans-serif;font-size:0.68rem;}
+.rv-a.correct{color:var(–green);}
+.rv-a.wrong{color:var(–red);}
+.rv-fw{font-family:‘Cinzel’,serif;font-size:0.44rem;letter-spacing:0.08em;text-transform:uppercase;opacity:0.42;flex-shrink:0;padding-top:3px;}
+.test-footer{text-align:center;margin-top:22px;font-family:‘Cinzel’,serif;font-size:0.48rem;letter-spacing:0.14em;color:var(–blue-soft);opacity:0.38;text-transform:uppercase;}
+
+/* THEME BREAKDOWN BAR */
+.theme-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0;}
+.tb-item{text-align:center;padding:8px 6px;border:1px solid var(–sand-dk);}
+.tb-score{font-family:‘Cinzel’,serif;font-size:1.0rem;display:block;line-height:1;margin-bottom:3px;}
+.tb-label{font-family:‘DM Sans’,sans-serif;font-size:0.5rem;text-transform:uppercase;letter-spacing:0.07em;color:var(–ink-soft);opacity:0.6;display:block;}
+.tb-bar{height:3px;background:var(–sand-mid);border-radius:2px;margin-top:4px;overflow:hidden;}
+.tb-fill{height:100%;border-radius:2px;}
+
+/* TIER SELECTOR */
+.tier-label{font-family:‘Cinzel’,serif;font-size:0.52rem;letter-spacing:0.22em;color:var(–blue-soft);text-transform:uppercase;display:block;margin-bottom:10px;opacity:0.65;text-align:center;}
+.tier-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.tier-btn{background:var(–sand);border:1.5px solid var(–sand-dk);padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+.tier-btn:hover{border-color:var(–blue-soft);background:var(–blue-pale);}
+.tier-btn.selected{border-color:var(–blue);background:var(–blue-pale);}
+.tier-num{font-family:‘Cinzel’,serif;font-size:1.5rem;color:var(–blue);display:block;line-height:1;margin-bottom:3px;}
+.tier-name{font-family:‘Cinzel’,serif;font-size:0.52rem;letter-spacing:0.1em;color:var(–blue);text-transform:uppercase;display:block;margin-bottom:2px;}
+.tier-time{font-family:‘DM Sans’,sans-serif;font-size:0.56rem;color:var(–ink-faint);display:block;}
+.tier-btn.selected .tier-num,.tier-btn.selected .tier-name{color:var(–blue);}
+
+/* TEAM SHARE CARD */
+.team-card{background:var(–blue);padding:20px 24px;margin-top:16px;text-align:left;}
+.tc-label{font-family:‘Cinzel’,serif;font-size:0.5rem;letter-spacing:0.22em;color:var(–gold-lt);text-transform:uppercase;display:block;margin-bottom:6px;opacity:0.75;}
+.tc-title{font-family:‘Cinzel’,serif;font-size:0.92rem;color:#f0e6d0;letter-spacing:0.06em;display:block;margin-bottom:8px;}
+.tc-body{font-size:0.88rem;font-weight:400;color:#c8b890;line-height:1.65;margin-bottom:14px;}
+.tc-body strong{color:#f0e6d0;font-weight:500;}
+.tc-q{font-size:0.88rem;font-weight:400;color:#e8d8b0;line-height:1.6;border-left:3px solid var(–gold-lt);padding-left:12px;margin-bottom:14px;opacity:0.9;}
+.tc-link{font-family:‘DM Sans’,sans-serif;font-size:0.64rem;color:#a89060;letter-spacing:0.04em;word-break:break-all;display:block;margin-bottom:14px;}
+.tc-btn{font-family:‘Cinzel’,serif;font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;padding:11px 22px;background:var(–gold);color:var(–sand-lt);border:none;cursor:pointer;transition:background 0.2s;text-decoration:none;display:inline-block;}
+.tc-btn:hover{background:var(–gold-lt);}
+.tc-note{font-family:‘DM Sans’,sans-serif;font-size:0.54rem;color:#a89060;margin-top:8px;opacity:0.7;}
+
+@media(max-width:500px){.fw-reveal{grid-template-columns:1fr;}.intro-grid{grid-template-columns:1fr 1fr;}.theme-breakdown{grid-template-columns:1fr 1fr;}.tier-row{grid-template-columns:repeat(3,1fr);}}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <h1 class="title">Lifecycle Goals<br>Preparedness Assessment</h1>
+  <p class="tagline">What is your Team signaling about its ability to take their goals, and your objectives, all the way through? What are you signaling to them?</p>
+  <span class="subtitle" style="margin-top:6px;opacity:0.7;">Systems Thinking for All · Banyan Logic</span>
+
+<!-- INTRO -->
+
+<div class="screen active" id="screen-intro">
+  <div class="intro-card">
+    <span class="tier-label" style="margin-top:10px;display:block;font-size:0.48rem;color:var(--ink-faint);letter-spacing:0.14em;opacity:0.55;text-align:center;font-family:'DM Sans',sans-serif;font-style:italic;">This assessment improves through every human who takes it · Systems Thinking for All</span>
+    <span class="tier-label">Choose your depth</span>
+    <div class="tier-row">
+      <div class="tier-btn" id="tier-3" onclick="selectTier(3)">
+        <span class="tier-num">3</span>
+        <span class="tier-name">Quick Read</span>
+        <span class="tier-time">5 minutes</span>
+      </div>
+      <div class="tier-btn selected" id="tier-6" onclick="selectTier(6)">
+        <span class="tier-num">6</span>
+        <span class="tier-name">Standard</span>
+        <span class="tier-time">10 minutes</span>
+      </div>
+      <div class="tier-btn" id="tier-9" onclick="selectTier(9)">
+        <span class="tier-num">9</span>
+        <span class="tier-name">Full Diagnostic</span>
+        <span class="tier-time">15 minutes</span>
+      </div>
+    </div>
+
+```
+<div style="text-align:center;margin-top:4px;">
+  <button class="btn" onclick="startAssessment()">Begin →</button>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- TEST -->
+
+<div class="screen" id="screen-test">
+  <div class="prog-wrap"><div class="prog-fill" id="q-progress" style="width:0%"></div></div>
+  <div class="q-meta">
+    <span class="q-counter" id="q-counter">Question 1 of 9</span>
+    <span class="q-theme" id="q-theme"></span>
+  </div>
+  <div class="q-card">
+    <span class="q-sit-label">Situation</span>
+    <div class="q-scenario" id="q-scenario"></div>
+    <div class="q-stem" id="q-stem"></div>
+    <div class="options" id="q-options"></div>
+    <div class="feedback" id="q-feedback"></div>
+  </div>
+  <div class="next-wrap" id="next-wrap">
+    <button class="btn btn-sm" id="next-btn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+
+<div class="screen" id="screen-results">
+  <div class="results-card">
+    <div class="score-ring" id="score-ring">
+      <span class="score-val" id="score-val">0</span>
+      <span class="score-denom" id="score-denom">out of 9</span>
+    </div>
+    <div class="score-label" id="score-label">—</div>
+    <div class="score-sub" id="score-sub">—</div>
+    <div id="verdict-wrap"></div>
+
+```
+<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">Theme breakdown</span><div class="sdiv-rule"></div></div>
+<div class="theme-breakdown" id="theme-breakdown"></div>
+
+<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">What these questions were really testing</span><div class="sdiv-rule"></div></div>
+<p style="font-size:0.84rem;font-weight:300;color:var(--ink-soft);line-height:1.75;text-align:left;margin-bottom:9px;">Each scenario maps to a framework that names what you were diagnosing:</p>
+<div class="fw-reveal" id="fw-reveal"></div>
+
+<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">Question Review</span><div class="sdiv-rule"></div></div>
+<div id="review-list"></div>
+
+<div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+  <button class="btn btn-gold" onclick="retake()">Retake Assessment</button>
+  <a class="btn btn-outline" href="mailto:srinikasturi@banyanlogic.com?subject=Lifecycle Goals Preparedness Assessment — want to learn more" style="text-decoration:none;">Talk to Srini →</a>
+</div>
+<p style="font-size:0.73rem;font-style:italic;font-weight:300;color:var(--ink-faint);margin-top:12px;opacity:0.65;">Coffee Conversations on CLAAS · Sunday Ideate · Monday Iterate Better · 10 AM · No pitch · <a href="http://www.linkedin.com/in/skasturi" target="_blank" style="color:var(--blue-soft);">linkedin.com/in/skasturi</a></p>
+
+<!-- TEAM SHARE CARD -->
+<div class="team-card">
+  <span class="tc-label">Now ask your team</span>
+  <span class="tc-title">What would your team answer?</span>
+  <p class="tc-body"><strong>Bring your results to Coffee Conversations on CLAAS.</strong> Sunday 10 AM — Ideate. Monday 10 AM — Iterate better. The gaps between your team's answers are where the real conversation lives. That conversation has a home.</p>
+  <p class="tc-q">"Send this to three people on your team. Have them take it independently. Bring the results to Sunday's session. Iterate better on Monday because you named it first."</p>
+  <span class="tc-link" id="team-link">https://srinimkasturi.github.io/Hums/bl-lgpa.html</span>
+  <p class="tc-note" style="margin-bottom:10px;">Questions or want to discuss your results? Connect with Srini on LinkedIn: <a href="http://www.linkedin.com/in/skasturi" target="_blank" style="color:var(--gold-lt);">linkedin.com/in/skasturi</a></p>
+  <div>
+    <button class="tc-btn" onclick="copyLink()">Share with Your Team</button>
+    <a class="tc-btn" href="mailto:?subject=How does your team think about lifecycle problems?&body=I just took this 5-10 minute assessment and thought you might find it interesting. No signup, no pitch — just a set of scenarios from 30 years of enterprise practice. See how you think about handoffs, requirements, people, and lifecycle.%0A%0Ahttps://srinimkasturi.github.io/Hums/bl-lgpa.html%0A%0ACompare your results with mine at our next meeting." style="text-decoration:none;margin-left:8px;">Email to Team</a>
+  </div>
+  <p class="tc-note" id="copy-confirm" style="display:none;">✓ Link copied to clipboard</p>
+  <p class="tc-note" style="margin-top:6px;">No accounts · No data collected · Each person sees only their own results</p>
+</div>
+```
+
+  </div>
+  <div class="test-footer">© Banyan Logic, LLC · Srinivasa M. Kasturi · 2026 · Systems Thinking for All<br>Connect on LinkedIn: <a href="http://www.linkedin.com/in/skasturi" target="_blank" style="color:var(--blue-soft);opacity:0.7;">linkedin.com/in/skasturi</a> · "Framing the problem is half the Transformation"</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// 18-QUESTION BANK · 9 served · balanced across 4 themes
+// Scenarios drawn from 30 years of enterprise practice
+// All organisations anonymised
+// Framework vocabulary revealed in results only
+// ═══════════════════════════════════════════════════════
+const QUESTIONS = [
+
+// ── PEOPLE (5 questions) ─────────────────────────────
+{id:'p1',theme:'People',
+scenario:'A security team runs over 250 production applications with a 99% uptime target. Leadership proposes adding 15 new applications to the portfolio next quarter without adding headcount.',
+stem:'What is the most important question to answer before accepting this proposal?',
+options:['The team already has enough capacity to absorb this volume without degrading','The monitoring tools can handle 15 more applications with reconfiguration','Which of the 15 applications are highest priority for the portfolio','Whether onboarding can be streamlined to reduce per-application effort'],
+correct:0,
+explain:'A team at 99% uptime across 250 applications has almost no room to breathe. <strong>Every human system has a rhythm — a pace it can sustain without degrading.</strong> When you add volume without first asking whether there is room to absorb it, you are not growing the team. You are overloading a system already near its ceiling. The first diagnostic question is always: where is the breathing room right now?',
+fw:'The signal: team breathing room — when a human system has no capacity to absorb, it cannot grow — it can only break (HUMS™)'},
+
+{id:'p2',theme:'People',
+scenario:'A security team is deliberately shifted from routine, low-risk testing to high-risk testing and red-teaming. The team grows from 11 to 20+ staff. Six months in, the original members are performing well in the new model. Several of the new hires are struggling.',
+stem:'Using lifecycle thinking, what is the most likely explanation?',
+options:['The new hires were not screened rigorously enough — the selection process did not assess for the specific judgment required in high-risk testing','The new hires need better structured onboarding documentation','The original team built judgment through years of practice — new hires have credentials but not yet the pattern recognition that only comes from sustained operational experience','High-risk testing requires a different technical skill set — one that the new hires have not yet had the opportunity to demonstrate in this context'],
+correct:2,
+explain:'There is a difference between <strong>credentials and earned judgment.</strong> Credentials are what you have learned. Judgment is what you have developed — through repeated exposure to real situations, real consequences, and real feedback over time. The original team has both. The new hires have the first but not yet the second. Where someone is in the arc of their practice shapes what they can actually do — and that cannot be shortcut with better documentation.',
+fw:'The signal: credentials vs earned judgment — developmental stage shapes what a person can actually do, and that gap cannot be closed with onboarding (HUMS™)'},
+
+{id:'p3',theme:'People',
+scenario:'A senior engineer has been the primary contact for a critical compliance platform for seven years. She announces retirement in three months. The knowledge transfer plan consists of two one-hour handover meetings.',
+stem:'What does lifecycle experience tell you about this plan?',
+options:['Two hours is sufficient if the documentation is comprehensive and covers the key decision points she has encountered over seven years of running the platform','Platform documentation should be updated and validated before she leaves, then reviewed by the replacement to surface any gaps in the handover','The replacement should shadow her for the full three months to absorb context','Seven years of tacit knowledge — judgment, undocumented decisions, pattern recognition — cannot be transferred in two meetings. It was never written down because nothing required it to be.'],
+correct:3,
+explain:'<strong>Two one-hour meetings transfer information. They do not transfer judgment.</strong> The knowledge that keeps a seven-year system running is not in the documentation — it lives in the person. It was never written down because nothing in the lifecycle ever required it to be. The gap becomes visible only after she is gone, at which point the cost of recovery is far higher than the cost of proper capture would have been.',
+fw:'The signal: undocumented human dependency — when one person holds the system in their memory, the system is one departure away from a crisis (HUMS™)'},
+
+{id:'p4',theme:'People',
+scenario:'A security leader has influenced executives across six directorates and 40+ IT units over eight years, securing consistent programme funding. A new executive joins and immediately questions the value of the programme.',
+stem:'What lifecycle lens explains why eight years of demonstrated value can still be questioned?',
+options:['The programme results were not communicated clearly enough to senior leadership — the outcome data existed but was not translated into the language the new executive uses','Value demonstrated to previous stakeholders does not transfer to new ones. Every new decision-maker starts from their own baseline. The trust must be rebuilt, not assumed.','The new executive needs time to understand the programme history and context — the value will become apparent once they have reviewed the evidence base','The programme should have built stronger documentation of its outcomes over time'],
+correct:1,
+explain:'Eight years of demonstrated value lives in the relationships and shared experiences of the people who witnessed it. <strong>None of that transfers automatically to someone who was not in the room.</strong> Trust is not stored in outcome reports — it is stored in the humans who experienced the outcomes. When those humans change, the trust must be rebuilt from the new person\'s baseline. This is not a communication failure. It is a fundamental property of how trust works between people.',
+fw:'The signal: trust as a human asset — value demonstrated to previous stakeholders does not automatically carry to new ones (HUMS™)'},
+
+{id:'p5',theme:'People',
+scenario:'A security team maintains under 15% staff attrition across a follow-the-sun model spanning three geographies over several years, consistently delivering against targets. A consultant recommends restructuring for "operational efficiency."',
+stem:'What lifecycle signal is the consultant most likely missing?',
+options:['Low attrition in a high-pressure domain signals a People layer that is functioning. Restructuring without understanding why the team is stable risks destroying what produces the performance.','The follow-the-sun model may introduce coordination inefficiencies that are masking underlying performance issues across the three geographies','The team cost structure may be suboptimal across three geographies','Team performance should be benchmarked against comparable organisations in the sector before any structural changes are considered'],
+correct:0,
+explain:'Under 15% attrition in security work across three geographies is not a baseline — <strong>it is evidence that something in the human system is working.</strong> The accumulated trust, shared context, and team cohesion that produce that result took years to build. They are invisible in an org chart and undetectable in a cost analysis. A restructuring that optimises a number without asking why the team is stable risks destroying the very conditions that produce the performance it is trying to preserve.',
+fw:'The signal: stability as evidence of a healthy human system — before you restructure, understand what is producing the result you want to keep (HUMS™)'},
+
+// ── HANDOFF (5 questions) ─────────────────────────────
+{id:'h1',theme:'Handoff',
+scenario:'A team inherits a set of enterprise testing frameworks for a new cloud platform. Within the first year, escalations from downstream teams drop 50% and upstream artifact quality improves 25%.',
+stem:'What lifecycle discipline most likely produced this result?',
+options:['The new team was more technically skilled and applied that expertise more consistently across the full testing portfolio','The documentation made the work easier to execute and reduced the time required to onboard new team members onto specific platforms','The frameworks shifted quality upstream — problems caught earlier meant cleaner handoffs and fewer downstream escalations','The cloud platform was more stable than the previous infrastructure'],
+correct:2,
+explain:'<strong>The earlier in the lifecycle a problem is caught, the cheaper it is to fix.</strong> A defect found before the requirements are written costs almost nothing. The same defect found after the system is live costs ten to a hundred times more. The 50% escalation reduction is not a team quality story — it is a handoff story. Downstream teams received cleaner work because the upstream team handed cleaner work forward. That is the leverage point.',
+fw:'The signal: upstream quality as downstream leverage — where in the relay a problem is caught determines how much it costs to fix (C-SALF)'},
+
+{id:'h2',theme:'Handoff',
+scenario:'An independent assessor evaluates a government agency\'s security controls. The agency\'s self-assessment shows 95% compliance. The independent assessor\'s findings show 67% against the same control set.',
+stem:'What does the gap between 95% and 67% most likely reveal?',
+options:['The independent assessor used a stricter interpretation of the control requirements','The agency needs to retrain its internal assessment team — the 28-point gap suggests the criteria are being applied inconsistently across different control families','The control set contained ambiguous language that both teams interpreted differently, producing divergent findings from the same underlying evidence','The self-assessment was partial — internal teams assess against what they know. An independent assessor applies documented criteria without that context, revealing what familiarity made invisible.'],
+correct:3,
+explain:'This is not a story about dishonesty. <strong>It is a story about how familiarity distorts judgment.</strong> When you assess your own work, you unconsciously assess against your mental model of how it should work — not against the documented standard. An independent reviewer applies the same criteria without that context, and sees what familiarity had made invisible. The findings that matter most almost always come from someone who was not involved in producing the work.',
+fw:'The signal: familiarity bias — the person closest to the work is the least able to inspect it impartially (C-SALF · ISO 17020)'},
+
+{id:'h3',theme:'Handoff',
+scenario:'A team automates security testing across a CI/CD pipeline, generating 40,000+ automated risk-based decisions per year. Six months after launch, a critical vulnerability class is found in production that the automated pipeline missed.',
+stem:'What is the most important lifecycle question to ask first?',
+options:['Whether the automation tool was correctly configured and whether its rule set had been updated to reflect the current threat landscape for this application type','Whether a requirement was written for this vulnerability class. If the adversarial story was never written, the pipeline was never asked to look for it — a gap in requirements, not in the build.','Whether the automation should be replaced with a more capable scanning tool','Whether the development team followed secure coding standards and whether those standards explicitly addressed the vulnerability class that was found in production'],
+correct:1,
+explain:'Automation is precise and tireless — but it only looks for what it was told to look for. <strong>If the question what would an attacker try? was never written into the requirements, the pipeline was never configured to answer it.</strong> The vulnerability was not missed by the tool. It was missed months earlier, when someone wrote requirements and only asked what a user should be able to do — and forgot to ask the second question.',
+fw:'The signal: requirements shape what automation can find — a scanner cannot look for a threat that was never written into the specification (C-SALF)'},
+
+{id:'h4',theme:'Handoff',
+scenario:'A team improves release quality by 10% and delivery speed by 20% after implementing a new DevSecOps model. A senior engineer attributes the improvement to the new CI/CD toolchain. A team lead attributes it to clearer handoff criteria between development and security review.',
+stem:'Which attribution is more likely to produce sustained improvement?',
+options:['Clearer handoff criteria — the quality of what moves between people determines whether improvement lasts when tools change','Both the toolchain and the handoff criteria contributed, and it would be difficult to attribute the improvement to one factor without isolating each variable','The CI/CD toolchain — better tools produce measurable and repeatable results','The tool improvement is more scalable — once implemented it applies consistently across every team that uses the pipeline, without requiring individual behaviour change'],
+correct:0,
+explain:'Tools change. <strong>The discipline of agreeing what a complete handoff looks like does not.</strong> When two roles agree on what ready to hand forward means — what the work must contain, what questions it must already have answered — that agreement produces quality that survives a tool migration, a team change, or a process redesign. The tool enables the movement. The handoff criteria determine whether the movement carries clean work or dirty work.',
+fw:'The signal: handoff criteria as the durable improvement — tools enable the relay, but what moves between people determines whether the improvement lasts (C-SALF)'},
+
+{id:'h5',theme:'Handoff',
+scenario:'A product team wins an IT Innovation Award for shipping a new security capability. Six months later, a review finds the operations team has developed 12 unofficial procedures that contradict the original design documentation.',
+stem:'What do the 12 unofficial procedures reveal?',
+options:['The operations team needs retraining on the original design — the 12 unofficial procedures suggest a systematic misunderstanding of how the system was intended to operate','The design documentation should be updated to reflect current operational practice','Twelve unofficial procedures signal an incomplete handoff — the documentation described the system as designed, not as it needs to run. The operations team rebuilt the knowledge from scratch.','The operations team should have raised these issues formally during the handover period rather than developing workaround procedures independently over six months'],
+correct:2,
+explain:'Twelve unofficial procedures are not a compliance problem. <strong>They are a handoff signal.</strong> They mean the operations team received documentation describing the system as it was designed — not as it actually needs to be run. The real operational knowledge was rebuilt from scratch by the people doing the work. The Innovation Award measured the build. Nobody measured what happened at the moment the build team walked away.',
+fw:'The signal: unofficial procedures as evidence of an incomplete handoff — when operations rewrites the runbook, the baton was never truly passed (C-SALF)'},
+
+// ── REQUIREMENTS (4 questions) ────────────────────────
+{id:'r1',theme:'Requirements',
+scenario:'An enterprise builds a governance platform. Executives can view dashboards, risk teams can file assessments, IT teams can track compliance. Three months after launch, the platform administrator — a non-technical business manager — discovers she cannot add a user, modify access, or export a report without filing an IT ticket.',
+stem:'Which requirement was missing from the original specification?',
+options:['An administrability requirement — the administrator must be able to govern the platform without engineering support for routine tasks like adding users and exporting reports','A performance requirement — if the system takes too long to respond to administrator actions, the business owner will route around it by filing IT tickets instead','A training requirement — the administrator may be capable of performing these tasks independently once she has been properly trained on the system configuration','A capacity requirement — the system cannot support the required number of users'],
+correct:0,
+explain:'The system was built for the people who use it — and designed by the people who built it. <strong>Nobody asked: what must the person who governs this system be able to do, on their own, without calling IT?</strong> That question is one of the most commonly skipped in any requirements process. When it is skipped, the business owner of a system does not actually own it. They own a dependency on the people who built it.',
+fw:'The signal: administrator independence — a system whose owner cannot govern it without specialist support was built for its builders, not its owners (C-SALF)'},
+
+{id:'r2',theme:'Requirements',
+scenario:'A financial institution builds a customer data platform. The requirements team produces 60 detailed user stories with acceptance criteria. A risk officer asks: "What have we written about what happens if an attacker compromises a service account?"',
+stem:'What does this question reveal about the requirements process?',
+options:['This concern belongs in the security review phase — adversarial scenarios should be assessed by the security team after the requirements are baselined, not before','The risk officer should be satisfied by the existing access control requirements','This is a compliance question that belongs in the risk register alongside other identified threats — it does not need to be resolved at the requirements stage','The requirements captured what legitimate users do but never asked what an adversary would attempt. Every user story has an adversarial mirror — and none were written.'],
+correct:3,
+explain:'Every story about what a legitimate user does has a shadow: <strong>what would someone with malicious intent attempt to do with the same system?</strong> When only the first story is written, the system is designed to serve the legitimate user — and has no designed defence against the adversarial one. The risk officer\'s question is not a security review question. It is a requirements question. If it is not asked here, the build team will never be given the brief to answer it.',
+fw:'The signal: the adversarial mirror — every legitimate use case has a shadow, and that shadow belongs in the requirements, not in a post-launch audit (C-SALF)'},
+
+{id:'r3',theme:'Requirements',
+scenario:'An AI-based tool is delivered to a global organisation and achieves significant time savings. Three months later, only 40% of the intended user base is using it; 60% have reverted to manual processes.',
+stem:'Which requirement category was underspecified?',
+options:['Performance requirements — if the tool takes too long to return results, users in time-pressured roles will revert to manual processes they already trust','Capacity requirements — the system cannot support all users simultaneously','The user stories captured what the system should do, but never whether users would trust it enough to rely on it. The distance between works correctly and trusted enough to use must be designed for.','Training requirements — the 60% reversion rate suggests users were not sufficiently prepared to use the tool confidently in their day-to-day workflows'],
+correct:2,
+explain:'A system that 60% of its users have abandoned is not a training problem. <strong>It is evidence that the requirements captured what the system should do — but never asked whether users would trust it enough to rely on it.</strong> There is a difference between a system that works and a system that is trusted. The first is a technical property. The second is a human one. And human trust is a requirements question: what would make this feel reliable to someone who has to stake their judgment on it?',
+fw:'The signal: genuine adoption as a requirement — the distance between works correctly and trusted enough to use must be designed for, not assumed (HUMS™ · C-SALF)'},
+
+{id:'r4',theme:'Requirements',
+scenario:'A team writes requirements for an internal tool. They produce 40 user stories. A colleague suggests they should also document what happens when the tool is used by 500 people simultaneously at the start of a shift.',
+stem:'What category of requirement is the colleague proposing?',
+options:['A performance requirement — documenting the expected response time for a single user under normal operating conditions, which the 40 user stories already partially address','A capacity requirement — what the system must handle at peak simultaneous use, including graceful behaviour when the ceiling is reached','A resilience requirement — documenting what the system should do when it encounters an error condition, including fallback behaviour for users already mid-session','A user story — 500 simultaneous users at shift change is still a valid user scenario'],
+correct:1,
+explain:'Performance tells you how fast the system works for one user under normal load. <strong>Capacity tells you how many users the system can serve simultaneously before it starts to degrade — and what happens gracefully when that ceiling is reached.</strong> A system that works perfectly for ten users but silently degrades during a 500-person shift-change is a system whose ceiling was never written into the requirements. Both questions must be asked before the build starts.',
+fw:'The signal: designing for the ceiling — a system performance under normal load tells you little about how it behaves when everyone needs it at once (C-SALF)'},
+
+// ── LIFECYCLE (4 questions) ───────────────────────────
+{id:'l1',theme:'Lifecycle',
+scenario:'A team delivers $2M in investment outcomes within 5% budget variance across a portfolio of automation projects. Six months later, a review reveals three of the five projects have active workarounds and only two are generating the projected efficiency gains.',
+stem:'What does the review reveal about how value was being measured?',
+options:['Budget variance measures execution, not impact. Three projects with active workarounds are generating partial value. The measure that mattered — are people actually using this? — was never tracked.','The workarounds indicate a design problem — three of five systems need to be redesigned based on how users are actually working around their current limitations','The post-project review should have been conducted earlier, ideally at 90 days','The projects were over-scoped from the start — the 5% budget variance is misleading because it masks the fact that the delivered scope fell short of what was promised'],
+correct:0,
+explain:'Delivering within budget tells you the team executed well. <strong>It tells you nothing about whether the work delivered value to the people it was meant to serve.</strong> Workarounds are the most honest signal in any system: they mean users found it easier to route around the system than to use it. When three of five projects have active workarounds, the lifecycle did not end at shipping. It stalled there — and nobody was assigned to notice.',
+fw:'The signal: outputs vs outcomes — delivery within budget measures execution, not impact; workarounds are the most honest measure of whether a system was truly adopted (C-SALF)'},
+
+{id:'l2',theme:'Lifecycle',
+scenario:'An organisation implements SAFe across six business units. PI planning is running, ARTs are formed, flow metrics are tracked, and team satisfaction is high. Eighteen months in, the time to deliver a security-relevant change is longer than before SAFe.',
+stem:'What lifecycle diagnosis does this situation suggest?',
+options:['SAFe is not designed for security-relevant work — the PI planning cadence and team topology assumptions do not account for the compliance dependencies that security changes carry','The flow metrics need to be recalibrated specifically for security change delivery','Security changes should be handled on a separate dedicated track — removing them from the main ART flow would allow security teams to manage their own delivery cadence','The transformation addressed coordination but not the people layer — the humans making security decisions were not given vocabulary or space to surface what was slowing them down inside the new structure.'],
+correct:3,
+explain:'When process transformation produces better metrics and worse outcomes, the process was not the problem. <strong>The problem was in the layer the process was built on top of — the people carrying the work.</strong> Better coordination does not help if the individuals being coordinated do not have the vocabulary to name what is slowing them down, or the space to surface it. The transformation changed how teams talked to each other. It did not change what happened inside the humans doing the work.',
+fw:'The signal: the people layer underneath the process — improved coordination on top of an undiagnosed people layer produces better ceremonies and worse results (CLAAS · HUMS™)'},
+
+{id:'l3',theme:'Lifecycle',
+scenario:'T-shaped skills training is delivered to a mixed group of business analysts, project managers, and security engineers — running from Business Model Canvas through to traceable ROI dashboards. Participants who complete the full programme are measurably better at cross-functional handoffs within six months.',
+stem:'What does this outcome confirm about where lifecycle capability actually develops?',
+options:['Mixed-role training creates social bonds across teams that naturally improve communication and reduce the friction that typically causes handoff failures between functions','ROI tracking improves when people understand the full business model behind their work','Whole-lifecycle judgment — holding the full relay in mind while running your own leg — is built by doing the work across the full arc. The improvement in handoffs is the evidence.','Business analysts and security engineers have complementary skills — when they understand each other\'s constraints they make better decisions about scope, risk, and priority'],
+correct:2,
+explain:'The improvement in cross-functional handoffs is not a relationship effect. <strong>It is a relay effect.</strong> When a project manager has personally built a requirements document, they hand to the build team with more precision. When a business analyst has personally tried to measure ROI, they write requirements with the measurement already in mind. The ability to hold the whole journey in mind while doing your own part is only built by practising across the full arc.',
+fw:'The signal: the relay effect — whole-lifecycle judgment is built by doing the work across the full arc, not by studying the phases from one position (T-Class · C-SALF)'},
+
+{id:'l4',theme:'Lifecycle',
+scenario:'Four AI-based products are shipped by a security team over two years. Three are in active pilot. One is in full production. The production product has the highest error rate of the four but also the highest user-reported value score.',
+stem:'What does the combination of high error rate and high value score tell you?',
+options:['The production product needs to be stabilised before expansion — investing in a product with a high error rate signals poor quality management and will erode stakeholder confidence','Users distinguish between technical imperfection and genuine usefulness — high value despite errors is a strong adoption signal. A product that solves a real problem will be tolerated when it fails.','The error rate measurement methodology needs to be recalibrated for this product type','The three pilot products should be compared directly against the production product to understand what design or delivery differences account for the value score gap'],
+correct:1,
+explain:'<strong>A product that users find genuinely valuable will be tolerated when it fails. A product that users do not need will be abandoned when it fails.</strong> High value alongside high error rate is telling you that this product is solving a real problem — users are motivated to work through its imperfections because the alternative is worse. Error rate alone is the wrong measure. What users are willing to put up with tells you more than whether the system works correctly.',
+fw:'The signal: tolerance as an adoption signal — users who work through errors are telling you the product solves something real; users who abandon a working product are telling you it does not (HUMS™ · C-SALF)'},
+
+// ── LIFECYCLE · Output→Objective→Outcome→Result ──────
+
+
+
+
+// ── PLUMBER · People ─────────────────────────────────
+
+{id:'pb1',theme:'People',
+scenario:'A master plumber teaches his apprentice by letting him watch for six months. The apprentice passes his certification exam with high marks. On his first solo job a pipe fails in an unusual way — a failure mode the master fixed three times but never talked through out loud. The apprentice calls the master, confused.',
+stem:'What does this situation reveal about how the knowledge was transferred?',
+options:[
+    'The apprentice needs more time watching before he should be sent on solo jobs',
+    'The certification exam tested what the apprentice had learned. The solo job tested what the master had never said. Tacit knowledge — the judgment built from repeated exposure to real failures — was never made explicit, because nobody required it to be.',
+    'The master should have documented the unusual failure modes in a written reference guide',
+    'The apprentice passed the exam so the knowledge transfer was complete — this is simply a matter of experience that comes with time on the job'],
+correct:1,
+explain:'The exam proved the apprentice could recall what was taught. <strong>The silent gap was everything the master knew but never said</strong> — the three times he had seen this failure before, what he noticed first, what he ruled out, what he tried. That knowledge lived only in the master\'s hands and eyes. Certification measures what was transferred. It cannot measure what was never surfaced to transfer.',
+fw:'The signal: the gap between taught and known — tacit judgment cannot be transferred if it was never made explicit (HUMS™)'},
+
+{id:'pb2',theme:'People',
+scenario:'A plumber runs a small team of three. Two are experienced. One is newly qualified. He gives all three the same jobs, same schedule, same expectations. After three months the new hire is making errors on jobs the experienced two handle easily. The plumber assumes the new hire is not cut out for the trade.',
+stem:'What is the plumber most likely misreading?',
+options:[
+    'The new hire is probably better suited to a different trade or specialisation',
+    'The plumber is treating developmental stage as a personality trait. The new hire is not underperforming — he is performing exactly where someone three months into the trade should perform. The question is whether the work is matched to his current stage, not whether he belongs.',
+    'The experienced team members should be mentoring the new hire more actively on each job',
+    'The hiring process failed — the new hire\'s qualifications overstated his readiness for independent work'],
+correct:1,
+explain:'<strong>Where someone is in the arc of their practice shapes what they can reliably do.</strong> A three-month qualified plumber given identical expectations to a five-year experienced one is not failing — he is being set up to fail. Developmental stage is a design input for how work is assigned, not a verdict on whether someone belongs. The mismatch is in the job design, not the person.',
+fw:'The signal: stage shapes capability — matching work to where someone actually is, not where you wish they were (HUMS™)'},
+
+{id:'pb3',theme:'People',
+scenario:'A plumber\'s best technician has run the commercial accounts for four years. She knows every building manager, every quirky system, every shortcut that saves an hour on a difficult job. She hands in her notice with two weeks remaining.',
+stem:'From a lifecycle perspective, what is the real risk here — and when did it begin?',
+options:[
+    'The real risk is losing the client relationships she has built over four years',
+    'The real risk began four years ago, not today. Every year she operated as the sole carrier of that knowledge was a year the business accumulated an undocumented dependency. The two-week notice is not the problem — it is the bill arriving for four years of deferred knowledge capture.',
+    'The real risk is that clients will follow her if she joins a competitor in the same area',
+    'The real risk is the workload gap — the remaining team will be stretched covering her accounts during the transition'],
+correct:1,
+explain:'<strong>The notice is not the event. The event was four years of relying on one person\'s memory to hold something the business needed.</strong> Every undocumented shortcut, every relationship detail, every system quirk that lived only in her head was a liability being accumulated quietly. Two weeks is not enough time to transfer what four years built — because nobody asked for it to be written down while it was being built.',
+fw:'The signal: undocumented dependency accumulates silently — the departure is the bill, not the damage (HUMS™)'},
+
+// ── PLUMBER · Handoff ─────────────────────────────────
+
+{id:'pb4',theme:'Handoff',
+scenario:'A plumber completes a job and hands a verbal summary to his office manager before driving to the next site. The invoice goes out three days later — wrong address, wrong scope, double the agreed price. The client is furious.',
+stem:'Where did the lifecycle break down?',
+options:[
+    'The office manager made an error processing the job details from memory',
+    'A verbal summary on a job site is not a handoff — it has no record, no confirmation, and no way to verify what was heard against what was said. The breakdown was not the invoice. It was the moment the plumber drove away without confirming the baton was clean.',
+    'The invoicing process needs better software to reduce manual entry errors',
+    'The client should have received a quote confirmation before the job started to prevent billing disputes'],
+correct:1,
+explain:'<strong>A handoff is only complete when the recipient can act on it without going back to ask.</strong> A verbal summary from a van window, before driving away, is not a handoff — it is a transfer of noise. The office manager did not fail to process correctly. She was never given a clean baton to process. The invoice error was determined the moment the plumber pulled out of the driveway without confirming.',
+fw:'The signal: verbal is not a handoff — a baton without a record cannot be confirmed, traced, or corrected (C-SALF)'},
+
+{id:'pb5',theme:'Handoff',
+scenario:'A plumbing company grows from one to five technicians. The founder used to brief every job personally. Now jobs are assigned via a shared whiteboard in the office. Three months in, two technicians show up at the same site on the same day. A third misses a job entirely because he thought someone else had it.',
+stem:'What lifecycle discipline is missing?',
+options:[
+    'The whiteboard system needs to be replaced with scheduling software immediately',
+    'The handoff method that worked for one person did not scale to five. What was implicit — the founder\'s personal confirmation that each person knew their role — was never made explicit when the system grew. The whiteboard carries information but not confirmation.',
+    'The technicians need clearer individual accountability for checking their own schedules',
+    'The company grew too fast without putting management structures in place first'],
+correct:1,
+explain:'When one person holds the whole system in their head, informal communication works. <strong>When the system grows, every implicit confirmation that lived in one person\'s oversight must be made explicit.</strong> The whiteboard carries the information. It does not confirm the recipient received it, understood it, or knows they own it. The breakdown was not the tool. It was the absence of a confirmation step — the moment someone says "I have this, and I am clear on what it requires."',
+fw:'The signal: implicit confirmation does not scale — what one person held in their head must become a documented handoff as teams grow (C-SALF)'},
+
+{id:'pb6',theme:'Handoff',
+scenario:'A plumber finishes installing a new hot water system. He shows the homeowner how it works in a five-minute walkthrough and leaves. Six months later the homeowner calls — a valve that needed quarterly checking has never been touched, and the system is damaged. The homeowner says nobody told her.',
+stem:'What does this reveal about the handoff from installation to operation?',
+options:[
+    'The homeowner should have read the manufacturer documentation that came with the system',
+    'The installation was complete. The operational handoff was not. Showing how something works is not the same as handing over what is required to keep it working. The maintenance requirement existed from day one — it simply never crossed from the installer to the person responsible for operating it.',
+    'A five-minute walkthrough is standard industry practice and the plumber fulfilled his obligation',
+    'The manufacturer should include clearer maintenance reminders in the product itself'],
+correct:1,
+explain:'Built is not done. <strong>A system is only complete when the person responsible for operating it knows what it needs from them — not just how it works.</strong> The hot water system was installed correctly. The operational knowledge — what to check, when, and why — never made it to the homeowner. The handoff ended at completion. It should have ended at readiness.',
+fw:'The signal: built is not done — the handoff from installation to operation is a separate and equally critical step (C-SALF)'},
+
+// ── PLUMBER · Requirements ────────────────────────────
+
+{id:'pb7',theme:'Requirements',
+scenario:'A homeowner asks a plumber to "sort out the water pressure" in her house. The plumber fixes the pressure in the kitchen — the room she showed him. Three weeks later she calls back frustrated: the bathroom upstairs still has low pressure, and she assumed the whole house was being addressed.',
+stem:'What requirement was never established?',
+options:[
+    'The plumber should have inspected the whole house before starting any work',
+    'The scope was never confirmed in writing before the job started. "Sort out the water pressure" meant different things to each person. The plumber solved the problem he saw. The homeowner expected the problem she felt throughout the house. Neither confirmed what the job actually included.',
+    'The homeowner should have been more specific about what she needed when she made the booking',
+    'The plumber should have tested all outlets after completing the kitchen work to catch remaining issues'],
+correct:1,
+explain:'<strong>An unconfirmed scope is not a scope — it is an assumption with a bill attached.</strong> "Sort out the water pressure" described a feeling, not a specification. The plumber interpreted it one way. The homeowner meant another. Both were reasonable. Neither was confirmed. The gap between them only became visible after the job was finished and the invoice was paid.',
+fw:'The signal: scope as assumption — without written confirmation of what the job includes, both parties are working from different briefs (C-SALF)'},
+
+{id:'pb8',theme:'Requirements',
+scenario:'A commercial property manager hires a plumbing company to install a new system across a six-floor building. The specification covers all six floors. The job is completed on time and on budget. Eighteen months later the building is sold. The new owner\'s engineer discovers the system has no isolation valves on individual floors — meaning any repair requires shutting down the entire building.',
+stem:'Which requirement was missing from the original specification?',
+options:[
+    'A resilience requirement — the system must allow individual floor isolation so a single repair does not shut down the whole building',
+    'A performance requirement — the system must maintain consistent pressure across all six floors under full occupancy load',
+    'A capacity requirement — the system must handle peak demand across all six floors simultaneously without pressure drop',
+    'A compliance requirement — the system must meet the building code standards for commercial multi-floor installations'],
+correct:0,
+explain:'The system was built to specification. The specification never asked: <strong>what must the system allow when something fails?</strong> Isolation valves on individual floors are a resilience requirement — the system must be serviceable without shutting down everything around the failure. That question was never asked before the build started, because the person writing the brief was thinking about installation, not about the day three years later when a floor needs repair.',
+fw:'The signal: resilience lives in the requirements — designing for the failure scenario must happen before the build, not after it (C-SALF)'},
+
+{id:'pb9',theme:'Lifecycle',
+scenario:'A plumber installs a new boiler system. It works perfectly. He never contacts the homeowner again. Two years later the homeowner calls a different plumber — the system has been making a noise for eight months and now needs a major repair that could have been prevented with a simple adjustment six months ago.',
+stem:'What lifecycle discipline was absent?',
+options:[
+    'The original plumber should have used higher quality components to reduce the likelihood of early failure',
+    'Installation complete is not lifecycle complete. A system delivered without any feedback loop — no follow-up, no check-in, no way for the homeowner to signal early warning signs — will fail silently until the failure is expensive. The job ended at completion. It should have included a mechanism to stay connected to the result.',
+    'The homeowner should have called the original plumber when the noise started rather than waiting eight months',
+    'Annual service contracts should be standard practice in the industry to prevent exactly this type of preventable failure'],
+correct:1,
+explain:'<strong>A system delivered without a feedback loop is a system that will fail without warning.</strong> The noise was the signal. The homeowner noticed it but had no reason to act — no relationship, no expectation of follow-up, no prompt. The original plumber closed the job at installation. He never built the mechanism that would have let the customer\'s experience reach him. The result was preventable. It simply had no channel to travel back through.',
+fw:'The signal: delivery without a feedback loop — the lifecycle is not complete until the customer result can reach back to the person who produced it (C-SALF · CLAAS)'},
+
+// ── SOCIAL WORKER · People ────────────────────────────
+
+{id:'sw1',theme:'People',
+scenario:'A social worker has carried a caseload of 60 families for three years without complaint. Her manager adds 15 more cases to address a team shortage. Two months later her documentation quality drops, she misses two home visit appointments, and a family reports feeling unseen and unheard.',
+stem:'What is the most important lifecycle question her manager should have asked before adding the 15 cases?',
+options:[
+    'Whether the social worker had the right supervision structure to support a larger caseload',
+    'Whether the social worker currently had any breathing room — any capacity to absorb additional work without degrading what she was already doing. Adding volume to someone already at their limit does not increase the team\'s output. It reduces the quality of everything.',
+    'Whether the 15 new cases could be split across multiple workers rather than concentrated on one person',
+    'Whether temporary administrative support could be provided to help manage the increased documentation burden'],
+correct:1,
+explain:'Three years of good performance created an invisible assumption: that she had capacity to spare. <strong>She did not. She was at her limit, performing well within it.</strong> Adding 15 cases did not increase the team\'s capacity. It pushed one person past hers — and the first things to go were the ones that required the most presence: the documentation that protects families, and the visits where families feel seen. The question was not "can she handle more?" It was "does she have room to absorb anything more without something dropping?"',
+fw:'The signal: capacity as the prerequisite question — adding volume to a human system at its limit does not scale the system, it degrades it (HUMS™)'},
+
+{id:'sw2',theme:'People',
+scenario:'A senior social worker retires after 22 years. Her replacement is newly qualified, enthusiastic, and technically competent. Within six months, three long-term client families have disengaged from services they previously used reliably. The families say nothing has changed — they just stopped coming.',
+stem:'What is the most likely explanation?',
+options:[
+    'The new social worker needs more training in engagement and relationship-building techniques',
+    'The families were connected to a person, not a service. Twenty-two years of relationship, trust, and contextual understanding cannot be handed over in a file transfer. The families did not disengage from the service. They disengaged from the absence of the person they had come to trust.',
+    'The transition process should have included a longer handover period with both workers present',
+    'The families\' needs may have changed and the timing of the worker\'s retirement coincided with a natural end to their engagement'],
+correct:1,
+explain:'Trust in human services is personal before it is institutional. <strong>The files transferred. The relationship did not.</strong> Twenty-two years of knowing how a family communicates, what they are afraid of, what has worked before and why — none of that is in the case notes. The new worker inherited the information. She could not inherit what had been built through repeated presence over two decades. The families did not leave the service. They left the absence of someone they trusted.',
+fw:'The signal: trust as a non-transferable human asset — relationships built over years cannot be handed over in a file (HUMS™)'},
+
+{id:'sw3',theme:'People',
+scenario:'A social work team is reorganised to improve efficiency. Caseloads are redistributed by geography rather than by worker-client relationship. Twelve long-standing worker-family relationships are broken in the process. Within four months, three families disengage entirely and two enter crisis.',
+stem:'What did the efficiency calculation miss?',
+options:[
+    'The reorganisation should have been piloted with a smaller group of workers and families first',
+    'The calculation measured distance and coverage. It did not measure the value of what was already working. A relationship that took two years to build and is producing results is an asset with a real value — one that does not appear in a geography map but disappears immediately when the map changes.',
+    'Workers should have been consulted before the reorganisation to identify which relationships were most critical to preserve',
+    'The reorganisation was structurally sound but the transition support for affected families was insufficient'],
+correct:1,
+explain:'<strong>What is working rarely appears in an efficiency analysis — because efficiency analyses measure inputs and outputs, not the human conditions that make outputs possible.</strong> Two years of trust, context, and demonstrated reliability between a worker and a family is a structural asset. It does not show up in a geography map. It disappears the moment the map changes. The reorganisation optimised the visible. It destroyed the invisible — and the invisible was doing the actual work.',
+fw:'The signal: the invisible assets of a functioning human system — what is working often cannot be seen until it is gone (HUMS™ · CLAAS)'},
+
+// ── SOCIAL WORKER · Handoff ───────────────────────────
+
+{id:'sw4',theme:'Handoff',
+scenario:'A social worker completes a successful intervention with a family and closes the case. Her notes record what she did — the visits, the referrals, the meetings. Two years later the family is referred back in a significantly worse situation. The new worker reads the file and finds detailed activity records but no account of what the worker learned about this family — what they responded to, what they were afraid of, what had worked and why.',
+stem:'What is missing from the handoff the closed case represents?',
+options:[
+    'The original case should not have been closed — the family clearly needed ongoing monitoring',
+    'The file recorded outputs — what was done. It did not record what was learned — the judgment and contextual knowledge that made the intervention work. When the case closed, the institutional knowledge closed with it. The new worker inherits the activity log but not the understanding.',
+    'Case management systems should require a structured exit summary before any case can be closed',
+    'The referring agency should have provided more background on the family\'s history before the original case was opened'],
+correct:1,
+explain:'Activity records answer the question: what did you do? <strong>They almost never answer the question: what did you learn about what works for this specific family?</strong> The judgment — what this family responds to, what they fear, what approach opened the door — was in the worker\'s head, not the file. When she moved on, it moved with her. The new worker starts from the activity log, not from the understanding. That gap is the cost of a handoff that recorded outputs but not insight.',
+fw:'The signal: outputs recorded, learning lost — a handoff that documents activity without capturing judgment leaves the next person starting from scratch (C-SALF · HUMS™)'},
+
+{id:'sw5',theme:'Handoff',
+scenario:'A social work agency implements a new digital case management system. Workers are trained on how to use it. Six months after launch, a quality review finds that workers are still maintaining parallel paper records for their most complex cases — and that the paper records contain detail and nuance the digital system does not.',
+stem:'What do the parallel paper records reveal?',
+options:[
+    'Workers are resistant to change and need more training and encouragement to adopt the new system',
+    'The parallel records are the real system. They exist because the digital system did not accommodate the kind of information workers actually need to carry between contacts with a family. The paper records are not a compliance failure — they are evidence that the handoff mechanism was not designed for the work it was meant to support.',
+    'The digital system needs additional fields and customisation to capture the complexity of frontline cases',
+    'The quality review should focus on eliminating the parallel records to ensure a single source of truth'],
+correct:1,
+explain:'Workers maintaining parallel systems are not being obstructive. <strong>They are solving a real problem that the designed system did not.</strong> The paper records exist because something the worker needs to carry forward — nuance, context, a note about how a conversation ended — has nowhere to go in the digital system. Parallel records are the most honest signal that the handoff mechanism was designed for the organisation\'s reporting needs, not for the worker\'s operational ones.',
+fw:'The signal: workarounds as honest feedback — parallel systems emerge when the designed system cannot carry what the work actually requires (C-SALF)'},
+
+// ── SOCIAL WORKER · Requirements ──────────────────────
+
+{id:'sw6',theme:'Requirements',
+scenario:'A new case management system is built for a social work agency. The development team interviews 10 frontline workers and builds exactly what they ask for. At launch, the system is blocked by the agency director, who was never consulted and whose sign-off is required for any new system affecting safeguarding records.',
+stem:'Which requirement was missing from the process that produced this system?',
+options:[
+    'A compliance requirement — the system needed to meet the safeguarding record standards set by the regulatory body',
+    'A stakeholder mapping requirement — the process only captured what users needed, not who else had authority over whether the system could be used. The director\'s sign-off was a requirement the system needed to satisfy from day one, not a barrier encountered at launch.',
+    'A security requirement — safeguarding records require a higher level of access control than the development team implemented',
+    'A training requirement — the director needed to be briefed on the system before launch to build confidence in the new approach'],
+correct:1,
+explain:'The system was built for the people who use it. <strong>It was never designed for the people who govern it.</strong> The director\'s sign-off was not a surprise obstacle — it was a known requirement of operating in this environment. The stakeholder map ended at the workers who were interviewed. It should have included everyone whose approval the system needed to function — not just everyone who would sit in front of it.',
+fw:'The signal: the map of who approves is as important as the map of who uses — governance requirements belong in the brief, not in the launch review (C-SALF)'},
+
+{id:'sw7',theme:'Requirements',
+scenario:'A social work agency commissions a digital referral system to replace a paper process. The specification is built around the referral workflow as it should work. At go-live, workers discover the system has no way to record a partial referral, an incomplete form, or a case where the family disengages mid-process — all of which happen regularly.',
+stem:'What category of requirement was missing?',
+options:[
+    'A performance requirement — the system is too slow to complete a referral under time pressure',
+    'A resilience requirement — the system must handle the real workflow, including the partial, the incomplete, and the abandoned, not just the ideal path from start to finish',
+    'A capacity requirement — the system cannot handle the volume of referrals the agency processes in a typical week',
+    'A training requirement — workers need to learn how to adapt their workflow to fit the system\'s designed process'],
+correct:1,
+explain:'The specification described the referral as it is supposed to happen. <strong>Real work is rarely the ideal path.</strong> Families disengage. Forms are incomplete. Referrals are started and paused. A system designed only for the clean journey will fail constantly in the field — because the field is full of the partial, the interrupted, and the abandoned. Resilience requirements ask: what must the system do when the ideal path does not happen? That question was never asked before the build.',
+fw:'The signal: designing for the real path, not the ideal one — resilience requirements capture what happens when the process does not go as planned (C-SALF)'},
+
+// ── SOCIAL WORKER · Lifecycle ─────────────────────────
+
+{id:'sw8',theme:'Lifecycle',
+scenario:'A social work team completes a successful 12-month family support programme. Outcomes are recorded: all families remained housed, school attendance improved, and no safeguarding referrals were made. The programme is marked as successful. Three years later a research study finds that 60% of the families experienced a crisis within 18 months of the programme ending.',
+stem:'What does the 18-month crisis rate reveal about how success was measured?',
+options:[
+    'The programme\'s outcomes were genuinely positive — the 18-month crisis rate reflects external factors beyond the programme\'s control',
+    'The outcomes measured what changed during the programme. Nobody measured what happened to families after it ended. Success was declared at completion, not at sustained result. The 18-month crisis rate is the customer result that the outcome measurement never reached.',
+    'The programme should have included a longer active support phase before families were discharged',
+    'The research methodology may not have adequately controlled for pre-existing risk factors in the sample families'],
+correct:1,
+explain:'All three outcome measures were true. <strong>None of them were customer results.</strong> Housing, attendance, and safeguarding referrals measured what changed during the programme. The result — whether families were sustainably better off — was only visible 18 months later, to a researcher, not to the team that ran the programme. Success was declared when the outputs were strong. Nobody waited for the result to confirm whether the outcome was real.',
+fw:'The signal: outcomes end at programme close, results live beyond it — sustained customer result is the only proof that the outcome was real (C-SALF · CLAAS)'},
+
+{id:'sw9',theme:'Lifecycle',
+scenario:'A social worker uses a new digital assessment tool that scores family risk on five dimensions. After six months, she notices the tool consistently rates one family as low risk. Her direct experience with the family tells her something is wrong — but the score says otherwise. She files the low-risk assessment and moves on.',
+stem:'What lifecycle discipline failed here — and what should have happened?',
+options:[
+    'The tool should have a manual override function so workers can adjust scores that do not match their professional judgment',
+    'The tool produced an output. The worker\'s judgment produced a signal the output could not see. When a practitioner\'s lived experience consistently contradicts a tool\'s finding, that contradiction is the finding — it is the qualitative signal that the quantitative measure is missing something. The lifecycle fails when the human signal is filed away rather than surfaced.',
+    'The assessment tool needs recalibration — six months of consistent low-risk ratings for a concerning family suggests a scoring error',
+    'The worker should have escalated to her supervisor immediately when she first noticed the discrepancy between the score and her professional judgment'],
+correct:1,
+explain:'The tool gave a number. The worker felt something the number could not. <strong>That gap — between what a system measures and what a person experiences — is where the most important information lives.</strong> The lifecycle discipline that failed was not the tool. It was the absence of a mechanism for the worker\'s signal to feed back into the assessment. Her unease was real data. It was filed away because the system had nowhere for qualitative human judgment to go when it contradicted the score.',
+fw:'The signal: the gap between what the tool measures and what the person knows — qualitative human judgment is data that quantitative systems cannot always capture (HUMS™ · C-SALF)'},
+
+// ── VIDEOGRAPHER · Story Preservation ────────────────
+
+{id:'vd1',theme:'People',
+scenario:'A documentary videographer spends three months building trust with an 84-year-old elder who survived a significant historical event. The elder agrees to be filmed and begins sharing stories she has never told publicly. Midway through the project the videographer takes on two other commissions to cover her income. The elder notices she seems distracted and stops going deeper in her accounts.',
+stem:'What is the most important lifecycle signal the videographer is missing?',
+options:[
+    'The videographer should have secured full funding before starting the project to avoid the income pressure',
+    'The elder is not withholding — she is responding to a change in the human conditions that made her feel safe to go deep. The capacity to be fully present is not a soft skill. It is the production requirement that determines whether the rarest material surfaces or stays buried.',
+    'The videographer needs to schedule dedicated uninterrupted days for the elder rather than mixing this project with others',
+    'The elder may be experiencing fatigue from the interview process and needs longer breaks between sessions'],
+correct:1,
+explain:'The elder did not decide to stop sharing. <strong>She responded to a signal the videographer did not know she was sending.</strong> Trust of this depth — the kind that surfaces stories held for decades — requires the interviewer\'s full presence as a condition, not a preference. When that presence becomes partial, the elder does not go further. She cannot. The rarest content in any story preservation project is gated not by the subject\'s willingness but by the human conditions that make deep disclosure feel safe. Those conditions are a production requirement.',
+fw:'The signal: presence as a production requirement — what the subject is willing to share is shaped by what the practitioner is able to give (HUMS™)'},
+
+{id:'vd2',theme:'Lifecycle',
+scenario:'A videographer completes a family oral history project — twelve hours of footage edited into a two-hour documentary. She delivers the finished film, receives payment, and moves to the next project. Three years later the family contacts her: the grandmother at the centre of the film has died, and they have discovered the raw footage was stored on a format that is now unreadable. The edited film survives. The unedited material — containing stories that did not make the cut — is gone.',
+stem:'What lifecycle discipline was absent from this project?',
+options:[
+    'The videographer should have included a digital preservation clause in her contract specifying who is responsible for long-term storage',
+    'Delivery was the output. Preservation was the result — the condition that determines whether the work survives to serve the family in ten, thirty, or fifty years. The lifecycle of a story preservation project does not end at the edit. It ends when the material is in a form and location that outlasts the people who commissioned it.',
+    'The family should have requested copies of the raw footage at the time of delivery as part of their own archival responsibility',
+    'The videographer should have delivered the raw footage alongside the edited film as standard practice in documentary work'],
+correct:1,
+explain:'The edited film was delivered. The output was complete. <strong>But the result — the family\'s ability to access their grandmother\'s unedited words in thirty years — was never designed for.</strong> Story preservation is a lifecycle that extends far beyond the project close. The raw footage contained the material that did not make the cut — the pauses, the asides, the stories the editor judged less important. For a grieving family three years later, those are often the most important. A preservation plan is not an add-on. It is Phase 5 and 6 of this particular relay.',
+fw:'The signal: delivery is the output, preservation is the result — the lifecycle of a story project ends when the material can outlast the people it belongs to (C-SALF · CLAAS)'},
+
+// ── NEURODIVERSITY COACH ──────────────────────────────
+
+{id:'nd1',theme:'Handoff',
+scenario:'A neurodiversity coach works with a client — a software engineer with ADHD — over six sessions. The engineer reports significant improvement in his ability to structure his work day. The coach closes the engagement feeling it was successful. Eight months later the engineer contacts her: he has changed jobs, the new environment is structured differently, and everything that was working has stopped working.',
+stem:'What was missing from the handoff at the end of the engagement?',
+options:[
+    'The coaching engagement was too short — six sessions is insufficient to build lasting strategies for someone with ADHD',
+    'The strategies were built for a specific environment, not for the engineer. The engagement ended when the strategies were working. It should have ended when the engineer understood why they worked — so he could rebuild them in any environment, not just the one where they were learned.',
+    'The coach should have included a follow-up session at three and six months to check whether the strategies were holding',
+    'The new employer should have provided an onboarding process that accommodated the engineer\'s working style before he started'],
+correct:1,
+explain:'The strategies worked. The engagement felt complete. <strong>But the engineer had learned what to do, not why it worked for him.</strong> The difference matters the moment the environment changes — which, in any working life, it will. A coaching engagement that ends when the client is performing well has produced an output. One that ends when the client understands the mechanism of their own success has produced a result that travels. The handoff was to a set of tactics. It should have been to a self-understanding.',
+fw:'The signal: handing over the why, not just the what — strategies that cannot be rebuilt by the person who holds them are tactics, not transfer (C-SALF · HUMS™)'},
+
+{id:'nd2',theme:'People',
+scenario:'A neurodiversity coach runs a thriving practice with 14 regular clients. A colleague encourages her to take on 6 more clients to grow her income. She accepts. Within two months she notices she is arriving at sessions having forgotten details from the previous one, she is less curious in the room, and her best clients are sensing something has shifted.',
+stem:'What is the most precise lifecycle diagnosis?',
+options:[
+    'The coach needs a better client management system to track session notes and maintain continuity between appointments',
+    'Coaching of this depth requires the practitioner\'s full cognitive and emotional presence in every session. That presence is not infinite. The point at which taking on more clients reduces what each client receives is not a personal failing — it is a capacity ceiling that determines the quality of the work. She has crossed it.',
+    'The coach should segment her clients by complexity and reserve her highest-attention sessions for the most demanding cases',
+    'Growing a coaching practice to 20 clients is standard and the adjustment period is temporary — quality will stabilise once the new rhythm is established'],
+correct:1,
+explain:'<strong>The currency of this work is presence — the quality of attention brought to each person in each session.</strong> Unlike most services, you cannot batch it, defer it, or compensate for its absence with a better system. When presence is divided too many ways, the most perceptive clients — often the ones with the highest sensitivity to social and emotional signals — notice first. The ceiling is not a weakness. It is a structural property of work that depends on the practitioner\'s whole self being available. Crossing it is a lifecycle decision, not a scheduling one.',
+fw:'The signal: presence as the finite resource in practice-based work — the quality ceiling is reached when taking on more reduces what each person receives (HUMS™ · CLAAS)'},
+
+// ── ANCIENT WISDOM PRACTITIONER ───────────────────────
+
+{id:'aw1',theme:'Requirements',
+scenario:'A teacher of Vedantic philosophy and contemplative practice builds a twelve-week online programme. She designs it for the serious student — someone willing to read primary texts and sit with difficult concepts. At launch, most of her registrants are people seeking stress relief and practical tools for daily life. The curriculum does not serve them, and they disengage by week four.',
+stem:'Which requirement was missing before the programme was designed?',
+options:[
+    'A marketing requirement — the programme was not positioned clearly enough to attract the right audience',
+    'A stakeholder requirement — the teacher designed for the student she wished to teach, not for the student who showed up. Understanding who will actually sit in the room — their starting point, their vocabulary, their real question — is a requirement that shapes everything that follows.',
+    'A curriculum requirement — the programme needed a foundational module before introducing primary texts',
+    'A capacity requirement — twelve weeks is too long for an online programme with the audience she reached'],
+correct:1,
+explain:'The programme was designed for a student who did not arrive. <strong>The students who did arrive had a real and legitimate need — they simply had a different starting point, a different vocabulary, and a different question.</strong> Neither group was wrong. The teacher built for one and reached the other. Understanding who will actually show up — not who you hope will show up — is the requirement that makes everything else coherent. The curriculum, the pacing, the language, the examples: all of it follows from the honest answer to that question.',
+fw:'The signal: design for the student who arrives, not the one you wish for — the real stakeholder requirement is the person in the room, not the ideal (C-SALF · HUMS™)'},
+
+{id:'aw2',theme:'Lifecycle',
+scenario:'A practitioner of traditional healing wisdom runs a series of weekend intensives on ancient frameworks for well-being. Participants leave each session feeling transformed. Feedback forms are excellent. Three months later she surveys the same participants and finds that fewer than 20% have maintained any of the practices they committed to. The other 80% report the weekend felt profound but the insight did not survive contact with ordinary life.',
+stem:'What does the 80% reversion rate reveal about how the programme measures its own success?',
+options:[
+    'Weekend intensives are inherently limited in their ability to produce lasting behavioural change — a longer programme format is required',
+    'The feedback forms measured the output — the experience in the room. The 80% reversion rate measures the result — whether the insight survived contact with the life the participant returned to. These are different things, and only the second one matters for a practice whose purpose is transformation, not experience.',
+    'Participants need a community of practice to sustain what they learn — the programme should include ongoing group support after each intensive',
+    'The commitment practices introduced in the programme were too demanding for people to maintain alongside ordinary life demands'],
+correct:1,
+explain:'Excellent feedback forms measure how people felt in the room. <strong>That is an output, not a result.</strong> The result — whether the insight changed how someone actually lives — is only visible months later, in ordinary circumstances, when the memory of the weekend has faded and the practice must stand on its own. A programme whose purpose is transformation but whose measurement ends at the closing circle is measuring the moment of peak experience, not the thing it exists to produce. The 80% reversion rate is not a failure of the participants. It is a signal that the lifecycle was designed to produce an experience, not a sustained result.',
+fw:'The signal: peak experience is an output, sustained practice is the result — measuring success at close of programme captures the wrong moment (C-SALF · CLAAS · HUMS™)'},
+
+// ── HITL · Human in the Loop ─────────────────────────
+
+{id:'ht1',theme:'Lifecycle',
+scenario:'A security team deploys an automated vulnerability scanner that flags a critical finding across 47 applications. The finding matches a known high-severity pattern. The team immediately begins emergency remediation across all 47 systems — a two-week effort involving 12 engineers. At the end, a senior engineer reviews the original flag and realises the scanner identified a pattern class correctly but the specific evidence in this environment did not meet the threshold for the critical rating. 31 of the 47 remediations were unnecessary.',
+stem:'What lifecycle discipline was missing between the automated finding and the remediation decision?',
+options:[
+    'The scanner should have been configured with environment-specific thresholds before deployment to prevent over-flagging',
+    'A human verification step between the automated finding and the remediation decision. The scanner surfaced a pattern class correctly. Whether the evidence in this specific environment supported the critical rating required a human to confirm — before two weeks of engineering effort, not after.',
+    'The team should have prioritised the 47 findings by business criticality before beginning remediation',
+    'The scanner vendor should have provided clearer guidance on how to interpret the severity ratings for this finding type'],
+correct:1,
+explain:'The scanner did its job. <strong>It surfaced a pattern class — a category of vulnerability that matches a known high-severity signature.</strong> What it could not do was confirm whether the specific evidence in this specific environment actually warranted the critical rating. That confirmation requires a human who can hold context, apply judgment, and ask: does the evidence here actually support the conclusion the pattern suggests? That step was skipped. The cost was 31 unnecessary remediations and two weeks of engineering capacity. The finding was not wrong. The leap from finding to action — without human verification — was.',
+fw:'The signal: human in the loop between pattern and action — automated tools surface pattern classes; humans confirm whether the evidence in this context supports the conclusion (HUMS™ · C-SALF · ISO 17020)'},
+
+{id:'ht2',theme:'Requirements',
+scenario:'A team builds a learning assessment using AI to generate questions and score responses. The AI produces 20 questions. All 20 have the correct answer in position B. All 20 correct answers are the longest option. The tool is deployed to 200 users. After three weeks, completion rates are high but score distributions are suspiciously uniform — most users score 70-80% regardless of background or experience.',
+stem:'What does the uniform score distribution reveal — and what caused it?',
+options:[
+    'The assessment is well-calibrated — a 70-80% score range is the expected distribution for a competency-based tool',
+    'The assessment was testing pattern recognition, not judgment. Users learned after two or three questions that B is always correct and the longest answer wins. The AI generated valid questions but no human verified whether the format was discriminating between those who understood and those who had spotted the pattern.',
+    'The scoring algorithm needs recalibration to produce a wider distribution across user backgrounds',
+    'The questions were too easy for the experienced users in the sample and too hard for the less experienced ones, compressing the distribution toward the middle'],
+correct:1,
+explain:'The AI generated questions that were individually plausible. <strong>No human checked whether the questions, taken together, were measuring what they were supposed to measure.</strong> Position B, always correct. Longest answer, always right. Two patterns a human reviewer would catch in sixty seconds — because a human can hold the full set in view and ask: is this testing judgment, or is this testing pattern recognition? The uniform score distribution is the evidence that most users found the pattern rather than developed the understanding. Human-in-the-loop review of AI-generated assessment content is not optional. It is the quality gate that determines whether the tool measures what it claims to measure.',
+fw:'The signal: AI generates the pattern, humans verify the instrument — without a human review step, an assessment can measure pattern recognition while believing it measures judgment (HUMS™ · C-SALF)'},
+
+]; // END QUESTION BANK
+
+// THEME CONFIG
+const THEMES = {
+  'People':      {color:'var(--green)',    bg:'#eaf4ec',         border:'#b8d8bc', label:'People Layer'},
+  'Handoff':     {color:'var(--blue)',     bg:'var(--blue-pale)', border:'#c0cce8', label:'Handoff Quality'},
+  'Requirements':{color:'var(--gold)',     bg:'var(--gold-pale)', border:'#d4b870', label:'Requirements'},
+  'Lifecycle':   {color:'var(--blue-mid)', bg:'#eef2fc',         border:'#c0cce8', label:'Lifecycle'},
+};
+
+const FW_CARDS = [
+  {name:'HUMS™',  label:'The People Layer Vocabulary',  color:'var(--green)',    desc:'27 signals that name what is happening inside the humans holding the work. Excavated from 30 years of watching what breaks when systems fail to see people.'},
+  {name:'C-SALF', label:'The Lifecycle Relay',           color:'var(--blue)',     desc:'6 phases. 7 roles. The relay you wish someone had shown you on day one — from idea through usage data, with handoff quality at every step.'},
+  {name:'T-Class',label:'Building T-Shaped Judgment',    color:'var(--blue-mid)', desc:'18 cells. 3 domains. How you build the horizontal bar — whole-lifecycle judgment that does not expire when the technology changes.'},
+  {name:'CLAAS',  label:'Systems Thinking at the People Layer', color:'var(--gold)', desc:'Cybersecurity · Lean · Agile · Automation · at Scale. The upskilling dimensions for this era. One practitioner\'s selection. Honest about that.'},
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let session = {questions:[], current:0, score:0, answered:[], tier:6};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selectTier(n) {
+  session.tier = n;
+  [3,6,9].forEach(t => {
+    const el = document.getElementById('tier-'+t);
+    if(el) el.classList.toggle('selected', t===n);
+  });
+}
+
+async function copyLink() {
+  const url = 'https://srinimkasturi.github.io/Hums/bl-lgpa.html';
+  const shareData = {
+    title: 'Lifecycle Goals Preparedness Assessment',
+    text: 'What is your team signaling about its ability to take their goals all the way through?',
+    url: url
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch(err) {
+      // User cancelled or share failed — fall through silently
+    }
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      const c = document.getElementById('copy-confirm');
+      if(c){ c.style.display='block'; setTimeout(()=>c.style.display='none', 2500); }
+    });
+  }
+}
+
+function startAssessment() {
+  const tier = session.tier;
+
+  let selected = [];
+  // Separate by domain
+  const it  = QUESTIONS.filter(q => !q.id.startsWith('pb') && !q.id.startsWith('sw') && !q.id.startsWith('vd') && !q.id.startsWith('nd') && !q.id.startsWith('aw'));
+  const pb  = QUESTIONS.filter(q => q.id.startsWith('pb'));
+  const sw  = QUESTIONS.filter(q => q.id.startsWith('sw'));
+  const cross = QUESTIONS.filter(q => q.id.startsWith('vd') || q.id.startsWith('nd') || q.id.startsWith('aw'));
+  [it, pb, sw, cross].forEach(pool => pool.sort(() => Math.random() - 0.5));
+
+  // Always include at least 1 non-IT scenario per sitting
+  const crossDomain = [...pb, ...sw, ...cross].sort(() => Math.random() - 0.5);
+  const crossPick = crossDomain.slice(0, Math.min(2, tier - 1));
+
+  // Theme-balanced draw from IT for remaining slots
+  const byTheme = {};
+  it.forEach(q => { if(!byTheme[q.theme]) byTheme[q.theme]=[]; byTheme[q.theme].push(q); });
+
+  if(tier === 3) {
+    const draw = {People:1, Handoff:1, Requirements:1, Lifecycle:0};
+    Object.entries(draw).forEach(([t,n]) => selected.push(...(byTheme[t]||[]).slice(0,n)));
+    selected.push(crossPick[0]); // 1 cross-domain
+  } else if(tier === 6) {
+    const draw = {People:2, Handoff:1, Requirements:1, Lifecycle:1};
+    Object.entries(draw).forEach(([t,n]) => selected.push(...(byTheme[t]||[]).slice(0,n)));
+    selected.push(...crossPick.slice(0,1)); // 1 cross-domain
+  } else {
+    const draw = {People:3, Handoff:2, Requirements:1, Lifecycle:1};
+    Object.entries(draw).forEach(([t,n]) => selected.push(...(byTheme[t]||[]).slice(0,n)));
+    selected.push(...crossPick.slice(0,2)); // 2 cross-domain
+  }
+
+  session.questions = selected.sort(()=>Math.random()-0.5).slice(0,tier);
+  session.current = 0;
+  session.score = 0;
+  session.answered = [];
+
+  const denom = document.getElementById('score-denom');
+  if(denom) denom.textContent = 'out of '+tier;
+
+  showScreen('test');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = session.questions[session.current];
+  const n = session.current+1;
+  const total = session.questions.length;
+
+  document.getElementById('q-progress').style.width = ((n-1)/total*100)+'%';
+  document.getElementById('q-counter').textContent = `Question ${n} of ${total}`;
+
+  const th = THEMES[q.theme]||THEMES['Lifecycle'];
+  const thEl = document.getElementById('q-theme');
+  thEl.textContent = th.label;
+  thEl.style.background = th.bg;
+  thEl.style.color = th.color;
+  thEl.style.border = `1px solid ${th.border}`;
+
+  document.getElementById('q-scenario').textContent = q.scenario;
+  document.getElementById('q-stem').textContent = q.stem;
+
+  const keys=['A','B','C','D'];
+  document.getElementById('q-options').innerHTML = q.options.map((opt,i)=>`
+    <div class="option" id="opt-${i}" onclick="selectAnswer(${i})">
+      <span class="opt-key">${keys[i]}</span>
+      <span class="opt-text">${opt}</span>
+      <span class="opt-icon" id="oi-${i}"></span>
+    </div>`).join('');
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  document.getElementById('next-wrap').classList.remove('show');
+  document.getElementById('next-btn').textContent =
+    session.current===total-1 ? 'See My Results →' : 'Next →';
+}
+
+function selectAnswer(idx) {
+  const q = session.questions[session.current];
+  if(document.getElementById('opt-0').classList.contains('disabled')) return;
+
+  const correct = idx===q.correct;
+  const keys=['A','B','C','D'];
+
+  q.options.forEach((_,i)=>{
+    const opt=document.getElementById('opt-'+i);
+    opt.classList.add('disabled');
+    if(i===idx){
+      opt.classList.add(correct?'correct':'wrong');
+      document.getElementById('oi-'+i).textContent=correct?'✓':'✗';
+    }
+    if(!correct&&i===q.correct){
+      opt.classList.add('reveal');
+      document.getElementById('oi-'+i).textContent='✓';
+    }
+  });
+
+  const fb=document.getElementById('q-feedback');
+  fb.className='feedback show '+(correct?'correct-fb':'wrong-fb');
+  fb.innerHTML=`
+    <span class="fb-verdict">${correct?"✓ That's the signal":"✗ The signal was "+keys[q.correct]}</span>
+    <div class="fb-explain">${q.explain}</div>
+    <div class="fb-fw">Framework signal: ${q.fw}</div>`;
+
+  session.answered.push({q, chosen:idx, correct});
+  if(correct) session.score++;
+  document.getElementById('next-wrap').classList.add('show');
+}
+
+function nextQuestion() {
+  session.current++;
+  if(session.current>=session.questions.length) showResults();
+  else renderQuestion();
+}
+
+function showResults() {
+  showScreen('results');
+  const s=session.score, t=session.questions.length;
+  const pct=s/t;
+
+  document.getElementById('score-val').textContent=s;
+  document.getElementById('score-denom').textContent='out of '+t;
+  const ringColor = pct>=0.78?'var(--green)':pct>=0.55?'var(--gold)':'var(--blue-mid)';
+  document.getElementById('score-ring').style.borderColor=ringColor;
+
+  // Percentage-based levels — works for 3, 6, or 9 questions
+  let label, sub;
+  if(pct===1)       { label='Whole-Lifecycle Judgment';    sub='You see the relay, the handoffs, and the People layer clearly. You are ready to carry this into your team.'; }
+  else if(pct>=0.78){ label='Lifecycle-Ready Thinker';     sub='You are already thinking in whole-lifecycle terms. The frameworks will sharpen what you already sense.'; }
+  else if(pct>=0.55){ label='Solid Lifecycle Instincts';   sub='Strong judgment across most of the lifecycle. A few signals are still developing.'; }
+  else if(pct>=0.33){ label='Developing Awareness';        sub='You are seeing the lifecycle in some areas. The remaining gaps are the most common — and the most fixable.'; }
+  else              { label='Early in the Journey';         sub='The signals you missed have names — and now you know them. Every gap here is closeable.'; }
+
+  document.getElementById('score-label').textContent=label;
+  document.getElementById('score-sub').textContent=sub;
+
+  // Verdict
+  const vEl=document.getElementById('verdict-wrap');
+  if(pct>=0.78) vEl.innerHTML=`<div class="verdict pass"><span class="verdict-title">Ready for the Coffee Hour</span><p>Bring your hardest lifecycle problem to the next 1st or 3rd Saturday session. You have the instincts — the frameworks will give them names and structure.</p></div>`;
+  else if(pct>=0.55) vEl.innerHTML=`<div class="verdict partial"><span class="verdict-title">Specific Signals to Develop</span><p>The gaps revealed above are addressable. The Coffee Hour is designed for exactly this — real problems, diagnostic thinking, no pitch.</p></div>`;
+  else vEl.innerHTML=`<div class="verdict entry"><span class="verdict-title">The Signals Are There — They Just Need Names</span><p>What you experienced in these questions you have been experiencing in your work. The frameworks below name what you have been seeing. Start with the Coffee Hour.</p></div>`;
+
+  // Theme breakdown
+  const thScores={}, thTotals={};
+  session.answered.forEach(({q,correct})=>{
+    thTotals[q.theme]=(thTotals[q.theme]||0)+1;
+    if(correct) thScores[q.theme]=(thScores[q.theme]||0)+1;
+  });
+  document.getElementById('theme-breakdown').innerHTML=
+    Object.keys(THEMES).map(th=>{
+      const sc=thScores[th]||0, tot=thTotals[th]||0;
+      const fpct=tot>0?Math.round(sc/tot*100):0;
+      const col=THEMES[th].color;
+      return `<div class="tb-item">
+        <span class="tb-score" style="color:${col}">${tot>0?sc+'/'+tot:'—'}</span>
+        <span class="tb-label">${THEMES[th].label}</span>
+        <div class="tb-bar"><div class="tb-fill" style="background:${col};width:${fpct}%"></div></div>
+      </div>`;
+    }).join('');
+
+  // Framework reveal
+  document.getElementById('fw-reveal').innerHTML=
+    FW_CARDS.map(fw=>`
+      <div class="fw-card" style="border-left-color:${fw.color}">
+        <span class="fw-name" style="color:${fw.color}">${fw.name} · ${fw.label}</span>
+        <div class="fw-desc">${fw.desc}</div>
+      </div>`).join('');
+
+  // Review
+  document.getElementById('review-list').innerHTML=
+    session.answered.map(({q,chosen,correct})=>`
+      <div class="review-item">
+        <span class="rv-icon">${correct?'✓':'✗'}</span>
+        <div class="rv-body">
+          <div class="rv-q">${q.stem}</div>
+          <div class="rv-a ${correct?'correct':'wrong'}">${correct?'Correct':'Missed — '+['A','B','C','D'][q.correct]+' was the signal'}</div>
+        </div>
+        <span class="rv-fw" style="color:${(THEMES[q.theme]||{}).color||'var(--blue)'}">${q.theme}</span>
+      </div>`).join('');
+}
+
+function retake() { showScreen('intro'); }
+</script>
+
+</body>
+</html>
