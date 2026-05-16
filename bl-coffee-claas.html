@@ -8,60 +8,38 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
 
-:root {
-–sand:#f0e6d0; –sand-lt:#fdf8ee; –sand-mid:#e4d4b4; –sand-dk:#c8b890;
-–blue:#1a3a6e; –blue-mid:#2a5aac; –blue-soft:#4a7ac8; –blue-pale:#e8eef8;
-–gold:#8b6018; –gold-lt:#c8a050; –gold-pale:#fdf3e0;
-–green:#1a5a28; –green-pale:#eaf4ec;
-–ink:#2a1a08; –ink-soft:#5a4a2a; –ink-faint:#8a7a5a;
-}
-
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-background: var(–blue);
+background: #1a3a6e;
 min-height: 100vh;
 display: flex;
 align-items: center;
 justify-content: center;
-padding: 20px 16px;
+padding: 24px 16px;
 font-family: ‘DM Sans’, sans-serif;
 }
 
-/* ── CARD ── */
 .card {
 width: 100%;
 max-width: 560px;
-background: var(–sand-lt);
-position: relative;
-overflow: hidden;
-animation: rise 0.9s ease both;
+background: #fdf8ee;
+border: 6px solid #1a3a6e;
+animation: rise 0.8s ease both;
 }
 
 @keyframes rise {
-from { opacity:0; transform:translateY(16px); }
+from { opacity:0; transform:translateY(14px); }
 to   { opacity:1; transform:translateY(0); }
 }
 
-/* inner rule */
-.card::before {
-content:’’;
-position:absolute;
-inset:6px;
-border:0.5px solid var(–sand-dk);
-pointer-events:none;
-z-index:0;
-}
-
-/* ── TOP BAR ── */
+/* TOP BAR */
 .top-bar {
-background: var(–blue);
-padding: 9px 22px;
+background: #1a3a6e;
+padding: 9px 20px;
 display: flex;
 justify-content: space-between;
 align-items: center;
-position: relative;
-z-index: 1;
 }
 
 .brand {
@@ -71,172 +49,145 @@ letter-spacing: 0.22em;
 color: #e8d8b0;
 }
 
-.brand-tag {
-font-family: ‘Cinzel’, serif;
-font-size: 0.48rem;
-letter-spacing: 0.16em;
-color: var(–gold-lt);
-opacity: 0.75;
-text-transform: uppercase;
-}
-
-/* ── HERO ── */
+/* HERO */
 .hero {
-padding: 28px 30px 22px;
-border-bottom: 1.5px solid var(–ink);
-position: relative;
-z-index: 1;
+padding: 24px 26px 18px;
+border-bottom: 1.5px solid #2a1a08;
 text-align: center;
+background: #fdf8ee;
 }
 
 .eyebrow {
 font-family: ‘Cinzel’, serif;
-font-size: 0.52rem;
+font-size: 0.5rem;
 letter-spacing: 0.28em;
-color: var(–gold);
+color: #8b6018;
 text-transform: uppercase;
 display: block;
-margin-bottom: 12px;
+margin-bottom: 10px;
 opacity: 0.8;
 }
 
 .main-title {
 font-family: ‘Cinzel’, serif;
-font-size: clamp(1.4rem, 5vw, 2rem);
+font-size: clamp(1.5rem, 5.5vw, 2.1rem);
 font-weight: 600;
-color: var(–blue);
-letter-spacing: 0.06em;
+color: #1a3a6e;
+letter-spacing: 0.04em;
 line-height: 1.2;
-margin-bottom: 6px;
+margin-bottom: 5px;
 }
 
-.main-title span {
-color: var(–gold);
-}
+.main-title .gold { color: #8b6018; }
 
 .sub-title {
 font-family: ‘Cinzel’, serif;
-font-size: 0.68rem;
+font-size: 0.64rem;
 letter-spacing: 0.16em;
-color: var(–blue-soft);
+color: #4a7ac8;
 display: block;
 margin-bottom: 16px;
-opacity: 0.7;
+opacity: 0.75;
 }
 
-/* CLAAS expansion */
+/* CLAAS ROW */
 .claas-row {
 display: flex;
 justify-content: center;
+align-items: flex-start;
 gap: 0;
-margin-bottom: 16px;
-flex-wrap: wrap;
+margin-bottom: 4px;
+flex-wrap: nowrap;
 }
 
 .claas-letter {
 display: flex;
 flex-direction: column;
 align-items: center;
-padding: 8px 12px;
-position: relative;
-}
-
-.claas-letter:not(:last-child)::after {
-content: ‘·’;
-position: absolute;
-right: -2px;
-top: 50%;
-transform: translateY(-50%);
-color: var(–sand-dk);
-font-size: 0.8rem;
+padding: 6px 10px;
 }
 
 .cl-big {
 font-family: ‘Cinzel’, serif;
-font-size: 1.4rem;
+font-size: 1.5rem;
 font-weight: 600;
-color: var(–blue);
+color: #1a3a6e;
 line-height: 1;
-margin-bottom: 3px;
+margin-bottom: 4px;
 }
 
 .cl-word {
 font-family: ‘DM Sans’, sans-serif;
-font-size: 0.52rem;
+font-size: 0.5rem;
 font-weight: 500;
-color: var(–ink-soft);
+color: #5a4a2a;
 text-transform: uppercase;
-letter-spacing: 0.06em;
+letter-spacing: 0.05em;
 white-space: nowrap;
 }
 
-/* ── RELAY ── */
+/* RELAY */
 .relay {
 display: grid;
-grid-template-columns: 1fr 56px 1fr;
-gap: 0;
-border-top: 1px solid var(–sand-dk);
-position: relative;
-z-index: 1;
+grid-template-columns: 1fr 50px 1fr;
+border-top: 1px solid #c8b890;
 }
 
 .session {
-padding: 20px 22px;
-position: relative;
+padding: 18px 18px 20px;
 }
 
 .session.sunday {
-background: var(–sand-lt);
-border-right: 1px solid var(–sand-dk);
+background: #fdf8ee;
 }
 
 .session.monday {
-background: var(–blue);
+background: #1a3a6e;
 }
 
 .session-day {
 font-family: ‘Cinzel’, serif;
-font-size: 0.5rem;
+font-size: 0.48rem;
 letter-spacing: 0.22em;
 text-transform: uppercase;
 display: block;
-margin-bottom: 4px;
+margin-bottom: 3px;
 }
 
-.session.sunday .session-day { color: var(–gold); opacity: 0.8; }
-.session.monday .session-day { color: var(–gold-lt); opacity: 0.7; }
+.session.sunday .session-day { color: #8b6018; opacity: 0.85; }
+.session.monday .session-day { color: #c8a050; opacity: 0.75; }
 
 .session-time {
 font-family: ‘Cinzel’, serif;
-font-size: 1.1rem;
-letter-spacing: 0.06em;
+font-size: 1.25rem;
+letter-spacing: 0.04em;
 display: block;
-margin-bottom: 6px;
 line-height: 1;
+margin-bottom: 5px;
 }
 
-.session.sunday .session-time { color: var(–blue); }
+.session.sunday .session-time { color: #1a3a6e; }
 .session.monday .session-time { color: #f0e6d0; }
 
 .session-verb {
 font-family: ‘Cinzel’, serif;
-font-size: 0.85rem;
+font-size: 0.9rem;
 font-weight: 600;
 letter-spacing: 0.1em;
 display: block;
-margin-bottom: 6px;
+margin-bottom: 8px;
 }
 
-.session.sunday .session-verb { color: var(–blue); }
-.session.monday .session-verb { color: var(–gold-lt); }
+.session.sunday .session-verb { color: #1a3a6e; }
+.session.monday .session-verb { color: #c8a050; }
 
 .session-desc {
 font-size: 0.8rem;
 font-weight: 400;
-line-height: 1.6;
+line-height: 1.62;
 }
 
-.session.sunday .session-desc { color: var(–ink-soft); }
+.session.sunday .session-desc { color: #5a4a2a; }
 .session.monday .session-desc { color: #c8b890; }
 
 /* BATON */
@@ -245,140 +196,162 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
-background: var(–sand);
-border-right: 1px solid var(–sand-dk);
-padding: 12px 4px;
-position: relative;
+background: #f0e6d0;
+border-left: 1px solid #c8b890;
+border-right: 1px solid #c8b890;
+padding: 10px 4px;
+gap: 6px;
 }
 
 .baton-line {
 width: 1px;
 flex: 1;
-background: linear-gradient(to bottom, var(–sand-dk), var(–gold-lt), var(–blue-soft));
-margin: 4px 0;
+background: linear-gradient(to bottom, #c8b890, #c8a050, #4a7ac8);
+min-height: 20px;
 }
 
 .baton-icon {
-font-size: 1.3rem;
+font-size: 1.2rem;
 line-height: 1;
 }
 
 .so-you-can {
 font-family: ‘Cormorant Garamond’, serif;
-font-size: 0.62rem;
+font-size: 0.58rem;
 font-style: italic;
-color: var(–gold);
+color: #8b6018;
 text-align: center;
 writing-mode: vertical-rl;
 transform: rotate(180deg);
-letter-spacing: 0.1em;
-opacity: 0.75;
+letter-spacing: 0.12em;
+opacity: 0.8;
 }
 
-/* ── TAGLINE ── */
-.tagline-block {
-padding: 14px 26px;
-text-align: center;
-border-top: 1px solid var(–sand-dk);
-background: var(–sand);
-position: relative;
-z-index: 1;
+/* THOUGHT STARTER */
+.thought-starter {
+background: #1a3a6e;
+padding: 16px 22px 18px;
+border-top: 1px solid rgba(200,180,144,0.25);
 }
 
-.tagline-q {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: clamp(0.95rem, 2.8vw, 1.15rem);
-font-style: italic;
-font-weight: 300;
-color: var(–ink);
-line-height: 1.55;
-margin-bottom: 4px;
+.ts-label {
+font-family: ‘Cinzel’, serif;
+font-size: 0.46rem;
+letter-spacing: 0.24em;
+color: #c8a050;
+text-transform: uppercase;
+display: block;
+margin-bottom: 5px;
+opacity: 0.72;
 }
 
-.tagline-q strong {
-font-style: normal;
-font-weight: 600;
-color: var(–blue);
+.ts-title {
+font-family: ‘Cinzel’, serif;
+font-size: 0.82rem;
+color: #f0e6d0;
+letter-spacing: 0.05em;
+display: block;
+margin-bottom: 7px;
 }
 
-/* ── BOTTOM ── */
+.ts-desc {
+font-size: 0.8rem;
+font-weight: 400;
+color: #c8b890;
+line-height: 1.62;
+margin-bottom: 12px;
+}
+
+.ts-desc em { color: #e8d8b0; font-style: italic; }
+
+.ts-btn {
+font-family: ‘Cinzel’, serif;
+font-size: 0.58rem;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+padding: 10px 20px;
+background: #8b6018;
+color: #fdf8ee;
+border: none;
+cursor: pointer;
+text-decoration: none;
+display: inline-block;
+transition: background 0.2s;
+}
+
+.ts-btn:hover { background: #c8a050; }
+
+/* BOTTOM */
 .bottom {
-padding: 12px 26px;
+padding: 12px 22px;
 display: flex;
 justify-content: space-between;
 align-items: center;
 flex-wrap: wrap;
 gap: 8px;
-position: relative;
-z-index: 1;
-border-top: 1px solid var(–sand-dk);
+background: #fdf8ee;
+border-top: 1px solid #c8b890;
 }
-
-.join-block { }
 
 .join-label {
 font-family: ‘Cinzel’, serif;
-font-size: 0.48rem;
+font-size: 0.46rem;
 letter-spacing: 0.2em;
-color: var(–gold);
+color: #8b6018;
 text-transform: uppercase;
 display: block;
-margin-bottom: 3px;
+margin-bottom: 4px;
 opacity: 0.75;
 }
 
 .join-links {
 display: flex;
-gap: 10px;
-flex-wrap: wrap;
+flex-direction: column;
+gap: 3px;
 }
 
 .join-link {
-font-size: 0.75rem;
+font-size: 0.76rem;
 font-weight: 500;
-color: var(–blue-mid);
+color: #2a5aac;
 text-decoration: none;
 display: flex;
 align-items: center;
-gap: 4px;
+gap: 5px;
 }
 
-.join-link:hover { color: var(–gold); }
-
-.join-link::before {
-content: ‘→’;
-font-size: 0.7rem;
-opacity: 0.6;
-}
+.join-link::before { content: ‘→’; font-size: 0.68rem; opacity: 0.55; }
+.join-link:hover { color: #8b6018; }
 
 .hitl-note {
-font-size: 0.68rem;
+font-size: 0.66rem;
 font-weight: 400;
-color: var(–ink-faint);
+color: #8a7a5a;
 font-style: italic;
-max-width: 180px;
+max-width: 170px;
 text-align: right;
 line-height: 1.5;
-opacity: 0.7;
+opacity: 0.72;
 }
 
-/* ── FOOTER RULE ── */
+/* FOOTER */
 .foot-rule {
-padding: 7px 26px;
-border-top: 2px solid var(–ink);
+padding: 8px 22px;
+border-top: 2px solid #2a1a08;
 display: flex;
 justify-content: space-between;
 align-items: center;
-position: relative;
-z-index: 1;
+background: #fdf8ee;
+flex-wrap: wrap;
+gap: 4px;
 }
 
 .foot-brand {
 font-family: ‘Cinzel’, serif;
-font-size: 0.5rem;
-letter-spacing: 0.16em;
-color: var(–blue);
-opacity: 0.55;
+font-size: 0.48rem;
+letter-spacing: 0.14em;
+color: #1a3a6e;
+opacity: 0.5;
 text-transform: uppercase;
 }
 
@@ -386,131 +359,23 @@ text-transform: uppercase;
 font-family: ‘Cormorant Garamond’, serif;
 font-size: 0.72rem;
 font-style: italic;
-color: var(–ink-soft);
-opacity: 0.55;
+color: #5a4a2a;
+opacity: 0.5;
 }
 
-/* ── THOUGHT STARTER ── */
-.thought-starter {
-background: var(–blue);
-padding: 16px 26px;
-border-top: 1px solid rgba(200,180,144,0.2);
-position: relative;
-z-index: 1;
-}
-
-.ts-label {
-font-family: ‘Cinzel’, serif;
-font-size: 0.48rem;
-letter-spacing: 0.24em;
-color: var(–gold-lt);
-text-transform: uppercase;
-display: block;
-margin-bottom: 6px;
-opacity: 0.7;
-}
-
-.ts-title {
-font-family: ‘Cinzel’, serif;
-font-size: 0.82rem;
-color: #f0e6d0;
-letter-spacing: 0.06em;
-display: block;
-margin-bottom: 6px;
-}
-
-.ts-desc {
-font-size: 0.8rem;
-font-weight: 400;
-color: #c8b890;
-line-height: 1.65;
-margin-bottom: 12px;
-}
-
-.ts-desc em {
-color: #e8d8b0;
-font-style: italic;
-}
-
-.ts-row {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 12px;
-flex-wrap: wrap;
-}
-
-.ts-stats {
-display: flex;
-gap: 14px;
-}
-
-.ts-stat {
-text-align: center;
-}
-
-.ts-stat-val {
-font-family: ‘Cinzel’, serif;
-font-size: 1.1rem;
-color: #f0e6d0;
-display: block;
-line-height: 1;
-margin-bottom: 2px;
-}
-
-.ts-stat-label {
-font-family: ‘DM Sans’, sans-serif;
-font-size: 0.5rem;
-color: #a89060;
-text-transform: uppercase;
-letter-spacing: 0.07em;
-display: block;
-}
-
-.ts-btn {
-font-family: ‘Cinzel’, serif;
-font-size: 0.58rem;
-letter-spacing: 0.16em;
-text-transform: uppercase;
-padding: 10px 18px;
-background: var(–gold);
-color: var(–sand-lt);
-border: none;
-cursor: pointer;
-text-decoration: none;
-display: inline-block;
-transition: background 0.2s;
-white-space: nowrap;
-}
-
-.ts-btn:hover { background: var(–gold-lt); }
-.free-badge {
-display: inline-flex;
-align-items: center;
-gap: 5px;
-background: var(–green-pale);
-border: 1px solid #b8d8bc;
-padding: 3px 9px;
-font-family: ‘Cinzel’, serif;
-font-size: 0.44rem;
-letter-spacing: 0.14em;
-color: var(–green);
-text-transform: uppercase;
-}
-
-@media (max-width: 420px) {
+@media (max-width: 400px) {
 .relay { grid-template-columns: 1fr 40px 1fr; }
-.session { padding: 16px 14px; }
-.claas-letter { padding: 6px 8px; }
-.cl-big { font-size: 1.1rem; }
+.session { padding: 14px 12px; }
+.claas-letter { padding: 5px 7px; }
+.cl-big { font-size: 1.2rem; }
+.cl-word { font-size: 0.44rem; }
 .bottom { flex-direction: column; align-items: flex-start; }
 .hitl-note { text-align: left; max-width: 100%; }
 }
 
 @media print {
 body { background: white; padding: 0; }
-.card { max-width: 100%; }
-.card::before { display: none; }
+.card { max-width: 100%; border: 4px solid #1a3a6e; }
 }
 </style>
 
@@ -529,49 +394,28 @@ body { background: white; padding: 0; }
 
   <div class="hero">
     <span class="eyebrow">An open diagnostic conversation</span>
-    <h1 class="main-title">Coffee Conversations<br>on <span>CLAAS</span></h1>
+    <h1 class="main-title">Coffee Conversations<br>on <span class="gold">CLAAS</span></h1>
     <span class="sub-title">Systems Thinking for All</span>
-
-```
-<!-- CLAAS expansion -->
-<div class="claas-row">
-  <div class="claas-letter">
-    <span class="cl-big">C</span>
-    <span class="cl-word">Cybersecurity</span>
-  </div>
-  <div class="claas-letter">
-    <span class="cl-big">L</span>
-    <span class="cl-word">Lean</span>
-  </div>
-  <div class="claas-letter">
-    <span class="cl-big">A</span>
-    <span class="cl-word">Agile</span>
-  </div>
-  <div class="claas-letter">
-    <span class="cl-big">A</span>
-    <span class="cl-word">Automate</span>
-  </div>
-  <div class="claas-letter">
-    <span class="cl-big">S</span>
-    <span class="cl-word">at Scale</span>
-  </div>
-</div>
-```
-
+    <div class="claas-row">
+      <div class="claas-letter"><span class="cl-big">C</span><span class="cl-word">Cybersecurity</span></div>
+      <div class="claas-letter"><span class="cl-big">L</span><span class="cl-word">Lean</span></div>
+      <div class="claas-letter"><span class="cl-big">A</span><span class="cl-word">Agile</span></div>
+      <div class="claas-letter"><span class="cl-big">A</span><span class="cl-word">Automate</span></div>
+      <div class="claas-letter"><span class="cl-big">S</span><span class="cl-word">at Scale</span></div>
+    </div>
   </div>
 
-  <!-- RELAY — Sunday → Monday -->
+  <!-- RELAY -->
 
   <div class="relay">
+    <div class="session sunday">
+      <span class="session-day">Sunday</span>
+      <span class="session-time">10 AM</span>
+      <span class="session-verb">Ideate</span>
+      <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
+    </div>
 
 ```
-<div class="session sunday">
-  <span class="session-day">Sunday</span>
-  <span class="session-time">10 AM</span>
-  <span class="session-verb">Ideate</span>
-  <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
-</div>
-
 <div class="baton-col">
   <div class="baton-line"></div>
   <span class="baton-icon">☕</span>
@@ -592,32 +436,16 @@ body { background: white; padding: 0; }
   <!-- THOUGHT STARTER -->
 
   <div class="thought-starter">
-    <span class="ts-label">Before you join · Optional thought starter</span>
+    <span class="ts-label">Before you join</span>
     <span class="ts-title">Lifecycle Goals Preparedness Assessment</span>
-    <p class="ts-desc">Take this free diagnostic before Sunday. <em>No prior knowledge needed — 9 scenarios drawn from 30 years of practice across IT, trades, and human services.</em> Your result gives the conversation a starting point. Bring it, or just bring your problem. Either works.</p>
-    <div class="ts-row">
-      <div class="ts-stats">
-        <div class="ts-stat">
-          <span class="ts-stat-val">3·6·9</span>
-          <span class="ts-stat-label">Questions</span>
-        </div>
-        <div class="ts-stat">
-          <span class="ts-stat-val">6</span>
-          <span class="ts-stat-label">Domains</span>
-        </div>
-        <div class="ts-stat">
-          <span class="ts-stat-val">$0</span>
-          <span class="ts-stat-label">Always</span>
-        </div>
-      </div>
-      <a class="ts-btn" href="https://srinimkasturi.github.io/Hums/bl-lgpa.html" target="_blank">Take the Assessment →</a>
-    </div>
+    <p class="ts-desc">Scenarios drawn from 30 years of practice. <em>Bring your result — or just bring your problem.</em></p>
+    <a class="ts-btn" href="https://srinimkasturi.github.io/Hums/bl-lgpa.html" target="_blank">Take the Assessment →</a>
   </div>
 
   <!-- BOTTOM -->
 
   <div class="bottom">
-    <div class="join-block">
+    <div>
       <span class="join-label">Join the conversation</span>
       <div class="join-links">
         <a class="join-link" href="http://www.linkedin.com/in/skasturi" target="_blank">linkedin.com/in/skasturi</a>
@@ -635,6 +463,5 @@ body { background: white; padding: 0; }
   </div>
 
 </div>
-
 </body>
 </html>
