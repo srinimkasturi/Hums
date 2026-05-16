@@ -117,6 +117,29 @@ body{background:var(--sand);background-image:radial-gradient(ellipse 80% 50% at 
 .rv-fw{font-family:‘Cinzel’,serif;font-size:0.44rem;letter-spacing:0.08em;text-transform:uppercase;opacity:0.42;flex-shrink:0;padding-top:3px;}
 .test-footer{text-align:center;margin-top:22px;font-family:‘Cinzel’,serif;font-size:0.48rem;letter-spacing:0.14em;color:var(–blue-soft);opacity:0.38;text-transform:uppercase;}
 
+/* EXPAND SECTIONS */
+.expand-section{border-top:1px solid var(–sand-mid);margin-top:4px;}
+.expand-btn{width:100%;text-align:left;padding:11px 0;background:none;border:none;cursor:pointer;font-family:‘Cinzel’,serif;font-size:0.58rem;letter-spacing:0.14em;color:var(–blue);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+.expand-btn:hover{color:var(–gold);}
+.expand-chevron{font-size:0.6rem;transition:transform 0.2s;}
+.expand-btn.open .expand-chevron{transform:rotate(180deg);}
+.expand-body{padding-bottom:10px;}
+
+/* FIX RIGHT AWAY */
+.fix-wrap{margin:14px 0 10px;text-align:left;}
+.fix-label{font-family:‘Cinzel’,serif;font-size:0.52rem;letter-spacing:0.2em;color:var(–red);text-transform:uppercase;display:block;margin-bottom:8px;opacity:0.85;}
+.fix-item{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;margin-bottom:6px;border-left:3px solid;border-radius:0;}
+.fix-item.people{background:#eaf4ec;border-color:var(–green);}
+.fix-item.handoff{background:var(–blue-pale);border-color:var(–blue);}
+.fix-item.requirements{background:var(–gold-pale);border-color:var(–gold);}
+.fix-item.lifecycle{background:#eef2fc;border-color:var(–blue-mid);}
+.fix-icon{font-size:0.9rem;flex-shrink:0;margin-top:1px;}
+.fix-body{flex:1;}
+.fix-theme{font-family:‘Cinzel’,serif;font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:2px;opacity:0.65;}
+.fix-text{font-size:0.86rem;font-weight:500;color:var(–ink);line-height:1.5;}
+.fix-sub{font-size:0.76rem;font-weight:400;color:var(–ink-soft);line-height:1.5;margin-top:2px;}
+.fix-all-good{padding:12px 14px;background:var(–green-pale);border-left:3px solid var(–green);font-size:0.88rem;font-weight:500;color:var(–green);margin:14px 0 10px;}
+
 /* THEME BREAKDOWN BAR */
 .theme-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0;}
 .tb-item{text-align:center;padding:8px 6px;border:1px solid var(–sand-dk);}
@@ -216,24 +239,49 @@ body{background:var(--sand);background-image:radial-gradient(ellipse 80% 50% at 
 
 <div class="screen" id="screen-results">
   <div class="results-card">
-    <div class="score-ring" id="score-ring">
-      <span class="score-val" id="score-val">0</span>
-      <span class="score-denom" id="score-denom">out of 9</span>
-    </div>
-    <div class="score-label" id="score-label">—</div>
-    <div class="score-sub" id="score-sub">—</div>
-    <div id="verdict-wrap"></div>
 
 ```
-<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">Theme breakdown</span><div class="sdiv-rule"></div></div>
-<div class="theme-breakdown" id="theme-breakdown"></div>
+<div class="score-ring" id="score-ring">
+  <span class="score-val" id="score-val">0</span>
+  <span class="score-denom" id="score-denom">out of 9</span>
+</div>
+<div class="score-label" id="score-label">&#8212;</div>
+<div class="score-sub" id="score-sub">&#8212;</div>
 
-<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">What these questions were really testing</span><div class="sdiv-rule"></div></div>
-<p style="font-size:0.84rem;font-weight:300;color:var(--ink-soft);line-height:1.75;text-align:left;margin-bottom:9px;">Each scenario maps to a framework that names what you were diagnosing:</p>
-<div class="fw-reveal" id="fw-reveal"></div>
+<!-- FIX RIGHT AWAY -->
+<div id="fix-wrap"></div>
 
-<div class="sdiv"><div class="sdiv-rule"></div><span class="sdiv-t">Question Review</span><div class="sdiv-rule"></div></div>
-<div id="review-list"></div>
+<!-- VERDICT -->
+<div id="verdict-wrap"></div>
+
+<!-- EXPANDABLE SECTIONS -->
+<div class="expand-section">
+  <button class="expand-btn" onclick="toggleSection('theme-section',this)">
+    Theme Breakdown <span class="expand-chevron">&#9660;</span>
+  </button>
+  <div id="theme-section" class="expand-body" style="display:none;">
+    <div class="theme-breakdown" id="theme-breakdown"></div>
+  </div>
+</div>
+
+<div class="expand-section">
+  <button class="expand-btn" onclick="toggleSection('fw-section',this)">
+    What These Questions Were Really Testing <span class="expand-chevron">&#9660;</span>
+  </button>
+  <div id="fw-section" class="expand-body" style="display:none;">
+    <p style="font-size:0.84rem;font-weight:400;color:var(--ink-soft);line-height:1.72;margin-bottom:9px;">Each scenario maps to a framework that names what you were diagnosing:</p>
+    <div class="fw-reveal" id="fw-reveal"></div>
+  </div>
+</div>
+
+<div class="expand-section">
+  <button class="expand-btn" onclick="toggleSection('review-section',this)">
+    Full Question Review <span class="expand-chevron">&#9660;</span>
+  </button>
+  <div id="review-section" class="expand-body" style="display:none;">
+    <div id="review-list"></div>
+  </div>
+</div>
 
 <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
   <button class="btn btn-gold" onclick="retake()">Retake Assessment</button>
@@ -932,6 +980,13 @@ function nextQuestion() {
   else renderQuestion();
 }
 
+function toggleSection(id, btn) {
+  const el = document.getElementById(id);
+  const open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : 'block';
+  btn.classList.toggle('open', !open);
+}
+
 function showResults() {
   showScreen('results');
   const s=session.score, t=session.questions.length;
@@ -942,22 +997,60 @@ function showResults() {
   const ringColor = pct>=0.78?'var(--green)':pct>=0.55?'var(--gold)':'var(--blue-mid)';
   document.getElementById('score-ring').style.borderColor=ringColor;
 
-  // Percentage-based levels — works for 3, 6, or 9 questions
   let label, sub;
-  if(pct===1)       { label='Whole-Lifecycle Judgment';    sub='You see the relay, the handoffs, and the People layer clearly. You are ready to carry this into your team.'; }
-  else if(pct>=0.78){ label='Lifecycle-Ready Thinker';     sub='You are already thinking in whole-lifecycle terms. The frameworks will sharpen what you already sense.'; }
-  else if(pct>=0.55){ label='Solid Lifecycle Instincts';   sub='Strong judgment across most of the lifecycle. A few signals are still developing.'; }
-  else if(pct>=0.33){ label='Developing Awareness';        sub='You are seeing the lifecycle in some areas. The remaining gaps are the most common — and the most fixable.'; }
-  else              { label='Early in the Journey';         sub='The signals you missed have names — and now you know them. Every gap here is closeable.'; }
+  if(pct===1)        { label='Whole-Lifecycle Judgment';   sub='You see the relay, the handoffs, and the People layer clearly.'; }
+  else if(pct>=0.78) { label='Lifecycle-Ready Thinker';    sub='You are already thinking in whole-lifecycle terms.'; }
+  else if(pct>=0.55) { label='Solid Lifecycle Instincts';  sub='Strong judgment across most of the lifecycle. A few signals are still developing.'; }
+  else if(pct>=0.33) { label='Developing Awareness';       sub='You are seeing the lifecycle in some areas. The gaps are the most common — and the most fixable.'; }
+  else               { label='Early in the Journey';        sub='The signals you missed have names — and now you know them. Every gap here is closeable.'; }
 
   document.getElementById('score-label').textContent=label;
   document.getElementById('score-sub').textContent=sub;
 
+  // ── FIX RIGHT AWAY ──
+  const missed = session.answered.filter(a => !a.correct);
+  const fixEl = document.getElementById('fix-wrap');
+  const themeClass = {'People':'people','Handoff':'handoff','Requirements':'requirements','Lifecycle':'lifecycle'};
+  const themeIcon  = {'People':'👥','Handoff':'🤝','Requirements':'📋','Lifecycle':'🔄'};
+
+  if(missed.length === 0) {
+    fixEl.innerHTML = '<div class="fix-all-good">&#10003; Perfect score — all signals identified. Bring your hardest real problem to Sunday\'s Coffee Conversation.</div>';
+  } else {
+    // Deduplicate by theme — show at most one bullet per theme, prioritise first miss
+    const seen = new Set();
+    const bullets = [];
+    missed.forEach(({q}) => {
+      if(!seen.has(q.theme) && bullets.length < 3) {
+        seen.add(q.theme);
+        // Extract the signal name from fw field (text before the first —)
+        const signalMatch = q.fw.match(/The signal:\s*([^—]+)/);
+        const signal = signalMatch ? signalMatch[1].trim() : q.theme + ' signal';
+        // Short action from the stem
+        const shortStem = q.stem.length > 60 ? q.stem.slice(0,58)+'…' : q.stem;
+        bullets.push({theme: q.theme, signal, stem: shortStem, fw: q.fw});
+      }
+    });
+
+    const cls = n => themeClass[n] || 'lifecycle';
+    const ico = n => themeIcon[n] || '🔄';
+
+    fixEl.innerHTML = '<span class="fix-label">Fix right away</span>' +
+      bullets.map(b => `
+        <div class="fix-item ${cls(b.theme)}">
+          <span class="fix-icon">${ico(b.theme)}</span>
+          <div class="fix-body">
+            <span class="fix-theme">${b.theme}</span>
+            <div class="fix-text">${b.signal}</div>
+            <div class="fix-sub">${b.fw.split('(')[0].replace('The signal:','').trim()}</div>
+          </div>
+        </div>`).join('');
+  }
+
   // Verdict
   const vEl=document.getElementById('verdict-wrap');
-  if(pct>=0.78) vEl.innerHTML=`<div class="verdict pass"><span class="verdict-title">Ready for the Coffee Hour</span><p>Bring your hardest lifecycle problem to the next 1st or 3rd Saturday session. You have the instincts — the frameworks will give them names and structure.</p></div>`;
-  else if(pct>=0.55) vEl.innerHTML=`<div class="verdict partial"><span class="verdict-title">Specific Signals to Develop</span><p>The gaps revealed above are addressable. The Coffee Hour is designed for exactly this — real problems, diagnostic thinking, no pitch.</p></div>`;
-  else vEl.innerHTML=`<div class="verdict entry"><span class="verdict-title">The Signals Are There — They Just Need Names</span><p>What you experienced in these questions you have been experiencing in your work. The frameworks below name what you have been seeing. Start with the Coffee Hour.</p></div>`;
+  if(pct>=0.78) vEl.innerHTML=`<div class="verdict pass"><span class="verdict-title">Ready for Coffee Conversations on CLAAS</span><p>Bring your hardest lifecycle problem on Sunday. You have the instincts — the frameworks will give them names and structure.</p></div>`;
+  else if(pct>=0.55) vEl.innerHTML=`<div class="verdict partial"><span class="verdict-title">Specific Signals to Develop</span><p>The gaps above are addressable. The Sunday Coffee Conversation is designed for exactly this.</p></div>`;
+  else vEl.innerHTML=`<div class="verdict entry"><span class="verdict-title">The Signals Are There — They Just Need Names</span><p>What you experienced in these questions you have been experiencing in your work. Start with Sunday.</p></div>`;
 
   // Theme breakdown
   const thScores={}, thTotals={};
