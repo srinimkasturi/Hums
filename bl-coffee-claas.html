@@ -47,6 +47,7 @@ padding: 22px 22px 16px;
 border-bottom: 2px solid #2a1a08;
 text-align: center;
 background: #fdf8ee;
+border-bottom: 2px solid #8b6018;
 }
 
 .eyebrow {
@@ -126,12 +127,13 @@ padding: 18px 20px 20px;
 }
 
 .session.sunday {
-background: #fdf8ee;
+background: #f5e8c8;
 border-bottom: none;
 }
 
 .session.monday {
 background: #1a3a6e;
+border-top: 3px solid #8b6018;
 }
 
 /* Baton divider — horizontal on mobile */
@@ -140,9 +142,9 @@ display: flex;
 align-items: center;
 gap: 10px;
 padding: 10px 20px;
-background: #f0e6d0;
-border-top: 1px solid #c8b890;
-border-bottom: 1px solid #c8b890;
+background: #e8d4a8;
+border-top: 2px solid #8b6018;
+border-bottom: 2px solid #8b6018;
 }
 
 .baton-line-h {
@@ -348,7 +350,7 @@ opacity: 0.5;
 }
 
 /* DESKTOP — side by side relay */
-@media (min-width: 500px) {
+@media (min-width: 620px) {
 body { padding: 28px 20px 48px; align-items: center; }
 .card { max-width: 560px; }
 
@@ -414,6 +416,22 @@ max-height: 80px;
 .cl-word { font-size: 0.34rem; }
 .claas-letter { padding: 4px 5px; }
 .session-desc { font-size: 0.78rem; }
+}
+
+/* Landscape on phone — always stack, never grid */
+@media (orientation: landscape) and (max-height: 520px) {
+body { padding: 10px 12px; align-items: flex-start; }
+.hero { padding: 12px 18px 10px; }
+.main-title { font-size: 1.15rem; }
+.claas-letter { padding: 3px 6px; }
+.cl-big { font-size: 0.95rem; }
+.cl-word { font-size: 0.36rem; }
+.session { padding: 12px 14px; }
+.session-time { font-size: 0.95rem; }
+.session-desc { font-size: 0.76rem; }
+.baton-col-desktop { display: none !important; }
+.baton-divider { display: flex !important; }
+.relay { display: block !important; }
 }
 
 @media print {
@@ -513,17 +531,22 @@ body { background: white; padding: 0; }
 function adjustLayout() {
   var dc = document.querySelector('.baton-col-desktop');
   var bd = document.querySelector('.baton-divider');
-  if (window.innerWidth >= 500) {
+  var relay = document.querySelector('.relay');
+  var isLandscapePhone = window.innerWidth < 820 && window.innerHeight < 520;
+  var useGrid = window.innerWidth >= 620 && !isLandscapePhone;
+  if (useGrid) {
     dc.style.display = 'flex';
     bd.style.display = 'none';
+    relay.style.display = 'grid';
   } else {
     dc.style.display = 'none';
     bd.style.display = 'flex';
+    relay.style.display = 'block';
   }
 }
 adjustLayout();
 window.addEventListener('resize', adjustLayout);
-window.addEventListener('orientationchange', function(){ setTimeout(adjustLayout, 100); });
+window.addEventListener('orientationchange', function(){ setTimeout(adjustLayout, 200); });
 </script>
 
 </body>
