@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee Conversations on CLAAS · Banyan Logic</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+–sand:#f0e6d0; –sand-lt:#fdf8ee; –sand-mid:#e4d4b4; –sand-dk:#c8b890;
+–blue:#1a3a6e; –blue-mid:#2a5aac; –blue-soft:#4a7ac8; –blue-pale:#e8eef8;
+–gold:#8b6018; –gold-lt:#c8a050; –gold-pale:#fdf3e0;
+–green:#1a5a28; –green-pale:#eaf4ec;
+–ink:#2a1a08; –ink-soft:#5a4a2a; –ink-faint:#8a7a5a;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+background: var(–blue);
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 20px 16px;
+font-family: ‘DM Sans’, sans-serif;
+}
+
+/* ── CARD ── */
+.card {
+width: 100%;
+max-width: 560px;
+background: var(–sand-lt);
+position: relative;
+overflow: hidden;
+animation: rise 0.9s ease both;
+}
+
+@keyframes rise {
+from { opacity:0; transform:translateY(16px); }
+to   { opacity:1; transform:translateY(0); }
+}
+
+/* inner rule */
+.card::before {
+content:’’;
+position:absolute;
+inset:6px;
+border:0.5px solid var(–sand-dk);
+pointer-events:none;
+z-index:0;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+background: var(–blue);
+padding: 9px 22px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: relative;
+z-index: 1;
+}
+
+.brand {
+font-family: ‘Cinzel’, serif;
+font-size: 0.82rem;
+letter-spacing: 0.22em;
+color: #e8d8b0;
+}
+
+.brand-tag {
+font-family: ‘Cinzel’, serif;
+font-size: 0.48rem;
+letter-spacing: 0.16em;
+color: var(–gold-lt);
+opacity: 0.75;
+text-transform: uppercase;
+}
+
+/* ── HERO ── */
+.hero {
+padding: 28px 30px 22px;
+border-bottom: 1.5px solid var(–ink);
+position: relative;
+z-index: 1;
+text-align: center;
+}
+
+.eyebrow {
+font-family: ‘Cinzel’, serif;
+font-size: 0.52rem;
+letter-spacing: 0.28em;
+color: var(–gold);
+text-transform: uppercase;
+display: block;
+margin-bottom: 12px;
+opacity: 0.8;
+}
+
+.main-title {
+font-family: ‘Cinzel’, serif;
+font-size: clamp(1.4rem, 5vw, 2rem);
+font-weight: 600;
+color: var(–blue);
+letter-spacing: 0.06em;
+line-height: 1.2;
+margin-bottom: 6px;
+}
+
+.main-title span {
+color: var(–gold);
+}
+
+.sub-title {
+font-family: ‘Cinzel’, serif;
+font-size: 0.68rem;
+letter-spacing: 0.16em;
+color: var(–blue-soft);
+display: block;
+margin-bottom: 16px;
+opacity: 0.7;
+}
+
+/* CLAAS expansion */
+.claas-row {
+display: flex;
+justify-content: center;
+gap: 0;
+margin-bottom: 16px;
+flex-wrap: wrap;
+}
+
+.claas-letter {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 8px 12px;
+position: relative;
+}
+
+.claas-letter:not(:last-child)::after {
+content: ‘·’;
+position: absolute;
+right: -2px;
+top: 50%;
+transform: translateY(-50%);
+color: var(–sand-dk);
+font-size: 0.8rem;
+}
+
+.cl-big {
+font-family: ‘Cinzel’, serif;
+font-size: 1.4rem;
+font-weight: 600;
+color: var(–blue);
+line-height: 1;
+margin-bottom: 3px;
+}
+
+.cl-word {
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.52rem;
+font-weight: 500;
+color: var(–ink-soft);
+text-transform: uppercase;
+letter-spacing: 0.06em;
+white-space: nowrap;
+}
+
+/* ── RELAY ── */
+.relay {
+display: grid;
+grid-template-columns: 1fr 56px 1fr;
+gap: 0;
+border-top: 1px solid var(–sand-dk);
+position: relative;
+z-index: 1;
+}
+
+.session {
+padding: 20px 22px;
+position: relative;
+}
+
+.session.sunday {
+background: var(–sand-lt);
+border-right: 1px solid var(–sand-dk);
+}
+
+.session.monday {
+background: var(–blue);
+}
+
+.session-day {
+font-family: ‘Cinzel’, serif;
+font-size: 0.5rem;
+letter-spacing: 0.22em;
+text-transform: uppercase;
+display: block;
+margin-bottom: 4px;
+}
+
+.session.sunday .session-day { color: var(–gold); opacity: 0.8; }
+.session.monday .session-day { color: var(–gold-lt); opacity: 0.7; }
+
+.session-time {
+font-family: ‘Cinzel’, serif;
+font-size: 1.1rem;
+letter-spacing: 0.06em;
+display: block;
+margin-bottom: 6px;
+line-height: 1;
+}
+
+.session.sunday .session-time { color: var(–blue); }
+.session.monday .session-time { color: #f0e6d0; }
+
+.session-verb {
+font-family: ‘Cinzel’, serif;
+font-size: 0.85rem;
+font-weight: 600;
+letter-spacing: 0.1em;
+display: block;
+margin-bottom: 6px;
+}
+
+.session.sunday .session-verb { color: var(–blue); }
+.session.monday .session-verb { color: var(–gold-lt); }
+
+.session-desc {
+font-size: 0.8rem;
+font-weight: 400;
+line-height: 1.6;
+}
+
+.session.sunday .session-desc { color: var(–ink-soft); }
+.session.monday .session-desc { color: #c8b890; }
+
+/* BATON */
+.baton-col {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: var(–sand);
+border-right: 1px solid var(–sand-dk);
+padding: 12px 4px;
+position: relative;
+}
+
+.baton-line {
+width: 1px;
+flex: 1;
+background: linear-gradient(to bottom, var(–sand-dk), var(–gold-lt), var(–blue-soft));
+margin: 4px 0;
+}
+
+.baton-icon {
+font-size: 1.3rem;
+line-height: 1;
+}
+
+.so-you-can {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 0.62rem;
+font-style: italic;
+color: var(–gold);
+text-align: center;
+writing-mode: vertical-rl;
+transform: rotate(180deg);
+letter-spacing: 0.1em;
+opacity: 0.75;
+}
+
+/* ── TAGLINE ── */
+.tagline-block {
+padding: 14px 26px;
+text-align: center;
+border-top: 1px solid var(–sand-dk);
+background: var(–sand);
+position: relative;
+z-index: 1;
+}
+
+.tagline-q {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+font-style: italic;
+font-weight: 300;
+color: var(–ink);
+line-height: 1.55;
+margin-bottom: 4px;
+}
+
+.tagline-q strong {
+font-style: normal;
+font-weight: 600;
+color: var(–blue);
+}
+
+/* ── BOTTOM ── */
+.bottom {
+padding: 12px 26px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 8px;
+position: relative;
+z-index: 1;
+border-top: 1px solid var(–sand-dk);
+}
+
+.join-block { }
+
+.join-label {
+font-family: ‘Cinzel’, serif;
+font-size: 0.48rem;
+letter-spacing: 0.2em;
+color: var(–gold);
+text-transform: uppercase;
+display: block;
+margin-bottom: 3px;
+opacity: 0.75;
+}
+
+.join-links {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+}
+
+.join-link {
+font-size: 0.75rem;
+font-weight: 500;
+color: var(–blue-mid);
+text-decoration: none;
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.join-link:hover { color: var(–gold); }
+
+.join-link::before {
+content: ‘→’;
+font-size: 0.7rem;
+opacity: 0.6;
+}
+
+.hitl-note {
+font-size: 0.68rem;
+font-weight: 400;
+color: var(–ink-faint);
+font-style: italic;
+max-width: 180px;
+text-align: right;
+line-height: 1.5;
+opacity: 0.7;
+}
+
+/* ── FOOTER RULE ── */
+.foot-rule {
+padding: 7px 26px;
+border-top: 2px solid var(–ink);
+display: flex;
+justify-content: space-between;
+align-items: center;
+position: relative;
+z-index: 1;
+}
+
+.foot-brand {
+font-family: ‘Cinzel’, serif;
+font-size: 0.5rem;
+letter-spacing: 0.16em;
+color: var(–blue);
+opacity: 0.55;
+text-transform: uppercase;
+}
+
+.foot-motto {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 0.72rem;
+font-style: italic;
+color: var(–ink-soft);
+opacity: 0.55;
+}
+
+/* ── THOUGHT STARTER ── */
+.thought-starter {
+background: var(–blue);
+padding: 16px 26px;
+border-top: 1px solid rgba(200,180,144,0.2);
+position: relative;
+z-index: 1;
+}
+
+.ts-label {
+font-family: ‘Cinzel’, serif;
+font-size: 0.48rem;
+letter-spacing: 0.24em;
+color: var(–gold-lt);
+text-transform: uppercase;
+display: block;
+margin-bottom: 6px;
+opacity: 0.7;
+}
+
+.ts-title {
+font-family: ‘Cinzel’, serif;
+font-size: 0.82rem;
+color: #f0e6d0;
+letter-spacing: 0.06em;
+display: block;
+margin-bottom: 6px;
+}
+
+.ts-desc {
+font-size: 0.8rem;
+font-weight: 400;
+color: #c8b890;
+line-height: 1.65;
+margin-bottom: 12px;
+}
+
+.ts-desc em {
+color: #e8d8b0;
+font-style: italic;
+}
+
+.ts-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+flex-wrap: wrap;
+}
+
+.ts-stats {
+display: flex;
+gap: 14px;
+}
+
+.ts-stat {
+text-align: center;
+}
+
+.ts-stat-val {
+font-family: ‘Cinzel’, serif;
+font-size: 1.1rem;
+color: #f0e6d0;
+display: block;
+line-height: 1;
+margin-bottom: 2px;
+}
+
+.ts-stat-label {
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.5rem;
+color: #a89060;
+text-transform: uppercase;
+letter-spacing: 0.07em;
+display: block;
+}
+
+.ts-btn {
+font-family: ‘Cinzel’, serif;
+font-size: 0.58rem;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+padding: 10px 18px;
+background: var(–gold);
+color: var(–sand-lt);
+border: none;
+cursor: pointer;
+text-decoration: none;
+display: inline-block;
+transition: background 0.2s;
+white-space: nowrap;
+}
+
+.ts-btn:hover { background: var(–gold-lt); }
+.free-badge {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+background: var(–green-pale);
+border: 1px solid #b8d8bc;
+padding: 3px 9px;
+font-family: ‘Cinzel’, serif;
+font-size: 0.44rem;
+letter-spacing: 0.14em;
+color: var(–green);
+text-transform: uppercase;
+}
+
+@media (max-width: 420px) {
+.relay { grid-template-columns: 1fr 40px 1fr; }
+.session { padding: 16px 14px; }
+.claas-letter { padding: 6px 8px; }
+.cl-big { font-size: 1.1rem; }
+.bottom { flex-direction: column; align-items: flex-start; }
+.hitl-note { text-align: left; max-width: 100%; }
+}
+
+@media print {
+body { background: white; padding: 0; }
+.card { max-width: 100%; }
+.card::before { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+  <!-- TOP BAR -->
+
+  <div class="top-bar">
+    <span class="brand">Banyan Logic</span>
+  </div>
+
+  <!-- HERO -->
+
+  <div class="hero">
+    <span class="eyebrow">An open diagnostic conversation</span>
+    <h1 class="main-title">Coffee Conversations<br>on <span>CLAAS</span></h1>
+    <span class="sub-title">Systems Thinking for All</span>
+
+```
+<!-- CLAAS expansion -->
+<div class="claas-row">
+  <div class="claas-letter">
+    <span class="cl-big">C</span>
+    <span class="cl-word">Cybersecurity</span>
+  </div>
+  <div class="claas-letter">
+    <span class="cl-big">L</span>
+    <span class="cl-word">Lean</span>
+  </div>
+  <div class="claas-letter">
+    <span class="cl-big">A</span>
+    <span class="cl-word">Agile</span>
+  </div>
+  <div class="claas-letter">
+    <span class="cl-big">A</span>
+    <span class="cl-word">Automate</span>
+  </div>
+  <div class="claas-letter">
+    <span class="cl-big">S</span>
+    <span class="cl-word">at Scale</span>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- RELAY — Sunday → Monday -->
+
+  <div class="relay">
+
+```
+<div class="session sunday">
+  <span class="session-day">Sunday</span>
+  <span class="session-time">10 AM</span>
+  <span class="session-verb">Ideate</span>
+  <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
+</div>
+
+<div class="baton-col">
+  <div class="baton-line"></div>
+  <span class="baton-icon">☕</span>
+  <span class="so-you-can">so you can</span>
+  <div class="baton-line"></div>
+</div>
+
+<div class="session monday">
+  <span class="session-day">Monday</span>
+  <span class="session-time">10 AM</span>
+  <span class="session-verb">Iterate</span>
+  <p class="session-desc">One concrete next step. Iterate better because you named it first.</p>
+</div>
+```
+
+  </div>
+
+  <!-- THOUGHT STARTER -->
+
+  <div class="thought-starter">
+    <span class="ts-label">Before you join · Optional thought starter</span>
+    <span class="ts-title">Lifecycle Goals Preparedness Assessment</span>
+    <p class="ts-desc">Take this free diagnostic before Sunday. <em>No prior knowledge needed — 9 scenarios drawn from 30 years of practice across IT, trades, and human services.</em> Your result gives the conversation a starting point. Bring it, or just bring your problem. Either works.</p>
+    <div class="ts-row">
+      <div class="ts-stats">
+        <div class="ts-stat">
+          <span class="ts-stat-val">3·6·9</span>
+          <span class="ts-stat-label">Questions</span>
+        </div>
+        <div class="ts-stat">
+          <span class="ts-stat-val">6</span>
+          <span class="ts-stat-label">Domains</span>
+        </div>
+        <div class="ts-stat">
+          <span class="ts-stat-val">$0</span>
+          <span class="ts-stat-label">Always</span>
+        </div>
+      </div>
+      <a class="ts-btn" href="https://srinimkasturi.github.io/Hums/bl-lgpa.html" target="_blank">Take the Assessment →</a>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+
+  <div class="bottom">
+    <div class="join-block">
+      <span class="join-label">Join the conversation</span>
+      <div class="join-links">
+        <a class="join-link" href="http://www.linkedin.com/in/skasturi" target="_blank">linkedin.com/in/skasturi</a>
+        <a class="join-link" href="mailto:srinikasturi@banyanlogic.com?subject=Coffee Conversations on CLAAS">srinikasturi@banyanlogic.com</a>
+      </div>
+    </div>
+    <p class="hitl-note">This conversation improves through every human who joins it</p>
+  </div>
+
+  <!-- FOOTER -->
+
+  <div class="foot-rule">
+    <span class="foot-brand">Banyan Logic · LLC · 2026</span>
+    <span class="foot-motto">"Framing the problem is half the Transformation"</span>
+  </div>
+
+</div>
+
+</body>
+</html>
