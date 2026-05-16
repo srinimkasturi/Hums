@@ -129,12 +129,15 @@ white-space: nowrap;
 /* RELAY */
 .relay {
 display: grid;
-grid-template-columns: 1fr 50px 1fr;
+grid-template-columns: minmax(0,1fr) 44px minmax(0,1fr);
 border-top: 1px solid #c8b890;
+overflow: hidden;
 }
 
 .session {
-padding: 18px 18px 20px;
+padding: 18px 16px 20px;
+min-width: 0;
+word-wrap: break-word;
 }
 
 .session.sunday {
@@ -320,7 +323,6 @@ align-items: center;
 gap: 5px;
 }
 
-.join-link::before { content: ‘→’; font-size: 0.68rem; opacity: 0.55; }
 .join-link:hover { color: #8b6018; }
 
 .hitl-note {
@@ -363,14 +365,41 @@ color: #5a4a2a;
 opacity: 0.5;
 }
 
-@media (max-width: 400px) {
-.relay { grid-template-columns: 1fr 40px 1fr; }
-.session { padding: 14px 12px; }
-.claas-letter { padding: 5px 7px; }
-.cl-big { font-size: 1.2rem; }
-.cl-word { font-size: 0.44rem; }
+@media (max-width: 420px) {
+.card { border-width: 4px; }
+.relay { grid-template-columns: minmax(0,1fr) 38px minmax(0,1fr); }
+.session { padding: 14px 11px; }
+.session-time { font-size: 1.05rem; }
+.session-desc { font-size: 0.75rem; }
+.claas-letter { padding: 5px 6px; }
+.cl-big { font-size: 1.15rem; }
+.cl-word { font-size: 0.42rem; }
+.main-title { font-size: 1.45rem; }
 .bottom { flex-direction: column; align-items: flex-start; }
 .hitl-note { text-align: left; max-width: 100%; }
+}
+
+@media (min-width: 600px) {
+body { padding: 28px 24px; }
+.card { max-width: 600px; }
+.hero { padding: 28px 32px 22px; }
+.session { padding: 22px 24px 24px; }
+.session-time { font-size: 1.5rem; }
+.session-desc { font-size: 0.86rem; }
+.claas-letter { padding: 8px 14px; }
+.cl-big { font-size: 1.7rem; }
+.cl-word { font-size: 0.56rem; }
+.main-title { font-size: 2.2rem; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+body { padding: 14px 16px; align-items: flex-start; }
+.hero { padding: 16px 24px 14px; }
+.main-title { font-size: 1.4rem; }
+.session { padding: 14px 14px; }
+.session-time { font-size: 1.0rem; }
+.claas-letter { padding: 4px 8px; }
+.cl-big { font-size: 1.1rem; }
 }
 
 @media print {
@@ -448,8 +477,8 @@ body { background: white; padding: 0; }
     <div>
       <span class="join-label">Join the conversation</span>
       <div class="join-links">
-        <a class="join-link" href="http://www.linkedin.com/in/skasturi" target="_blank">linkedin.com/in/skasturi</a>
-        <a class="join-link" href="mailto:srinikasturi@banyanlogic.com?subject=Coffee Conversations on CLAAS">srinikasturi@banyanlogic.com</a>
+        <a class="join-link" href="http://www.linkedin.com/in/skasturi" target="_blank">&#8594; linkedin.com/in/skasturi</a>
+        <a class="join-link" href="mailto:srinikasturi@banyanlogic.com?subject=Coffee Conversations on CLAAS">&#8594; srinikasturi@banyanlogic.com</a>
       </div>
     </div>
     <p class="hitl-note">This conversation improves through every human who joins it</p>
