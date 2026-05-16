@@ -6,61 +6,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coffee Conversations on CLAAS · Banyan Logic</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,300;1,400&family=Cinzel:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+- { margin:0; padding:0; box-sizing:border-box; }
 
 body {
 background: #1a3a6e;
 min-height: 100vh;
 display: flex;
-align-items: center;
+align-items: flex-start;
 justify-content: center;
-padding: 24px 16px;
+padding: 20px 14px 40px;
 font-family: ‘DM Sans’, sans-serif;
 }
 
 .card {
 width: 100%;
-max-width: 560px;
+max-width: 540px;
 background: #fdf8ee;
-border: 6px solid #1a3a6e;
-animation: rise 0.8s ease both;
-}
-
-@keyframes rise {
-from { opacity:0; transform:translateY(14px); }
-to   { opacity:1; transform:translateY(0); }
+border: 5px solid #1a3a6e;
 }
 
 /* TOP BAR */
 .top-bar {
 background: #1a3a6e;
-padding: 9px 20px;
-display: flex;
-justify-content: space-between;
-align-items: center;
+padding: 9px 18px;
 }
 
 .brand {
 font-family: ‘Cinzel’, serif;
-font-size: 0.82rem;
+font-size: 0.8rem;
 letter-spacing: 0.22em;
 color: #e8d8b0;
+display: block;
 }
 
 /* HERO */
 .hero {
-padding: 24px 26px 18px;
-border-bottom: 1.5px solid #2a1a08;
+padding: 22px 22px 16px;
+border-bottom: 2px solid #2a1a08;
 text-align: center;
 background: #fdf8ee;
 }
 
 .eyebrow {
 font-family: ‘Cinzel’, serif;
-font-size: 0.5rem;
-letter-spacing: 0.28em;
+font-size: 0.48rem;
+letter-spacing: 0.26em;
 color: #8b6018;
 text-transform: uppercase;
 display: block;
@@ -70,7 +62,7 @@ opacity: 0.8;
 
 .main-title {
 font-family: ‘Cinzel’, serif;
-font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+font-size: clamp(1.4rem, 6vw, 2rem);
 font-weight: 600;
 color: #1a3a6e;
 letter-spacing: 0.04em;
@@ -82,11 +74,11 @@ margin-bottom: 5px;
 
 .sub-title {
 font-family: ‘Cinzel’, serif;
-font-size: 0.64rem;
+font-size: 0.62rem;
 letter-spacing: 0.16em;
 color: #4a7ac8;
 display: block;
-margin-bottom: 16px;
+margin-bottom: 18px;
 opacity: 0.75;
 }
 
@@ -96,20 +88,18 @@ display: flex;
 justify-content: center;
 align-items: flex-start;
 gap: 0;
-margin-bottom: 4px;
-flex-wrap: nowrap;
 }
 
 .claas-letter {
 display: flex;
 flex-direction: column;
 align-items: center;
-padding: 6px 10px;
+padding: 5px 8px;
 }
 
 .cl-big {
 font-family: ‘Cinzel’, serif;
-font-size: 1.5rem;
+font-size: clamp(1.1rem, 4vw, 1.5rem);
 font-weight: 600;
 color: #1a3a6e;
 line-height: 1;
@@ -118,39 +108,71 @@ margin-bottom: 4px;
 
 .cl-word {
 font-family: ‘DM Sans’, sans-serif;
-font-size: 0.5rem;
+font-size: clamp(0.38rem, 1.4vw, 0.5rem);
 font-weight: 500;
 color: #5a4a2a;
 text-transform: uppercase;
-letter-spacing: 0.05em;
+letter-spacing: 0.04em;
 white-space: nowrap;
 }
 
-/* RELAY */
+/* RELAY — MOBILE STACKED */
 .relay {
-display: grid;
-grid-template-columns: minmax(0,1fr) 44px minmax(0,1fr);
 border-top: 1px solid #c8b890;
-overflow: hidden;
 }
 
 .session {
-padding: 18px 16px 20px;
-min-width: 0;
-word-wrap: break-word;
+padding: 18px 20px 20px;
 }
 
 .session.sunday {
 background: #fdf8ee;
+border-bottom: none;
 }
 
 .session.monday {
 background: #1a3a6e;
 }
 
+/* Baton divider — horizontal on mobile */
+.baton-divider {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 10px 20px;
+background: #f0e6d0;
+border-top: 1px solid #c8b890;
+border-bottom: 1px solid #c8b890;
+}
+
+.baton-line-h {
+flex: 1;
+height: 1px;
+background: linear-gradient(to right, #c8b890, #c8a050, #4a7ac8);
+}
+
+.baton-center {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.baton-icon { font-size: 1.1rem; line-height: 1; }
+
+.so-you-can-h {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 0.72rem;
+font-style: italic;
+color: #8b6018;
+letter-spacing: 0.1em;
+opacity: 0.85;
+white-space: nowrap;
+}
+
+/* SESSION CONTENT */
 .session-day {
 font-family: ‘Cinzel’, serif;
-font-size: 0.48rem;
+font-size: 0.46rem;
 letter-spacing: 0.22em;
 text-transform: uppercase;
 display: block;
@@ -162,7 +184,7 @@ margin-bottom: 3px;
 
 .session-time {
 font-family: ‘Cinzel’, serif;
-font-size: 1.25rem;
+font-size: 1.3rem;
 letter-spacing: 0.04em;
 display: block;
 line-height: 1;
@@ -185,76 +207,39 @@ margin-bottom: 8px;
 .session.monday .session-verb { color: #c8a050; }
 
 .session-desc {
-font-size: 0.8rem;
+font-size: 0.84rem;
 font-weight: 400;
-line-height: 1.62;
+line-height: 1.65;
 }
 
 .session.sunday .session-desc { color: #5a4a2a; }
 .session.monday .session-desc { color: #c8b890; }
 
-/* BATON */
-.baton-col {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background: #f0e6d0;
-border-left: 1px solid #c8b890;
-border-right: 1px solid #c8b890;
-padding: 10px 4px;
-gap: 6px;
-}
-
-.baton-line {
-width: 1px;
-flex: 1;
-background: linear-gradient(to bottom, #c8b890, #c8a050, #4a7ac8);
-min-height: 20px;
-}
-
-.baton-icon {
-font-size: 1.2rem;
-line-height: 1;
-}
-
-.so-you-can {
-font-family: ‘Cormorant Garamond’, serif;
-font-size: 0.58rem;
-font-style: italic;
-color: #8b6018;
-text-align: center;
-writing-mode: vertical-rl;
-transform: rotate(180deg);
-letter-spacing: 0.12em;
-opacity: 0.8;
-}
-
 /* THOUGHT STARTER */
 .thought-starter {
 background: #1a3a6e;
-padding: 16px 22px 18px;
-border-top: 1px solid rgba(200,180,144,0.25);
+padding: 15px 20px 17px;
+border-top: 1px solid rgba(200,180,144,0.2);
 }
 
 .ts-label {
 font-family: ‘Cinzel’, serif;
-font-size: 0.46rem;
-letter-spacing: 0.24em;
+font-size: 0.44rem;
+letter-spacing: 0.22em;
 color: #c8a050;
 text-transform: uppercase;
 display: block;
-margin-bottom: 5px;
+margin-bottom: 4px;
 opacity: 0.72;
 }
 
 .ts-title {
 font-family: ‘Cinzel’, serif;
-font-size: 0.82rem;
+font-size: 0.8rem;
 color: #f0e6d0;
-letter-spacing: 0.05em;
+letter-spacing: 0.04em;
 display: block;
-margin-bottom: 7px;
+margin-bottom: 6px;
 }
 
 .ts-desc {
@@ -262,17 +247,17 @@ font-size: 0.8rem;
 font-weight: 400;
 color: #c8b890;
 line-height: 1.62;
-margin-bottom: 12px;
+margin-bottom: 11px;
 }
 
 .ts-desc em { color: #e8d8b0; font-style: italic; }
 
 .ts-btn {
 font-family: ‘Cinzel’, serif;
-font-size: 0.58rem;
+font-size: 0.56rem;
 letter-spacing: 0.16em;
 text-transform: uppercase;
-padding: 10px 20px;
+padding: 10px 18px;
 background: #8b6018;
 color: #fdf8ee;
 border: none;
@@ -286,7 +271,7 @@ transition: background 0.2s;
 
 /* BOTTOM */
 .bottom {
-padding: 12px 22px;
+padding: 12px 20px;
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -298,8 +283,8 @@ border-top: 1px solid #c8b890;
 
 .join-label {
 font-family: ‘Cinzel’, serif;
-font-size: 0.46rem;
-letter-spacing: 0.2em;
+font-size: 0.44rem;
+letter-spacing: 0.18em;
 color: #8b6018;
 text-transform: uppercase;
 display: block;
@@ -314,23 +299,20 @@ gap: 3px;
 }
 
 .join-link {
-font-size: 0.76rem;
+font-size: 0.75rem;
 font-weight: 500;
 color: #2a5aac;
 text-decoration: none;
-display: flex;
-align-items: center;
-gap: 5px;
 }
 
 .join-link:hover { color: #8b6018; }
 
 .hitl-note {
-font-size: 0.66rem;
+font-size: 0.64rem;
 font-weight: 400;
 color: #8a7a5a;
 font-style: italic;
-max-width: 170px;
+max-width: 160px;
 text-align: right;
 line-height: 1.5;
 opacity: 0.72;
@@ -338,7 +320,7 @@ opacity: 0.72;
 
 /* FOOTER */
 .foot-rule {
-padding: 8px 22px;
+padding: 7px 20px;
 border-top: 2px solid #2a1a08;
 display: flex;
 justify-content: space-between;
@@ -350,8 +332,8 @@ gap: 4px;
 
 .foot-brand {
 font-family: ‘Cinzel’, serif;
-font-size: 0.48rem;
-letter-spacing: 0.14em;
+font-size: 0.46rem;
+letter-spacing: 0.12em;
 color: #1a3a6e;
 opacity: 0.5;
 text-transform: uppercase;
@@ -365,61 +347,88 @@ color: #5a4a2a;
 opacity: 0.5;
 }
 
-@media (max-width: 420px) {
-.card { border-width: 4px; }
-.relay { grid-template-columns: minmax(0,1fr) 38px minmax(0,1fr); }
-.session { padding: 14px 11px; }
-.session-time { font-size: 1.05rem; }
-.session-desc { font-size: 0.75rem; }
-.claas-letter { padding: 5px 6px; }
-.cl-big { font-size: 1.15rem; }
-.cl-word { font-size: 0.42rem; }
-.main-title { font-size: 1.45rem; }
-.bottom { flex-direction: column; align-items: flex-start; }
-.hitl-note { text-align: left; max-width: 100%; }
+/* DESKTOP — side by side relay */
+@media (min-width: 500px) {
+body { padding: 28px 20px 48px; align-items: center; }
+.card { max-width: 560px; }
+
+.relay {
+display: grid;
+grid-template-columns: minmax(0,1fr) 48px minmax(0,1fr);
+}
+
+.baton-divider { display: none; }
+
+.session.sunday {
+border-right: 1px solid #c8b890;
+}
+
+/* Baton column rendered via a real element on desktop */
+.baton-col-desktop {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: #f0e6d0;
+border-left: none;
+padding: 10px 4px;
+gap: 6px;
+overflow: hidden;
+}
+
+.baton-line-v {
+width: 1px;
+flex: 1;
+min-height: 16px;
+background: linear-gradient(to bottom, #c8b890, #c8a050, #4a7ac8);
+}
+
+.so-you-can-v {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 0.56rem;
+font-style: italic;
+color: #8b6018;
+writing-mode: vertical-rl;
+transform: rotate(180deg);
+letter-spacing: 0.12em;
+opacity: 0.82;
+white-space: nowrap;
+overflow: hidden;
+max-height: 80px;
+}
+
+.session { padding: 20px 20px 22px; min-width: 0; }
 }
 
 @media (min-width: 600px) {
-body { padding: 28px 24px; }
-.card { max-width: 600px; }
-.hero { padding: 28px 32px 22px; }
-.session { padding: 22px 24px 24px; }
 .session-time { font-size: 1.5rem; }
-.session-desc { font-size: 0.86rem; }
-.claas-letter { padding: 8px 14px; }
-.cl-big { font-size: 1.7rem; }
-.cl-word { font-size: 0.56rem; }
-.main-title { font-size: 2.2rem; }
+.session-desc { font-size: 0.88rem; }
+.cl-big { font-size: 1.6rem; }
+.cl-word { font-size: 0.52rem; }
+.claas-letter { padding: 6px 12px; }
 }
 
-@media (orientation: landscape) and (max-height: 500px) {
-body { padding: 14px 16px; align-items: flex-start; }
-.hero { padding: 16px 24px 14px; }
-.main-title { font-size: 1.4rem; }
-.session { padding: 14px 14px; }
-.session-time { font-size: 1.0rem; }
-.claas-letter { padding: 4px 8px; }
-.cl-big { font-size: 1.1rem; }
+@media (max-width: 360px) {
+.main-title { font-size: 1.25rem; }
+.cl-big { font-size: 1rem; }
+.cl-word { font-size: 0.34rem; }
+.claas-letter { padding: 4px 5px; }
+.session-desc { font-size: 0.78rem; }
 }
 
 @media print {
 body { background: white; padding: 0; }
-.card { max-width: 100%; border: 4px solid #1a3a6e; }
+.card { border: 3px solid #1a3a6e; max-width: 100%; }
 }
 </style>
 
 </head>
 <body>
-
 <div class="card">
-
-  <!-- TOP BAR -->
 
   <div class="top-bar">
     <span class="brand">Banyan Logic</span>
   </div>
-
-  <!-- HERO -->
 
   <div class="hero">
     <span class="eyebrow">An open diagnostic conversation</span>
@@ -434,22 +443,34 @@ body { background: white; padding: 0; }
     </div>
   </div>
 
-  <!-- RELAY -->
+  <!-- RELAY — mobile: stacked. desktop: grid via CSS -->
 
   <div class="relay">
-    <div class="session sunday">
-      <span class="session-day">Sunday</span>
-      <span class="session-time">10 AM</span>
-      <span class="session-verb">Ideate</span>
-      <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
-    </div>
 
 ```
-<div class="baton-col">
-  <div class="baton-line"></div>
-  <span class="baton-icon">☕</span>
-  <span class="so-you-can">so you can</span>
-  <div class="baton-line"></div>
+<div class="session sunday">
+  <span class="session-day">Sunday</span>
+  <span class="session-time">10 AM</span>
+  <span class="session-verb">Ideate</span>
+  <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
+</div>
+
+<!-- Mobile baton divider (hidden on desktop) -->
+<div class="baton-divider">
+  <div class="baton-line-h"></div>
+  <div class="baton-center">
+    <span class="baton-icon">&#9749;</span>
+    <span class="so-you-can-h">so you can</span>
+  </div>
+  <div class="baton-line-h"></div>
+</div>
+
+<!-- Desktop baton column (hidden on mobile via display:none default, shown via grid) -->
+<div class="baton-col-desktop" style="display:none;">
+  <div class="baton-line-v"></div>
+  <span style="font-size:1.1rem;">&#9749;</span>
+  <span class="so-you-can-v">so you can</span>
+  <div class="baton-line-v"></div>
 </div>
 
 <div class="session monday">
@@ -462,16 +483,12 @@ body { background: white; padding: 0; }
 
   </div>
 
-  <!-- THOUGHT STARTER -->
-
   <div class="thought-starter">
     <span class="ts-label">Before you join</span>
     <span class="ts-title">Lifecycle Goals Preparedness Assessment</span>
     <p class="ts-desc">Scenarios drawn from 30 years of practice. <em>Bring your result — or just bring your problem.</em></p>
-    <a class="ts-btn" href="https://srinimkasturi.github.io/Hums/bl-lgpa.html" target="_blank">Take the Assessment →</a>
+    <a class="ts-btn" href="https://srinimkasturi.github.io/Hums/bl-lgpa.html" target="_blank">Take the Assessment &#8594;</a>
   </div>
-
-  <!-- BOTTOM -->
 
   <div class="bottom">
     <div>
@@ -484,13 +501,30 @@ body { background: white; padding: 0; }
     <p class="hitl-note">This conversation improves through every human who joins it</p>
   </div>
 
-  <!-- FOOTER -->
-
   <div class="foot-rule">
-    <span class="foot-brand">Banyan Logic · LLC · 2026</span>
-    <span class="foot-motto">"Framing the problem is half the Transformation"</span>
+    <span class="foot-brand">Banyan Logic &#183; LLC &#183; 2026</span>
+    <span class="foot-motto">&#8220;Framing the problem is half the Transformation&#8221;</span>
   </div>
 
 </div>
+
+<script>
+// Show baton-col-desktop only when grid is active (>=500px)
+function adjustLayout() {
+  var dc = document.querySelector('.baton-col-desktop');
+  var bd = document.querySelector('.baton-divider');
+  if (window.innerWidth >= 500) {
+    dc.style.display = 'flex';
+    bd.style.display = 'none';
+  } else {
+    dc.style.display = 'none';
+    bd.style.display = 'flex';
+  }
+}
+adjustLayout();
+window.addEventListener('resize', adjustLayout);
+window.addEventListener('orientationchange', function(){ setTimeout(adjustLayout, 100); });
+</script>
+
 </body>
 </html>
