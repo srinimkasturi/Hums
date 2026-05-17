@@ -47,7 +47,7 @@ padding: 22px 22px 16px;
 border-bottom: 2px solid #2a1a08;
 text-align: center;
 background: #fdf8ee;
-border-bottom: 2px solid #8b6018;
+border-bottom: 3px solid #2a1a08;
 }
 
 .eyebrow {
@@ -127,13 +127,13 @@ padding: 18px 20px 20px;
 }
 
 .session.sunday {
-background: #f5e8c8;
+background: #8b6018;
 border-bottom: none;
 }
 
 .session.monday {
 background: #1a3a6e;
-border-top: 3px solid #8b6018;
+border-top: none;
 }
 
 /* Baton divider — horizontal on mobile */
@@ -141,10 +141,10 @@ border-top: 3px solid #8b6018;
 display: flex;
 align-items: center;
 gap: 10px;
-padding: 10px 20px;
-background: #e8d4a8;
-border-top: 2px solid #8b6018;
-border-bottom: 2px solid #8b6018;
+padding: 8px 20px;
+background: #f0e6d0;
+border-top: 1px solid #c8b890;
+border-bottom: 1px solid #c8b890;
 }
 
 .baton-line-h {
@@ -165,7 +165,7 @@ gap: 8px;
 font-family: ‘Cormorant Garamond’, serif;
 font-size: 0.72rem;
 font-style: italic;
-color: #8b6018;
+color: #5a4a2a;
 letter-spacing: 0.1em;
 opacity: 0.85;
 white-space: nowrap;
@@ -181,8 +181,8 @@ display: block;
 margin-bottom: 3px;
 }
 
-.session.sunday .session-day { color: #8b6018; opacity: 0.85; }
-.session.monday .session-day { color: #c8a050; opacity: 0.75; }
+.session.sunday .session-day { color: #fdf8ee; opacity: 1; font-size: 0.65rem; }
+.session.monday .session-day { color: #f0e6d0; opacity: 1; font-size: 0.65rem; }
 
 .session-time {
 font-family: ‘Cinzel’, serif;
@@ -193,8 +193,8 @@ line-height: 1;
 margin-bottom: 5px;
 }
 
-.session.sunday .session-time { color: #1a3a6e; }
-.session.monday .session-time { color: #f0e6d0; }
+.session.sunday .session-time { color: #fdf8ee; font-size: 1.5rem; }
+.session.monday .session-time { color: #ffffff; font-size: 1.5rem; }
 
 .session-verb {
 font-family: ‘Cinzel’, serif;
@@ -205,8 +205,8 @@ display: block;
 margin-bottom: 8px;
 }
 
-.session.sunday .session-verb { color: #1a3a6e; }
-.session.monday .session-verb { color: #c8a050; }
+.session.sunday .session-verb { color: #fdf8ee; font-size: 1.1rem; }
+.session.monday .session-verb { color: #c8a050; font-size: 1.1rem; }
 
 .session-desc {
 font-size: 0.84rem;
@@ -214,45 +214,46 @@ font-weight: 400;
 line-height: 1.65;
 }
 
-.session.sunday .session-desc { color: #5a4a2a; }
+.session.sunday .session-desc { color: #f0e0b8; }
 .session.monday .session-desc { color: #c8b890; }
 
 /* THOUGHT STARTER */
 .thought-starter {
-background: #1a3a6e;
+background: #fdf3e0;
 padding: 15px 20px 17px;
-border-top: 1px solid rgba(200,180,144,0.2);
+border-top: 3px solid #8b6018;
+border-bottom: 3px solid #8b6018;
 }
 
 .ts-label {
 font-family: ‘Cinzel’, serif;
-font-size: 0.44rem;
+font-size: 0.5rem;
 letter-spacing: 0.22em;
-color: #c8a050;
+color: #8b6018;
 text-transform: uppercase;
 display: block;
 margin-bottom: 4px;
-opacity: 0.72;
+opacity: 1;
 }
 
 .ts-title {
 font-family: ‘Cinzel’, serif;
-font-size: 0.8rem;
-color: #f0e6d0;
+font-size: 0.88rem;
+color: #1a3a6e;
 letter-spacing: 0.04em;
 display: block;
 margin-bottom: 6px;
 }
 
 .ts-desc {
-font-size: 0.8rem;
+font-size: 0.84rem;
 font-weight: 400;
-color: #c8b890;
+color: #5a4a2a;
 line-height: 1.62;
 margin-bottom: 11px;
 }
 
-.ts-desc em { color: #e8d8b0; font-style: italic; }
+.ts-desc em { color: #8b6018; font-style: italic; }
 
 .ts-btn {
 font-family: ‘Cinzel’, serif;
@@ -273,25 +274,26 @@ transition: background 0.2s;
 
 /* BOTTOM */
 .bottom {
-padding: 12px 20px;
+padding: 14px 20px;
 display: flex;
 justify-content: space-between;
 align-items: center;
 flex-wrap: wrap;
 gap: 8px;
-background: #fdf8ee;
-border-top: 1px solid #c8b890;
+background: #e8eef8;
+border-top: 3px solid #1a3a6e;
+border-bottom: 3px solid #1a3a6e;
 }
 
 .join-label {
 font-family: ‘Cinzel’, serif;
-font-size: 0.44rem;
+font-size: 0.52rem;
 letter-spacing: 0.18em;
-color: #8b6018;
+color: #1a3a6e;
 text-transform: uppercase;
 display: block;
-margin-bottom: 4px;
-opacity: 0.75;
+margin-bottom: 5px;
+opacity: 1;
 }
 
 .join-links {
@@ -301,23 +303,23 @@ gap: 3px;
 }
 
 .join-link {
-font-size: 0.75rem;
-font-weight: 500;
-color: #2a5aac;
+font-size: 0.78rem;
+font-weight: 600;
+color: #1a3a6e;
 text-decoration: none;
 }
 
 .join-link:hover { color: #8b6018; }
 
 .hitl-note {
-font-size: 0.64rem;
+font-size: 0.68rem;
 font-weight: 400;
-color: #8a7a5a;
+color: #2a3a5a;
 font-style: italic;
 max-width: 160px;
 text-align: right;
 line-height: 1.5;
-opacity: 0.72;
+opacity: 0.85;
 }
 
 /* FOOTER */
