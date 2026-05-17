@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner with Hiding Toggle</title>
+    <title>Split Tear-Off Planner</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -130,13 +130,20 @@
         .month-box.month-hidden .month-header-row {
             margin-bottom: 0;
         }
-        .month-toggle-vis-btn {
+        .month-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .month-btn {
             background: #fff;
             border: 1px solid #777;
             cursor: pointer;
             font-size: 11px;
             padding: 2px 6px;
             font-family: inherit;
+        }
+        .month-btn.purge:hover {
+            background: #ffcccc;
         }
 
         .calendar-grid {
@@ -218,6 +225,9 @@
         .action-btn:hover {
             background: #ddd;
         }
+        .action-btn.delete-item-btn:hover {
+            background: #ffcccc;
+        }
 
         .todo-input-zone {
             margin-top: 15px;
@@ -252,7 +262,6 @@
         <div class="panel-header">
             <h2>Numbered To-Do List</h2>
             <div class="header-actions">
-                <!-- Toggle showing hidden tasks in list -->
                 <button id="show-hidden-toggle" class="toggle-btn" style="background:#5cb85c;" onclick="toggleShowHiddenTasks()">Show Hidden Tasks</button>
                 
                 <label for="purge-setting" style="font-size: 12px; font-weight: bold; margin-left:10px;">Auto-Purge Done:</label>
@@ -280,7 +289,7 @@
         let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
         let nextTodoId = parseInt(localStorage.getItem('planner_next_id')) || 1;
         let calendarData = JSON.parse(localStorage.getItem('planner_calendar')) || {};
-        let hiddenMonths = JSON.parse(localStorage.getItem('planner_hidden_months')) || {}; // Structure: {"YYYY-MM": true}
+        let hiddenMonths = JSON.parse(localStorage.getItem('planner_hidden_months')) || {};
         let purgeThresholdDays = localStorage.getItem('planner_purge_days') || 'never';
         let showHiddenTasksState = false; 
 
@@ -370,17 +379,28 @@
             titleSpan.innerText = `${monthNames[month]} ${year}`;
             headerRow.appendChild(titleSpan);
             
-            // NEW: Individual Month Hide/Show Button
+            // Action wrapper containing both Hide and Purge buttons for the month
+            const actionWrapper = document.createElement('div');
+            actionWrapper.className = 'month-actions';
+            
             const toggleVisBtn = document.createElement('button');
-            toggleVisBtn.className = 'month-toggle-vis-btn';
+            toggleVisBtn.className = 'month-btn';
             toggleVisBtn.innerText = hiddenMonths[monthKey] ? "👁️ Show" : "👁️ Hide";
             toggleVisBtn.onclick = () => {
                 hiddenMonths[monthKey] = !hiddenMonths[monthKey];
                 localStorage.setItem('planner_hidden_months', JSON.stringify(hiddenMonths));
                 renderCalendar();
             };
-            headerRow.appendChild(toggleVisBtn);
+            actionWrapper.appendChild(toggleVisBtn);
             
+            const purgeMonthBtn = document.createElement('button');
+            purgeMonthBtn.className = 'month-btn purge';
+            purgeMonthBtn.innerText = "🗑️ Clear";
+            purgeMonthBtn.title = "Delete data for this month";
+            purgeMonthBtn.onclick = () => purgeSingleMonth(year, month, monthNames[month]);
+            actionWrapper.appendChild(purgeMonthBtn);
+
+            headerRow.appendChild(actionWrapper);
             monthBox.appendChild(headerRow);
             
             const grid = document.createElement('div');
@@ -433,6 +453,19 @@
             return monthBox;
         }
 
+        function purgeSingleMonth(year, month, monthName) {
+            if (confirm(`Completely wipe out all planned entries for ${monthName} ${year}?`)) {
+                const prefix = `${year}-${String(month + 1).padStart(2, '0')}-`;
+                Object.keys(calendarData).forEach(key => {
+                    if (key.startsWith(prefix)) {
+                        delete calendarData[key];
+                    }
+                });
+                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                renderCalendar();
+            }
+        }
+
         function evaluateStrikeThrough(inputElement, value) {
             if (!value.trim()) {
                 inputElement.classList.remove('task-struck-out');
@@ -464,7 +497,6 @@
             listDiv.innerHTML = '';
             
             todos.forEach(todo => {
-                // If task is hidden and we aren't showing hidden elements, skip it completely
                 if (todo.hidden && !showHiddenTasksState) return;
 
                 const item = document.createElement('div');
@@ -482,19 +514,30 @@
                 text.innerText = todo.text + (todo.hidden ? " [HIDDEN]" : "");
                 text.onclick = () => toggleTodo(todo.id);
                 
-                // NEW: Toggle Hiding an individual task instead of wiping it completely
+                // Button 1: Hide Toggle
                 const hideBtn = document.createElement('button');
                 hideBtn.className = 'action-btn';
                 hideBtn.innerHTML = todo.hidden ? '👁️' : '👁️‍🗨️';
-                hideBtn.title = todo.hidden ? "Unhide this task" : "Hide this task";
+                hideBtn.title = todo.hidden ? "Unhide Task" : "Hide Task";
                 hideBtn.onclick = (e) => {
                     e.stopPropagation();
                     toggleHideTodoItem(todo.id);
                 };
                 
+                // Button 2: Hard Delete Button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'action-btn delete-item-btn';
+                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.title = "Delete Task Permanently";
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteTodoItem(todo.id);
+                };
+                
                 item.appendChild(num);
                 item.appendChild(text);
                 item.appendChild(hideBtn);
+                item.appendChild(deleteBtn);
                 listDiv.appendChild(item);
             });
         }
@@ -532,11 +575,19 @@
             renderCalendar(); 
         }
 
-        // Toggles a task's internal visibility state
         function toggleHideTodoItem(id) {
             todos = todos.map(t => t.id === id ? { ...t, hidden: !t.hidden } : t);
             localStorage.setItem('planner_todos', JSON.stringify(todos));
             renderTodos();
+        }
+
+        function deleteTodoItem(id) {
+            if (confirm(`Completely destroy task #${id}? This can't be undone.`)) {
+                todos = todos.filter(t => t.id !== id);
+                localStorage.setItem('planner_todos', JSON.stringify(todos));
+                renderTodos();
+                renderCalendar();
+            }
         }
 
         // --- TEAR-OFF OPERATIONS ---
