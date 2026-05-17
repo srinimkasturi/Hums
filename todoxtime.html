@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner</title>
+    <title>Split Tear-Off Planner with Hiding Toggle</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -37,7 +37,7 @@
             flex: 0.8;
         }
 
-        /* Collapsed Panel States */
+        /* Collapsed Main Panels */
         .panel.collapsed {
             flex: 0 0 45px !important;
             overflow: hidden;
@@ -109,6 +109,14 @@
         .month-box {
             border: 1px solid #ccc;
             padding: 10px;
+            transition: background-color 0.2s;
+        }
+        .month-box.month-hidden {
+            padding: 5px 10px;
+            background: #e8e8e8;
+        }
+        .month-box.month-hidden .calendar-grid {
+            display: none;
         }
         .month-header-row {
             display: flex;
@@ -119,16 +127,16 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
-        .month-purge-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 12px;
-            padding: 2px;
-            border-radius: 3px;
+        .month-box.month-hidden .month-header-row {
+            margin-bottom: 0;
         }
-        .month-purge-btn:hover {
-            background: #ffcccc;
+        .month-toggle-vis-btn {
+            background: #fff;
+            border: 1px solid #777;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 2px 6px;
+            font-family: inherit;
         }
 
         .calendar-grid {
@@ -179,6 +187,12 @@
             font-size: 16px;
             gap: 10px;
         }
+        .todo-item.hidden-task-style {
+            background: #f0f0f0;
+            opacity: 0.6;
+            border-left: 3px dashed #999;
+            padding-left: 4px;
+        }
         .todo-number {
             font-weight: bold;
             width: 40px;
@@ -193,7 +207,7 @@
             color: #999;
         }
         
-        .delete-btn {
+        .action-btn {
             background: transparent;
             border: none;
             cursor: pointer;
@@ -201,8 +215,8 @@
             padding: 2px 6px;
             border-radius: 3px;
         }
-        .delete-btn:hover {
-            background: #ffcccc;
+        .action-btn:hover {
+            background: #ddd;
         }
 
         .todo-input-zone {
@@ -225,7 +239,7 @@
             <h2>3-Month Planning Window</h2>
             <div class="header-actions">
                 <button class="tear-off-btn" onclick="tearOffCalendar()">✂ Tear Off Full Calendar</button>
-                <button class="toggle-btn" id="toggle-cal-btn" onclick="togglePanel('top-panel', 'toggle-cal-btn')">Hide</button>
+                <button class="toggle-btn" id="toggle-cal-btn" onclick="togglePanel('top-panel', 'toggle-cal-btn')">Hide Panel</button>
             </div>
         </div>
         <div class="panel-content">
@@ -238,7 +252,10 @@
         <div class="panel-header">
             <h2>Numbered To-Do List</h2>
             <div class="header-actions">
-                <label for="purge-setting" style="font-size: 12px; font-weight: bold;">Auto-Purge:</label>
+                <!-- Toggle showing hidden tasks in list -->
+                <button id="show-hidden-toggle" class="toggle-btn" style="background:#5cb85c;" onclick="toggleShowHiddenTasks()">Show Hidden Tasks</button>
+                
+                <label for="purge-setting" style="font-size: 12px; font-weight: bold; margin-left:10px;">Auto-Purge Done:</label>
                 <select id="purge-setting" class="settings-select" onchange="changePurgeSetting(this.value)">
                     <option value="never">Never (Manual)</option>
                     <option value="1">After 1 Day</option>
@@ -246,7 +263,7 @@
                     <option value="7">After 7 Days</option>
                 </select>
                 <button class="tear-off-btn" onclick="tearOffTodos()">✂ Tear Off Done Tasks</button>
-                <button class="toggle-btn" id="toggle-todo-btn" onclick="togglePanel('bottom-panel', 'toggle-todo-btn')">Hide</button>
+                <button class="toggle-btn" id="toggle-todo-btn" onclick="togglePanel('bottom-panel', 'toggle-todo-btn')">Hide Panel</button>
             </div>
         </div>
         <div class="panel-content">
@@ -263,22 +280,31 @@
         let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
         let nextTodoId = parseInt(localStorage.getItem('planner_next_id')) || 1;
         let calendarData = JSON.parse(localStorage.getItem('planner_calendar')) || {};
+        let hiddenMonths = JSON.parse(localStorage.getItem('planner_hidden_months')) || {}; // Structure: {"YYYY-MM": true}
         let purgeThresholdDays = localStorage.getItem('planner_purge_days') || 'never';
+        let showHiddenTasksState = false; 
 
         document.getElementById('purge-setting').value = purgeThresholdDays;
 
-        // --- HIDE / SHOW VISIBILITY TOGGLE ---
+        // --- PANEL DISPLAY TOGGLES ---
         function togglePanel(panelId, btnId) {
             const panel = document.getElementById(panelId);
             const btn = document.getElementById(btnId);
             
             if (panel.classList.contains('collapsed')) {
                 panel.classList.remove('collapsed');
-                btn.innerText = "Hide";
+                btn.innerText = "Hide Panel";
             } else {
                 panel.classList.add('collapsed');
-                btn.innerText = "Show";
+                btn.innerText = "Show Panel";
             }
+        }
+
+        function toggleShowHiddenTasks() {
+            showHiddenTasksState = !showHiddenTasksState;
+            document.getElementById('show-hidden-toggle').innerText = showHiddenTasksState ? "Hide Hidden Tasks" : "Show Hidden Tasks";
+            document.getElementById('show-hidden-toggle').style.background = showHiddenTasksState ? "#f0ad4e" : "#5cb85c";
+            renderTodos();
         }
 
         // --- AUTOMATIC PURGE ENGINE ---
@@ -329,11 +355,14 @@
         function createMonthElement(year, month) {
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const daysShort = ["S", "M", "T", "W", "T", "F", "S"];
+            const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
             
             const monthBox = document.createElement('div');
             monthBox.className = 'month-box';
+            if (hiddenMonths[monthKey]) {
+                monthBox.classList.add('month-hidden');
+            }
             
-            // Header block with title and a targeted Purge Month button
             const headerRow = document.createElement('div');
             headerRow.className = 'month-header-row';
             
@@ -341,12 +370,16 @@
             titleSpan.innerText = `${monthNames[month]} ${year}`;
             headerRow.appendChild(titleSpan);
             
-            const purgeMonthBtn = document.createElement('button');
-            purgeMonthBtn.className = 'month-purge-btn';
-            purgeMonthBtn.innerHTML = '🗑️ Clear Month';
-            purgeMonthBtn.title = `Clear entries for ${monthNames[month]} only`;
-            purgeMonthBtn.onclick = () => purgeSingleMonth(year, month, monthNames[month]);
-            headerRow.appendChild(purgeMonthBtn);
+            // NEW: Individual Month Hide/Show Button
+            const toggleVisBtn = document.createElement('button');
+            toggleVisBtn.className = 'month-toggle-vis-btn';
+            toggleVisBtn.innerText = hiddenMonths[monthKey] ? "👁️ Show" : "👁️ Hide";
+            toggleVisBtn.onclick = () => {
+                hiddenMonths[monthKey] = !hiddenMonths[monthKey];
+                localStorage.setItem('planner_hidden_months', JSON.stringify(hiddenMonths));
+                renderCalendar();
+            };
+            headerRow.appendChild(toggleVisBtn);
             
             monthBox.appendChild(headerRow);
             
@@ -400,22 +433,6 @@
             return monthBox;
         }
 
-        // Target and clear out ONLY specific date keys corresponding to a selected month/year combo
-        function purgeSingleMonth(year, month, monthName) {
-            if (confirm(`Clear all calendar plans for ${monthName} ${year}? Other months won't be modified.`)) {
-                const prefix = `${year}-${String(month + 1).padStart(2, '0')}-`;
-                
-                Object.keys(calendarData).forEach(key => {
-                    if (key.startsWith(prefix)) {
-                        delete calendarData[key];
-                    }
-                });
-                
-                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
-                renderCalendar();
-            }
-        }
-
         function evaluateStrikeThrough(inputElement, value) {
             if (!value.trim()) {
                 inputElement.classList.remove('task-struck-out');
@@ -447,8 +464,14 @@
             listDiv.innerHTML = '';
             
             todos.forEach(todo => {
+                // If task is hidden and we aren't showing hidden elements, skip it completely
+                if (todo.hidden && !showHiddenTasksState) return;
+
                 const item = document.createElement('div');
                 item.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                if (todo.hidden) {
+                    item.classList.add('hidden-task-style');
+                }
                 
                 const num = document.createElement('span');
                 num.className = 'todo-number';
@@ -456,21 +479,22 @@
                 
                 const text = document.createElement('span');
                 text.className = 'todo-text';
-                text.innerText = todo.text;
+                text.innerText = todo.text + (todo.hidden ? " [HIDDEN]" : "");
                 text.onclick = () => toggleTodo(todo.id);
                 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-btn';
-                deleteBtn.innerHTML = '🗑️';
-                deleteBtn.title = "Delete item permanently";
-                deleteBtn.onclick = (e) => {
+                // NEW: Toggle Hiding an individual task instead of wiping it completely
+                const hideBtn = document.createElement('button');
+                hideBtn.className = 'action-btn';
+                hideBtn.innerHTML = todo.hidden ? '👁️' : '👁️‍🗨️';
+                hideBtn.title = todo.hidden ? "Unhide this task" : "Hide this task";
+                hideBtn.onclick = (e) => {
                     e.stopPropagation();
-                    deleteTodoItem(todo.id);
+                    toggleHideTodoItem(todo.id);
                 };
                 
                 item.appendChild(num);
                 item.appendChild(text);
-                item.appendChild(deleteBtn);
+                item.appendChild(hideBtn);
                 listDiv.appendChild(item);
             });
         }
@@ -480,7 +504,7 @@
             const text = input.value.trim();
             if (!text) return;
             
-            todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null });
+            todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null, hidden: false });
             nextTodoId++;
             
             localStorage.setItem('planner_todos', JSON.stringify(todos));
@@ -508,13 +532,11 @@
             renderCalendar(); 
         }
 
-        function deleteTodoItem(id) {
-            if (confirm(`Completely delete task #${id}? This removes it entirely.`)) {
-                todos = todos.filter(t => t.id !== id);
-                localStorage.setItem('planner_todos', JSON.stringify(todos));
-                renderTodos();
-                renderCalendar();
-            }
+        // Toggles a task's internal visibility state
+        function toggleHideTodoItem(id) {
+            todos = todos.map(t => t.id === id ? { ...t, hidden: !t.hidden } : t);
+            localStorage.setItem('planner_todos', JSON.stringify(todos));
+            renderTodos();
         }
 
         // --- TEAR-OFF OPERATIONS ---
