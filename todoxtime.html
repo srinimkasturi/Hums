@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner with Sync</title>
+    <title>Split Tear-Off Planner</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -29,7 +29,7 @@
         #top-panel {
             flex: 1.2;
             margin-bottom: 15px;
-            border-bottom: 4px dashed #999; /* Perforation line */
+            border-bottom: 4px dashed #999;
         }
         
         #bottom-panel {
@@ -86,16 +86,17 @@
         
         .day-cell {
             border: 1px solid #eee;
-            min-height: 60px;
+            min-height: 55px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             background: #fafafa;
-            padding: 2px;
+            padding: 4px;
             box-sizing: border-box;
         }
         .day-number { font-size: 10px; text-align: left; color: #666; }
         
+        /* Direct Calendar Input Style */
         .day-input {
             width: 100%;
             border: none;
@@ -105,22 +106,18 @@
             font-weight: bold;
             color: #0056b3;
             box-sizing: border-box;
+            font-size: 14px;
         }
         .day-input:focus { background: #ffffcc; outline: none; }
 
-        /* Struck-off tasks section inside calendar cell */
-        .day-completed-tasks {
-            font-size: 9px;
-            color: #999;
+        /* Triggered dynamically when the linked item ID is marked done */
+        .day-input.task-struck-out {
             text-decoration: line-through;
-            text-align: center;
-            margin-top: 2px;
-            word-break: break-all;
-            background: #f0f0f0;
-            border-radius: 2px;
+            color: #bbb;
+            font-style: italic;
         }
 
-        /* To-Do Styling */
+        /* To-Do List Styling */
         .todo-item {
             display: flex;
             align-items: center;
@@ -177,12 +174,12 @@
     </div>
 
     <script>
-        // --- DATA STORAGE STATE ---
+        // --- DATA SETUP & LOCAL STORAGE ---
         let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
         let nextTodoId = parseInt(localStorage.getItem('planner_next_id')) || 1;
         let calendarData = JSON.parse(localStorage.getItem('planner_calendar')) || {};
 
-        // --- CALENDAR GENERATION ---
+        // --- CALENDAR MANAGEMENT ---
         function renderCalendar() {
             const container = document.getElementById('calendar-container');
             container.innerHTML = '';
@@ -237,30 +234,23 @@
                 
                 const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
-                // Active task number input
                 const input = document.createElement('input');
                 input.className = 'day-input';
                 input.type = 'text';
                 input.placeholder = "-";
                 input.value = calendarData[dateKey] || '';
                 
+                // Track typing input
                 input.oninput = (e) => {
                     calendarData[dateKey] = e.target.value;
                     localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
-                    // Re-render just the completed sub-items on typing changes
-                    updateCompletedDisplayForCell(cell, e.target.value);
+                    evaluateStrikeThrough(input, e.target.value);
                 };
                 
+                // Set original formatting on page load
+                evaluateStrikeThrough(input, input.value);
+                
                 cell.appendChild(input);
-                
-                // Container for struck off tasks assigned to this day
-                const completedContainer = document.createElement('div');
-                completedContainer.className = 'day-completed-tasks-container';
-                cell.appendChild(completedContainer);
-                
-                // Fill struck off items initially
-                updateCompletedDisplayForCell(cell, input.value);
-                
                 grid.appendChild(cell);
             }
             
@@ -268,31 +258,36 @@
             return monthBox;
         }
 
-        // Helper to scan active calendar numbers and drop completed tasks to the bottom of the day
-        function updateCompletedDisplayForCell(cell, rawInputValue) {
-            const container = cell.querySelector('.day-completed-tasks-container');
-            container.innerHTML = ''; // Reset container
-            
-            if (!rawInputValue.trim()) return;
+        // Evaluates if the contents inside the calendar input are associated with a finished task
+        function evaluateStrikeThrough(inputElement, value) {
+            if (!value.trim()) {
+                inputElement.classList.remove('task-struck-out');
+                return;
+            }
 
-            // Extract potential task numbers from the calendar entry (e.g., "1", "1, 2", "1-3")
-            const enteredNumbers = rawInputValue.match(/\d+/g) || [];
+            // Extract all numbers found in the text input string
+            const foundNumbers = value.match(/\d+/g) || [];
             
-            enteredNumbers.forEach(numStr => {
+            if (foundNumbers.length === 0) {
+                inputElement.classList.remove('task-struck-out');
+                return;
+            }
+
+            // Check if ALL parsed numbers in this cell point to completed items
+            const allFinished = foundNumbers.every(numStr => {
                 const id = parseInt(numStr);
-                const targetTodo = todos.find(t => t.id === id);
-                
-                // If the target task exists and is marked complete, render it struck off at the bottom
-                if (targetTodo && targetTodo.completed) {
-                    const doneMarker = document.createElement('div');
-                    doneMarker.className = 'day-completed-tasks';
-                    doneMarker.innerText = `#${id}`;
-                    container.appendChild(doneMarker);
-                }
+                const match = todos.find(t => t.id === id);
+                return match ? match.completed : false;
             });
+
+            if (allFinished) {
+                inputElement.classList.add('task-struck-out');
+            } else {
+                inputElement.classList.remove('task-struck-out');
+            }
         }
 
-        // --- TO-DO FUNCTIONS ---
+        // --- TO-DO MANAGEMENT ---
         function renderTodos() {
             const listDiv = document.getElementById('todo-list');
             listDiv.innerHTML = '';
@@ -329,14 +324,14 @@
             
             input.value = '';
             renderTodos();
-            renderCalendar(); // Refresh calendar view to register new tracking potential
+            renderCalendar(); 
         }
 
         function toggleTodo(id) {
             todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
             localStorage.setItem('planner_todos', JSON.stringify(todos));
             renderTodos();
-            renderCalendar(); // Forces calendar day cells to recalculate struck-off drops instantly
+            renderCalendar(); // Instantly update input text formatting up top
         }
 
         // --- TEAR-OFF OPERATIONS ---
@@ -349,7 +344,7 @@
         }
 
         function tearOffTodos() {
-            if (confirm("Tear off page? This removes all struck-through tasks. Active items remain.")) {
+            if (confirm("Tear off page? This removes all struck-through tasks from the list below.")) {
                 todos = todos.filter(t => !t.completed);
                 localStorage.setItem('planner_todos', JSON.stringify(todos));
                 renderTodos();
