@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner</title>
+    <title>Advanced Split Tear-Off Planner</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -13,7 +13,8 @@
             padding: 10px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            gap: 15px;
+            min-height: 100vh;
             box-sizing: border-box;
         }
         
@@ -22,20 +23,13 @@
             border: 2px solid #333;
             border-radius: 4px;
             padding: 15px;
-            overflow-y: auto;
             box-shadow: 3px 3px 0px #333;
             transition: flex 0.2s ease, padding 0.2s ease;
         }
         
-        #top-panel {
-            flex: 1.2;
-            margin-bottom: 15px;
-            border-bottom: 4px dashed #999;
-        }
-        
-        #bottom-panel {
-            flex: 0.8;
-        }
+        #top-panel { flex: 1.2; overflow-y: auto; }
+        #bottom-panel { flex: 1; overflow-y: auto; }
+        #analytics-panel { flex: 0.5; overflow-y: auto; }
 
         /* Collapsed Main Panels */
         .panel.collapsed {
@@ -78,10 +72,7 @@
             font-weight: bold;
             box-shadow: 2px 2px 0px #333;
         }
-        .tear-off-btn:active {
-            transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px #333;
-        }
+        .tear-off-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #333; }
 
         .toggle-btn {
             background: #666;
@@ -111,13 +102,8 @@
             padding: 10px;
             transition: background-color 0.2s;
         }
-        .month-box.month-hidden {
-            padding: 5px 10px;
-            background: #e8e8e8;
-        }
-        .month-box.month-hidden .calendar-grid {
-            display: none;
-        }
+        .month-box.month-hidden { padding: 5px 10px; background: #e8e8e8; }
+        .month-box.month-hidden .calendar-grid { display: none; }
         .month-header-row {
             display: flex;
             justify-content: space-between;
@@ -127,13 +113,8 @@
             margin-bottom: 10px;
             font-weight: bold;
         }
-        .month-box.month-hidden .month-header-row {
-            margin-bottom: 0;
-        }
-        .month-actions {
-            display: flex;
-            gap: 4px;
-        }
+        .month-box.month-hidden .month-header-row { margin-bottom: 0; }
+        .month-actions { display: flex; gap: 4px; }
         .month-btn {
             background: #fff;
             border: 1px solid #777;
@@ -142,9 +123,7 @@
             padding: 2px 6px;
             font-family: inherit;
         }
-        .month-btn.purge:hover {
-            background: #ffcccc;
-        }
+        .month-btn.purge:hover { background: #ffcccc; }
 
         .calendar-grid {
             display: grid;
@@ -164,7 +143,13 @@
             background: #fafafa;
             padding: 4px;
             box-sizing: border-box;
+            transition: background-color 0.3s;
         }
+        
+        /* Overload Threshold Styling Rules */
+        .day-cell.overload-warning { background-color: #fff3cd !important; border-color: #ffeba0; } /* 3-4 tasks assigned */
+        .day-cell.overload-danger { background-color: #f8d7da !important; border-color: #f5c6cb; }  /* 5+ tasks assigned */
+        
         .day-number { font-size: 10px; text-align: left; color: #666; }
         
         .day-input {
@@ -179,12 +164,7 @@
             font-size: 14px;
         }
         .day-input:focus { background: #ffffcc; outline: none; }
-
-        .day-input.task-struck-out {
-            text-decoration: line-through;
-            color: #bbb;
-            font-style: italic;
-        }
+        .day-input.task-struck-out { text-decoration: line-through; color: #bbb; font-style: italic; }
 
         /* To-Do List Layout */
         .todo-item {
@@ -194,51 +174,50 @@
             font-size: 16px;
             gap: 10px;
         }
-        .todo-item.hidden-task-style {
-            background: #f0f0f0;
-            opacity: 0.6;
-            border-left: 3px dashed #999;
-            padding-left: 4px;
-        }
-        .todo-number {
-            font-weight: bold;
-            width: 40px;
-            color: #555;
-        }
-        .todo-text {
-            cursor: pointer;
-            flex-grow: 1;
-        }
-        .completed .todo-text {
-            text-decoration: line-through;
-            color: #999;
-        }
+        .todo-item.hidden-task-style { background: #f0f0f0; opacity: 0.6; border-left: 3px dashed #999; padding-left: 4px; }
+        .todo-number { font-weight: bold; width: 40px; color: #555; }
         
-        .action-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
+        /* Badge tags */
+        .todo-tag {
+            font-size: 11px;
+            font-weight: bold;
             padding: 2px 6px;
             border-radius: 3px;
+            color: #fff;
+            text-transform: uppercase;
         }
-        .action-btn:hover {
-            background: #ddd;
-        }
-        .action-btn.delete-item-btn:hover {
-            background: #ffcccc;
-        }
+        .todo-tag.tag-w { background-color: #0056b3; }
+        .todo-tag.tag-l { background-color: #28a745; }
+
+        .todo-text { cursor: pointer; flex-grow: 1; }
+        .completed .todo-text { text-decoration: line-through; color: #999; }
+        
+        .action-btn { background: transparent; border: none; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 3px; }
+        .action-btn:hover { background: #ddd; }
+        .action-btn.delete-item-btn:hover { background: #ffcccc; }
 
         .todo-input-zone {
             margin-top: 15px;
             display: flex;
             gap: 10px;
+            align-items: center;
         }
-        #new-todo {
-            flex-grow: 1;
-            padding: 5px;
-            font-family: inherit;
+        #new-todo { flex-grow: 1; padding: 6px; font-family: inherit; }
+        
+        /* Analytics Cards */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            font-size: 14px;
         }
+        .stat-card {
+            background: #f8f9fa;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .stat-val { font-size: 18px; font-weight: bold; color: #0056b3; margin-top: 5px;}
     </style>
 </head>
 <body>
@@ -278,8 +257,36 @@
         <div class="panel-content">
             <div id="todo-list"></div>
             <div class="todo-input-zone">
-                <input type="text" id="new-todo" spellcheck="true" placeholder="Enter a new task..." onkeypress="if(event.key === 'Enter') addTodo()">
-                <button style="padding: 5px 15px;" onclick="addTodo()">Add</button>
+                <input type="text" id="new-todo" placeholder="Enter a new task..." onkeypress="if(event.key === 'Enter') addTodo()">
+                <select id="new-todo-tag" class="settings-select" style="padding: 5px;">
+                    <option value="W">Work [W]</option>
+                    <option value="L">Living [L]</option>
+                </select>
+                <button style="padding: 5px 15px; font-weight: bold;" onclick="addTodo()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- METRICS & ANALYTICS PANEL -->
+    <div id="analytics-panel" class="panel">
+        <div class="panel-header">
+            <h2>Productivity Metrics & Analytics</h2>
+            <button class="toggle-btn" id="toggle-analytics-btn" onclick="togglePanel('analytics-panel', 'toggle-analytics-btn')">Hide Panel</button>
+        </div>
+        <div class="panel-content">
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <div>Busiest Output Day (Day of Week):</div>
+                    <div id="stat-peak-day" class="stat-val">No Data Yet</div>
+                </div>
+                <div class="stat-card">
+                    <div>Highest Production Week (This Month):</div>
+                    <div id="stat-peak-week" class="stat-val">No Data Yet</div>
+                </div>
+                <div class="stat-card">
+                    <div>Active Task Allocation:</div>
+                    <div id="stat-tag-ratio" class="stat-val" style="font-size:14px; color: #333;">W: 0 | L: 0</div>
+                </div>
             </div>
         </div>
     </div>
@@ -299,7 +306,6 @@
         function togglePanel(panelId, btnId) {
             const panel = document.getElementById(panelId);
             const btn = document.getElementById(btnId);
-            
             if (panel.classList.contains('collapsed')) {
                 panel.classList.remove('collapsed');
                 btn.innerText = "Hide Panel";
@@ -319,23 +325,21 @@
         // --- AUTOMATIC PURGE ENGINE ---
         function runAutoPurgeCheck() {
             if (purgeThresholdDays === 'never') return;
-            
             const targetDays = parseInt(purgeThresholdDays);
             const now = new Date().getTime();
             const msThreshold = targetDays * 24 * 60 * 60 * 1000;
-
             const originalLength = todos.length;
             
             todos = todos.filter(todo => {
                 if (!todo.completed || !todo.completedAt) return true;
-                const age = now - todo.completedAt;
-                return age < msThreshold;
+                return (now - todo.completedAt) < msThreshold;
             });
 
             if (todos.length !== originalLength) {
                 localStorage.setItem('planner_todos', JSON.stringify(todos));
                 renderTodos();
                 renderCalendar();
+                calculateAnalytics();
             }
         }
 
@@ -349,7 +353,6 @@
         function renderCalendar() {
             const container = document.getElementById('calendar-container');
             container.innerHTML = '';
-            
             const d = new Date();
             let currentMonth = d.getMonth();
             let currentYear = d.getFullYear();
@@ -368,9 +371,7 @@
             
             const monthBox = document.createElement('div');
             monthBox.className = 'month-box';
-            if (hiddenMonths[monthKey]) {
-                monthBox.classList.add('month-hidden');
-            }
+            if (hiddenMonths[monthKey]) monthBox.classList.add('month-hidden');
             
             const headerRow = document.createElement('div');
             headerRow.className = 'month-header-row';
@@ -379,7 +380,6 @@
             titleSpan.innerText = `${monthNames[month]} ${year}`;
             headerRow.appendChild(titleSpan);
             
-            // Action wrapper containing both Hide and Purge buttons for the month
             const actionWrapper = document.createElement('div');
             actionWrapper.className = 'month-actions';
             
@@ -396,7 +396,6 @@
             const purgeMonthBtn = document.createElement('button');
             purgeMonthBtn.className = 'month-btn purge';
             purgeMonthBtn.innerText = "🗑️ Clear";
-            purgeMonthBtn.title = "Delete data for this month";
             purgeMonthBtn.onclick = () => purgeSingleMonth(year, month, monthNames[month]);
             actionWrapper.appendChild(purgeMonthBtn);
 
@@ -435,15 +434,17 @@
                 input.type = 'text';
                 input.placeholder = "-";
                 input.value = calendarData[dateKey] || '';
-                input.setAttribute('spellcheck', 'true');
+                
+                // Track styling rules for strike-through loops and task overloads
+                evaluateDayOverload(cell, input.value);
+                evaluateStrikeThrough(input, input.value);
                 
                 input.oninput = (e) => {
                     calendarData[dateKey] = e.target.value;
                     localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
                     evaluateStrikeThrough(input, e.target.value);
+                    evaluateDayOverload(cell, e.target.value);
                 };
-                
-                evaluateStrikeThrough(input, input.value);
                 
                 cell.appendChild(input);
                 grid.appendChild(cell);
@@ -454,15 +455,26 @@
         }
 
         function purgeSingleMonth(year, month, monthName) {
-            if (confirm(`Completely wipe out all planned entries for ${monthName} ${year}?`)) {
+            if (confirm(`Wipe out all planned entries for ${monthName} ${year}?`)) {
                 const prefix = `${year}-${String(month + 1).padStart(2, '0')}-`;
                 Object.keys(calendarData).forEach(key => {
-                    if (key.startsWith(prefix)) {
-                        delete calendarData[key];
-                    }
+                    if (key.startsWith(prefix)) delete calendarData[key];
                 });
                 localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
                 renderCalendar();
+            }
+        }
+
+        // --- OVERLOAD & STRIKE ENGINE ---
+        function evaluateDayOverload(cellElement, value) {
+            cellElement.classList.remove('overload-warning', 'overload-danger');
+            const foundNumbers = value.match(/\d+/g) || [];
+            const activeTaskCount = foundNumbers.length;
+
+            if (activeTaskCount >= 5) {
+                cellElement.classList.add('overload-danger');  // Crimson warning
+            } else if (activeTaskCount >= 3) {
+                cellElement.classList.add('overload-warning'); // Amber warning
             }
         }
 
@@ -471,19 +483,16 @@
                 inputElement.classList.remove('task-struck-out');
                 return;
             }
-
             const foundNumbers = value.match(/\d+/g) || [];
             if (foundNumbers.length === 0) {
                 inputElement.classList.remove('task-struck-out');
                 return;
             }
-
             const allFinished = foundNumbers.every(numStr => {
                 const id = parseInt(numStr);
                 const match = todos.find(t => t.id === id);
                 return match ? match.completed : false;
             });
-
             if (allFinished) {
                 inputElement.classList.add('task-struck-out');
             } else {
@@ -501,53 +510,62 @@
 
                 const item = document.createElement('div');
                 item.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-                if (todo.hidden) {
-                    item.classList.add('hidden-task-style');
-                }
+                if (todo.hidden) item.classList.add('hidden-task-style');
                 
                 const num = document.createElement('span');
                 num.className = 'todo-number';
                 num.innerText = `#${todo.id}`;
                 
+                // Color-coded classification tag badge
+                const tagSpan = document.createElement('span');
+                tagSpan.className = `todo-tag tag-${todo.tag.toLowerCase()}`;
+                tagSpan.innerText = todo.tag;
+                
                 const text = document.createElement('span');
                 text.className = 'todo-text';
-                text.innerText = todo.text + (todo.hidden ? " [HIDDEN]" : "");
+                text.innerText = " " + todo.text + (todo.hidden ? " [HIDDEN]" : "");
                 text.onclick = () => toggleTodo(todo.id);
                 
-                // Button 1: Hide Toggle
                 const hideBtn = document.createElement('button');
                 hideBtn.className = 'action-btn';
                 hideBtn.innerHTML = todo.hidden ? '👁️' : '👁️‍🗨️';
-                hideBtn.title = todo.hidden ? "Unhide Task" : "Hide Task";
                 hideBtn.onclick = (e) => {
                     e.stopPropagation();
                     toggleHideTodoItem(todo.id);
                 };
                 
-                // Button 2: Hard Delete Button
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'action-btn delete-item-btn';
                 deleteBtn.innerHTML = '🗑️';
-                deleteBtn.title = "Delete Task Permanently";
                 deleteBtn.onclick = (e) => {
                     e.stopPropagation();
                     deleteTodoItem(todo.id);
                 };
                 
                 item.appendChild(num);
+                item.appendChild(tagSpan);
                 item.appendChild(text);
                 item.appendChild(hideBtn);
                 item.appendChild(deleteBtn);
                 listDiv.appendChild(item);
             });
+            calculateAnalytics();
         }
 
         function addTodo() {
             const input = document.getElementById('new-todo');
+            const tagSelect = document.getElementById('new-todo-tag');
             const text = input.value.trim();
             if (!text) return;
             
-            todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null, hidden: false });
+            todos.push({ 
+                id: nextTodoId, 
+                text: text, 
+                completed: false, 
+                completedAt: null, 
+                hidden: false,
+                tag: tagSelect.value 
+            });
             nextTodoId++;
             
             localStorage.setItem('planner_todos', JSON.stringify(todos));
@@ -582,7 +600,7 @@
         }
 
         function deleteTodoItem(id) {
-            if (confirm(`Completely destroy task #${id}? This can't be undone.`)) {
+            if (confirm(`Destroy task #${id}?`)) {
                 todos = todos.filter(t => t.id !== id);
                 localStorage.setItem('planner_todos', JSON.stringify(todos));
                 renderTodos();
@@ -590,9 +608,63 @@
             }
         }
 
+        // --- PRODUCTIVITY METRICS ENGINE ---
+        function calculateAnalytics() {
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            let completedTasks = todos.filter(t => t.completed && t.completedAt);
+            
+            // 1. Calculate Day of the week with the most checked boxes
+            let dayCounts = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
+            completedTasks.forEach(t => {
+                const dayOfWeek = new Date(t.completedAt).getDay();
+                dayCounts[dayOfWeek]++;
+            });
+            
+            let bestDayIdx = 0;
+            let maxDayCount = 0;
+            for(let i=0; i<7; i++) {
+                if(dayCounts[i] > maxDayCount) {
+                    maxDayCount = dayCounts[i];
+                    bestDayIdx = i;
+                }
+            }
+            document.getElementById('stat-peak-day').innerText = maxDayCount > 0 ? `${dayNames[bestDayIdx]} (${maxDayCount} done)` : "No items completed yet";
+
+            // 2. Calculate Week of the current month with the most checked boxes
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            let weekCounts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}; // Matrix sizing rows 
+
+            completedTasks.forEach(t => {
+                const compDate = new Date(t.completedAt);
+                if(compDate.getMonth() === currentMonth && compDate.getFullYear() === currentYear) {
+                    const dayOfMonth = compDate.getDate();
+                    // Get correct week indexing based on calendar start row padding offset
+                    const weekNo = Math.ceil((dayOfMonth + new Date(currentYear, currentMonth, 1).getDay()) / 7);
+                    if(weekCounts[weekNo] !== undefined) weekCounts[weekNo]++;
+                }
+            });
+
+            let bestWeekIdx = 1;
+            let maxWeekCount = 0;
+            for(let w in weekCounts) {
+                if(weekCounts[w] > maxWeekCount) {
+                    maxWeekCount = weekCounts[w];
+                    bestWeekIdx = w;
+                }
+            }
+            document.getElementById('stat-peak-week').innerText = maxWeekCount > 0 ? `Week ${bestWeekIdx} (${maxWeekCount} done)` : "No work logged this month";
+
+            // 3. Simple contextual categorization metrics
+            let workCount = todos.filter(t => t.tag === 'W' && !t.hidden).length;
+            let livingCount = todos.filter(t => t.tag === 'L' && !t.hidden).length;
+            document.getElementById('stat-tag-ratio').innerHTML = `Active Tasks:<br><span style="color:#0056b3; font-weight:bold;">Work [W]: ${workCount}</span><br><span style="color:#28a745; font-weight:bold;">Living [L]: ${livingCount}</span>`;
+        }
+
         // --- TEAR-OFF OPERATIONS ---
         function tearOffCalendar() {
-            if (confirm("Are you sure you want to tear off ALL calendar entries?")) {
+            if (confirm("Tear off all calendar entries?")) {
                 calendarData = {};
                 localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
                 renderCalendar();
@@ -600,7 +672,7 @@
         }
 
         function tearOffTodos() {
-            if (confirm("Tear off page? This removes all struck-through tasks from the list below.")) {
+            if (confirm("Tear off page? This removes completed tasks entirely.")) {
                 todos = todos.filter(t => !t.completed);
                 localStorage.setItem('planner_todos', JSON.stringify(todos));
                 renderTodos();
