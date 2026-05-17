@@ -170,47 +170,23 @@ opacity: 0.6;
 white-space: nowrap;
 }
 
-/* SESSION CONTENT */
-.session-day {
+/* SESSION HEADER — single line */
+.session-header {
 font-family: ‘Cinzel’, serif;
-font-size: 0.46rem;
-letter-spacing: 0.22em;
-text-transform: uppercase;
-display: block;
-margin-bottom: 3px;
-}
-
-.session.sunday .session-day { color: #1a3a6e; opacity: 0.75; font-size: 0.65rem; }
-.session.monday .session-day { color: #f0e6d0; opacity: 1; font-size: 0.65rem; }
-
-.session-time {
-font-family: ‘Cinzel’, serif;
-font-size: 1.3rem;
-letter-spacing: 0.04em;
-display: block;
-line-height: 1;
-margin-bottom: 5px;
-}
-
-.session.sunday .session-time { color: #1a3a6e; font-size: 1.25rem; }
-.session.monday .session-time { color: #ffffff; font-size: 1.25rem; }
-
-.session-verb {
-font-family: ‘Cinzel’, serif;
-font-size: 0.9rem;
+font-size: 1.05rem;
 font-weight: 600;
-letter-spacing: 0.1em;
-display: block;
+letter-spacing: 0.05em;
 margin-bottom: 8px;
+line-height: 1.2;
 }
 
-.session.sunday .session-verb { color: #1a3a6e; font-size: 0.95rem; }
-.session.monday .session-verb { color: #c8a050; font-size: 0.95rem; }
+.session.sunday .session-header { color: #1a3a6e; }
+.session.monday .session-header { color: #c8a050; }
 
 .session-desc {
-font-size: 0.78rem;
+font-size: 0.82rem;
 font-weight: 400;
-line-height: 1.65;
+line-height: 1.62;
 }
 
 .session.sunday .session-desc { color: #2a3a5a; }
@@ -404,7 +380,6 @@ max-height: 80px;
 }
 
 @media (min-width: 600px) {
-.session-time { font-size: 1.5rem; }
 .session-desc { font-size: 0.88rem; }
 .cl-big { font-size: 1.6rem; }
 .cl-word { font-size: 0.52rem; }
@@ -428,7 +403,6 @@ body { padding: 10px 12px; align-items: flex-start; }
 .cl-big { font-size: 0.95rem; }
 .cl-word { font-size: 0.36rem; }
 .session { padding: 12px 14px; }
-.session-time { font-size: 0.95rem; }
 .session-desc { font-size: 0.76rem; }
 .baton-col-desktop { display: none !important; }
 .baton-divider { display: flex !important; }
@@ -468,9 +442,7 @@ body { background: white; padding: 0; }
 
 ```
 <div class="session sunday">
-  <span class="session-day">Sunday</span>
-  <span class="session-time">10 AM</span>
-  <span class="session-verb">Ideate</span>
+  <p class="session-header">Sunday &middot; 10 AM &middot; Ideate</p>
   <p class="session-desc">Bring a real problem. We apply CLAAS lenses live — naming what is breaking and where in the lifecycle.</p>
 </div>
 
@@ -493,9 +465,7 @@ body { background: white; padding: 0; }
 </div>
 
 <div class="session monday">
-  <span class="session-day">Monday</span>
-  <span class="session-time">10 AM</span>
-  <span class="session-verb">Iterate</span>
+  <p class="session-header">Monday &middot; 10 AM &middot; Iterate</p>
   <p class="session-desc">One concrete next step. Iterate better because you named it first.</p>
 </div>
 ```
@@ -517,7 +487,6 @@ body { background: white; padding: 0; }
         <a class="join-link" href="mailto:srinikasturi@banyanlogic.com?subject=Coffee Conversations on CLAAS">&#8594; srinikasturi@banyanlogic.com</a>
       </div>
     </div>
-    <p class="hitl-note">This conversation improves through every human who joins it</p>
   </div>
 
   <div class="foot-rule">
