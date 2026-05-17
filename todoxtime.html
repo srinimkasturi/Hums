@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Tear-Off Planner</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f4f4f2;
+            color: #333;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        /* Split Screen Layout */
+        .panel {
+            background: #fff;
+            border: 2px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-y: auto;
+            box-shadow: 3px 3px 0px #333;
+        }
+        
+        /* Top Panel: 3-Month Calendar */
+        #top-panel {
+            flex: 1;
+            margin-bottom: 15px;
+            border-bottom: 4px dashed #999; /* Perforation line */
+            position: relative;
+        }
+        
+        /* Bottom Panel: To-Do List */
+        #bottom-panel {
+            flex: 1;
+            position: relative;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .tear-off-btn {
+            background: #ff4d4d;
+            color: white;
+            border: 1px solid #333;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 2px 2px 0px #333;
+        }
+        .tear-off-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #333;
+        }
+
+        /* Calendar Grid Setup */
+        .months-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .month-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .month-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: #eee;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .day-header { font-weight: bold; background: #ddd; padding: 2px; }
+        .day-cell {
+            border: 1px solid #eee;
+            min-height: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #fafafa;
+        }
+        .day-number { font-size: 10px; padding: 2px; text-align: left; color: #666; }
+        .day-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-family: inherit;
+            font-weight: bold;
+            color: #0056b3;
+            box-sizing: border-box;
+            padding-bottom: 2px;
+        }
+        .day-input:focus { background: #ffffcc; outline: none; }
+
+        /* To-Do Styling */
+        .todo-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .todo-number {
+            font-weight: bold;
+            width: 40px;
+            color: #555;
+        }
+        .todo-text {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+        .completed .todo-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .todo-input-zone {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        #new-todo {
+            flex-grow: 1;
+            padding: 5px;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP PANEL: 3-MONTH CALENDAR -->
+    <div id="top-panel" class="panel">
+        <div class="panel-header">
+            <h2>3-Month Planning Window</h2>
+            <button class="tear-off-btn" onclick="tearOffCalendar()">✂ Tear Off Calendar</button>
+        </div>
+        <div class="months-container" id="calendar-container"></div>
+    </div>
+
+    <!-- BOTTOM PANEL: NUMBERED TO-DOS -->
+    <div id="bottom-panel" class="panel">
+        <div class="panel-header">
+            <h2>Numbered To-Do List</h2>
+            <button class="tear-off-btn" onclick="tearOffTodos()">✂ Tear Off Done Tasks</button>
+        </div>
+        <div id="todo-list"></div>
+        <div class="todo-input-zone">
+            <input type="text" id="new-todo" placeholder="Enter a new task..." onkeypress="if(event.key === 'Enter') addTodo()">
+            <button style="padding: 5px 15px;" onclick="addTodo()">Add</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA STORAGE STATE ---
+        let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
+        let nextTodoId = parseInt(localStorage.getItem('planner_next_id')) || 1;
+        let calendarData = JSON.parse(localStorage.getItem('planner_calendar')) || {};
+
+        // --- CALENDAR GENERATION ---
+        function renderCalendar() {
+            const container = document.getElementById('calendar-container');
+            container.innerHTML = '';
+            
+            const d = new Date();
+            let currentMonth = d.getMonth();
+            let currentYear = d.getFullYear();
+
+            // Generate 3 consecutive months starting from the current month
+            for (let m = 0; m < 3; m++) {
+                let displayMonth = (currentMonth + m) % 12;
+                let displayYear = currentYear + Math.floor((currentMonth + m) / 12);
+                
+                container.appendChild(createMonthElement(displayYear, displayMonth));
+            }
+        }
+
+        function createMonthElement(year, month) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const daysShort = ["S", "M", "T", "W", "T", "F", "S"];
+            
+            const monthBox = document.createElement('div');
+            monthBox.className = 'month-box';
+            
+            const title = document.createElement('div');
+            title.className = 'month-title';
+            title.innerText = `${monthNames[month]} ${year}`;
+            monthBox.appendChild(title);
+            
+            const grid = document.createElement('div');
+            grid.className = 'calendar-grid';
+            
+            // Day headers (S, M, T...)
+            daysShort.forEach(d => {
+                const head = document.createElement('div');
+                head.className = 'day-header';
+                head.innerText = d;
+                grid.appendChild(head);
+            });
+            
+            // Padding cells for beginning of month
+            const firstDay = new Date(year, month, 1).getDay();
+            for (let i = 0; i < firstDay; i++) {
+                grid.appendChild(document.createElement('div'));
+            }
+            
+            // Actual days
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            for (let day = 1; day <= totalDays; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                
+                const numSpan = document.createElement('div');
+                numSpan.className = 'day-number';
+                numSpan.innerText = day;
+                cell.appendChild(numSpan);
+                
+                // Key format: YYYY-MM-DD
+                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                const input = document.createElement('input');
+                input.className = 'day-input';
+                input.type = 'text';
+                input.placeholder = "-";
+                input.value = calendarData[dateKey] || '';
+                
+                // Save calendar entries immediately on typing
+                input.oninput = (e) => {
+                    calendarData[dateKey] = e.target.value;
+                    localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                };
+                
+                cell.appendChild(input);
+                grid.appendChild(cell);
+            }
+            
+            monthBox.appendChild(grid);
+            return monthBox;
+        }
+
+        // --- TO-DO FUNCTIONS ---
+        function renderTodos() {
+            const listDiv = document.getElementById('todo-list');
+            listDiv.innerHTML = '';
+            
+            todos.forEach(todo => {
+                const item = document.createElement('div');
+                item.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                
+                const num = document.createElement('span');
+                num.className = 'todo-number';
+                num.innerText = `#${todo.id}`;
+                
+                const text = document.createElement('span');
+                text.className = 'todo-text';
+                text.innerText = todo.text;
+                // Clicking the item toggles cross-out status
+                text.onclick = () => toggleTodo(todo.id);
+                
+                item.appendChild(num);
+                item.appendChild(text);
+                listDiv.appendChild(item);
+            });
+        }
+
+        function addTodo() {
+            const input = document.getElementById('new-todo');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            todos.push({ id: nextTodoId, text: text, completed: false });
+            nextTodoId++;
+            
+            localStorage.setItem('planner_todos', JSON.stringify(todos));
+            localStorage.setItem('planner_next_id', nextTodoId);
+            
+            input.value = '';
+            renderTodos();
+        }
+
+        function toggleTodo(id) {
+            todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            localStorage.setItem('planner_todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        // --- TEAR-OFF OPERATIONS (INDEPENDENT CLEANING) ---
+        function tearOffCalendar() {
+            if (confirm("Are you sure you want to tear off the calendar entries? This clears your scheduled numbers.")) {
+                calendarData = {};
+                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                renderCalendar();
+            }
+        }
+
+        function tearOffTodos() {
+            if (confirm("Tear off page? This removes all struck-through tasks. Active items remain.")) {
+                // Keep only uncompleted items
+                todos = todos.filter(t => !t.completed);
+                localStorage.setItem('planner_todos', JSON.stringify(todos));
+                renderTodos();
+            }
+        }
+
+        // --- INITIALIZATION ---
+        renderCalendar();
+        renderTodos();
+    </script>
+</body>
+</html>
