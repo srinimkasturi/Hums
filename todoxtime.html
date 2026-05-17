@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner</title>
+    <title>Split Tear-Off Planner with Sync</title>
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
@@ -17,7 +17,6 @@
             box-sizing: border-box;
         }
         
-        /* Split Screen Layout */
         .panel {
             background: #fff;
             border: 2px solid #333;
@@ -27,18 +26,14 @@
             box-shadow: 3px 3px 0px #333;
         }
         
-        /* Top Panel: 3-Month Calendar */
         #top-panel {
-            flex: 1;
+            flex: 1.2;
             margin-bottom: 15px;
             border-bottom: 4px dashed #999; /* Perforation line */
-            position: relative;
         }
         
-        /* Bottom Panel: To-Do List */
         #bottom-panel {
-            flex: 1;
-            position: relative;
+            flex: 0.8;
         }
 
         .panel-header {
@@ -64,10 +59,10 @@
             box-shadow: 1px 1px 0px #333;
         }
 
-        /* Calendar Grid Setup */
+        /* Calendar Layout */
         .months-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
         .month-box {
@@ -88,15 +83,19 @@
             font-size: 12px;
         }
         .day-header { font-weight: bold; background: #ddd; padding: 2px; }
+        
         .day-cell {
             border: 1px solid #eee;
-            min-height: 45px;
+            min-height: 60px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             background: #fafafa;
+            padding: 2px;
+            box-sizing: border-box;
         }
-        .day-number { font-size: 10px; padding: 2px; text-align: left; color: #666; }
+        .day-number { font-size: 10px; text-align: left; color: #666; }
+        
         .day-input {
             width: 100%;
             border: none;
@@ -106,9 +105,20 @@
             font-weight: bold;
             color: #0056b3;
             box-sizing: border-box;
-            padding-bottom: 2px;
         }
         .day-input:focus { background: #ffffcc; outline: none; }
+
+        /* Struck-off tasks section inside calendar cell */
+        .day-completed-tasks {
+            font-size: 9px;
+            color: #999;
+            text-decoration: line-through;
+            text-align: center;
+            margin-top: 2px;
+            word-break: break-all;
+            background: #f0f0f0;
+            border-radius: 2px;
+        }
 
         /* To-Do Styling */
         .todo-item {
@@ -181,11 +191,9 @@
             let currentMonth = d.getMonth();
             let currentYear = d.getFullYear();
 
-            // Generate 3 consecutive months starting from the current month
             for (let m = 0; m < 3; m++) {
                 let displayMonth = (currentMonth + m) % 12;
                 let displayYear = currentYear + Math.floor((currentMonth + m) / 12);
-                
                 container.appendChild(createMonthElement(displayYear, displayMonth));
             }
         }
@@ -205,7 +213,6 @@
             const grid = document.createElement('div');
             grid.className = 'calendar-grid';
             
-            // Day headers (S, M, T...)
             daysShort.forEach(d => {
                 const head = document.createElement('div');
                 head.className = 'day-header';
@@ -213,13 +220,11 @@
                 grid.appendChild(head);
             });
             
-            // Padding cells for beginning of month
             const firstDay = new Date(year, month, 1).getDay();
             for (let i = 0; i < firstDay; i++) {
                 grid.appendChild(document.createElement('div'));
             }
             
-            // Actual days
             const totalDays = new Date(year, month + 1, 0).getDate();
             for (let day = 1; day <= totalDays; day++) {
                 const cell = document.createElement('div');
@@ -230,27 +235,61 @@
                 numSpan.innerText = day;
                 cell.appendChild(numSpan);
                 
-                // Key format: YYYY-MM-DD
                 const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 
+                // Active task number input
                 const input = document.createElement('input');
                 input.className = 'day-input';
                 input.type = 'text';
                 input.placeholder = "-";
                 input.value = calendarData[dateKey] || '';
                 
-                // Save calendar entries immediately on typing
                 input.oninput = (e) => {
                     calendarData[dateKey] = e.target.value;
                     localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                    // Re-render just the completed sub-items on typing changes
+                    updateCompletedDisplayForCell(cell, e.target.value);
                 };
                 
                 cell.appendChild(input);
+                
+                // Container for struck off tasks assigned to this day
+                const completedContainer = document.createElement('div');
+                completedContainer.className = 'day-completed-tasks-container';
+                cell.appendChild(completedContainer);
+                
+                // Fill struck off items initially
+                updateCompletedDisplayForCell(cell, input.value);
+                
                 grid.appendChild(cell);
             }
             
             monthBox.appendChild(grid);
             return monthBox;
+        }
+
+        // Helper to scan active calendar numbers and drop completed tasks to the bottom of the day
+        function updateCompletedDisplayForCell(cell, rawInputValue) {
+            const container = cell.querySelector('.day-completed-tasks-container');
+            container.innerHTML = ''; // Reset container
+            
+            if (!rawInputValue.trim()) return;
+
+            // Extract potential task numbers from the calendar entry (e.g., "1", "1, 2", "1-3")
+            const enteredNumbers = rawInputValue.match(/\d+/g) || [];
+            
+            enteredNumbers.forEach(numStr => {
+                const id = parseInt(numStr);
+                const targetTodo = todos.find(t => t.id === id);
+                
+                // If the target task exists and is marked complete, render it struck off at the bottom
+                if (targetTodo && targetTodo.completed) {
+                    const doneMarker = document.createElement('div');
+                    doneMarker.className = 'day-completed-tasks';
+                    doneMarker.innerText = `#${id}`;
+                    container.appendChild(doneMarker);
+                }
+            });
         }
 
         // --- TO-DO FUNCTIONS ---
@@ -269,7 +308,6 @@
                 const text = document.createElement('span');
                 text.className = 'todo-text';
                 text.innerText = todo.text;
-                // Clicking the item toggles cross-out status
                 text.onclick = () => toggleTodo(todo.id);
                 
                 item.appendChild(num);
@@ -291,17 +329,19 @@
             
             input.value = '';
             renderTodos();
+            renderCalendar(); // Refresh calendar view to register new tracking potential
         }
 
         function toggleTodo(id) {
             todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
             localStorage.setItem('planner_todos', JSON.stringify(todos));
             renderTodos();
+            renderCalendar(); // Forces calendar day cells to recalculate struck-off drops instantly
         }
 
-        // --- TEAR-OFF OPERATIONS (INDEPENDENT CLEANING) ---
+        // --- TEAR-OFF OPERATIONS ---
         function tearOffCalendar() {
-            if (confirm("Are you sure you want to tear off the calendar entries? This clears your scheduled numbers.")) {
+            if (confirm("Are you sure you want to tear off the calendar entries?")) {
                 calendarData = {};
                 localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
                 renderCalendar();
@@ -310,10 +350,10 @@
 
         function tearOffTodos() {
             if (confirm("Tear off page? This removes all struck-through tasks. Active items remain.")) {
-                // Keep only uncompleted items
                 todos = todos.filter(t => !t.completed);
                 localStorage.setItem('planner_todos', JSON.stringify(todos));
                 renderTodos();
+                renderCalendar();
             }
         }
 
