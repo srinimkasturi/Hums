@@ -34,14 +34,11 @@
 ```
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-        height: -webkit-fill-available;
-        height: 100dvh;
-    }
-    body {
-        height: 100vh;
-        height: -webkit-fill-available;
-        height: 100dvh;
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
         font-family: 'DM Sans', sans-serif;
         background: var(--sand);
@@ -49,21 +46,18 @@
         font-size: 13px;
     }
 
-    /* ── APP SHELL ─────────────────────────────────────────── */
+    /* -- APP SHELL --- */
     #app {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
         display: flex;
         flex-direction: column;
-        height: 100vh;
-        height: -webkit-fill-available;
-        height: 100dvh;
-        padding-left: 9px;
-        padding-right: 9px;
-        padding-top: max(env(safe-area-inset-top, 0px), 6px);
-        padding-bottom: max(env(safe-area-inset-bottom, 0px), 5px);
+        padding: 6px 9px 5px;
         gap: 5px;
+        overflow: hidden;
     }
 
-    /* ── MASTHEAD ──────────────────────────────────────────── */
+    /* -- MASTHEAD --- */
     #masthead {
         display: flex;
         align-items: center;
@@ -98,7 +92,7 @@
     .legend-item { display: flex; align-items: center; gap: 3px; }
     .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
 
-    /* ── MAIN SPLIT ────────────────────────────────────────── */
+    /* -- MAIN SPLIT --- */
     #main {
         display: flex;
         gap: 7px;
@@ -106,7 +100,7 @@
         min-height: 0;
     }
 
-    /* ── PANE CHROME ───────────────────────────────────────── */
+    /* -- PANE CHROME --- */
     .pane {
         display: flex;
         flex-direction: column;
@@ -152,7 +146,7 @@
     .pane-scroll::-webkit-scrollbar { width: 4px; }
     .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
 
-    /* ── CALENDAR PANE ─────────────────────────────────────── */
+    /* -- CALENDAR PANE --- */
     #cal-pane { flex: 1.2; }
 
     .months-container {
@@ -235,7 +229,7 @@
     .day-cell.overload-warning { background: var(--ow-bg) !important; outline: 1px solid var(--ow-bdr); }
     .day-cell.overload-danger  { background: var(--od-bg) !important; outline: 1px solid var(--od-bdr); }
 
-    /* ── TODO PANE ─────────────────────────────────────────── */
+    /* -- TODO PANE --- */
     #todo-pane { flex: 0.8; }
 
     .todo-item {
@@ -304,7 +298,7 @@
     }
     .todo-add-bar input { flex: 1; min-width: 0; }
 
-    /* ── BUTTONS ───────────────────────────────────────────── */
+    /* -- BUTTONS --- */
     .btn {
         font-family: 'DM Sans', sans-serif;
         font-size: 9px;
@@ -355,7 +349,7 @@
         border-color: var(--teal);
     }
 
-    /* ── ANALYTICS BAR ─────────────────────────────────────── */
+    /* -- ANALYTICS BAR --- */
     #analytics-bar {
         display: flex;
         gap: 0;
@@ -506,7 +500,7 @@
 </div>
 
 <script>
-    // ─── STATE ───────────────────────────────────────────────────────────────
+    // --- STATE ---
     let todos              = JSON.parse(localStorage.getItem('planner_todos'))         || [];
     let nextTodoId         = parseInt(localStorage.getItem('planner_next_id'))         || 1;
     let calendarData       = JSON.parse(localStorage.getItem('planner_calendar'))      || {};
@@ -517,14 +511,14 @@
 
     document.getElementById('purge-setting').value = purgeThresholdDays;
 
-    // ─── ANALYTICS TOGGLE ────────────────────────────────────────────────────
+    // --- ANALYTICS TOGGLE ---
     function toggleAnalytics() {
         analyticsCollapsed = !analyticsCollapsed;
         document.getElementById('analytics-bar').classList.toggle('collapsed', analyticsCollapsed);
         document.getElementById('analytics-toggle').innerText = analyticsCollapsed ? '▲' : '▼';
     }
 
-    // ─── SHOW HIDDEN ─────────────────────────────────────────────────────────
+    // --- SHOW HIDDEN ---
     function toggleShowHiddenTasks() {
         showHiddenTasksState = !showHiddenTasksState;
         const btn = document.getElementById('show-hidden-toggle');
@@ -533,7 +527,7 @@
         renderTodos();
     }
 
-    // ─── AUTO-PURGE ──────────────────────────────────────────────────────────
+    // --- AUTO-PURGE ---
     function runAutoPurgeCheck() {
         if (purgeThresholdDays === 'never') return;
         const ms = parseInt(purgeThresholdDays) * 86400000;
@@ -548,7 +542,7 @@
         runAutoPurgeCheck();
     }
 
-    // ─── CALENDAR ────────────────────────────────────────────────────────────
+    // --- CALENDAR ---
     function renderCalendar() {
         const container = document.getElementById('calendar-container');
         container.innerHTML = '';
@@ -656,7 +650,7 @@
         renderCalendar();
     }
 
-    // ─── OVERLOAD & STRIKE ───────────────────────────────────────────────────
+    // --- OVERLOAD & STRIKE ---
     function evaluateDayOverload(cell, val) {
         cell.classList.remove('overload-warning','overload-danger');
         const n = (val.match(/\d+/g) || []).length;
@@ -675,7 +669,7 @@
         inp.classList.toggle('task-struck-out', allDone);
     }
 
-    // ─── TO-DO ───────────────────────────────────────────────────────────────
+    // --- TO-DO ---
     function renderTodos() {
         const list = document.getElementById('todo-list');
         list.innerHTML = '';
@@ -754,7 +748,7 @@
         localStorage.setItem('planner_next_id', nextTodoId);
     }
 
-    // ─── ANALYTICS ───────────────────────────────────────────────────────────
+    // --- ANALYTICS ---
     function calculateAnalytics() {
         const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
         const done = todos.filter(t => t.completed && t.completedAt);
@@ -786,7 +780,7 @@
             `<span style="color:#7EB3E8;font-weight:600;">${wCount}</span> · <span style="color:#5BBFB5;">${lCount}</span>`;
     }
 
-    // ─── TEAR-OFF ────────────────────────────────────────────────────────────
+    // --- TEAR-OFF ---
     function tearOffCalendar() {
         if (!confirm('Clear all calendar entries?')) return;
         calendarData = {};
@@ -800,7 +794,7 @@
         save(); renderTodos(); renderCalendar();
     }
 
-    // ─── INIT ────────────────────────────────────────────────────────────────
+    // --- INIT ---
     renderCalendar();
     renderTodos();
     runAutoPurgeCheck();
