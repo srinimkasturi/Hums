@@ -34,8 +34,14 @@
 ```
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-        height: 100%;
+    html {
+        height: -webkit-fill-available;
+        height: 100dvh;
+    }
+    body {
+        height: 100vh;
+        height: -webkit-fill-available;
+        height: 100dvh;
         overflow: hidden;
         font-family: 'DM Sans', sans-serif;
         background: var(--sand);
@@ -48,7 +54,12 @@
         display: flex;
         flex-direction: column;
         height: 100vh;
-        padding: 7px 9px 5px;
+        height: -webkit-fill-available;
+        height: 100dvh;
+        padding-left: 9px;
+        padding-right: 9px;
+        padding-top: max(env(safe-area-inset-top, 0px), 6px);
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 5px);
         gap: 5px;
     }
 
@@ -108,13 +119,17 @@
     }
     .pane-header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
         padding: 4px 8px;
         background: var(--night);
         flex-shrink: 0;
+        gap: 4px;
+    }
+    .pane-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 5px;
-        flex-wrap: wrap;
     }
     .pane-title {
         font-family: 'Playfair Display', serif;
@@ -122,7 +137,7 @@
         font-weight: 600;
         color: var(--gold);
     }
-    .pane-actions { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+    .pane-actions { display: flex; gap: 4px; align-items: center; }
 
     .pane-scroll {
         flex: 1;
@@ -132,6 +147,7 @@
         padding: 5px;
         scrollbar-width: thin;
         scrollbar-color: var(--sand-deeper) transparent;
+        -webkit-overflow-scrolling: touch;
     }
     .pane-scroll::-webkit-scrollbar { width: 4px; }
     .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
@@ -407,11 +423,11 @@
     <div class="legend">
         <div class="legend-item">
             <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
-            <span>3–4 tasks</span>
+            <span>3–4</span>
         </div>
         <div class="legend-item">
             <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
-            <span>5+ tasks</span>
+            <span>5+</span>
         </div>
     </div>
 </div>
@@ -422,9 +438,11 @@
     <!-- CALENDAR PANE -->
     <div class="pane" id="cal-pane">
         <div class="pane-header">
-            <span class="pane-title">3-Month Calendar</span>
-            <div class="pane-actions">
-                <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
+            <div class="pane-header-row">
+                <span class="pane-title">3-Month Calendar</span>
+                <div class="pane-actions">
+                    <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
+                </div>
             </div>
         </div>
         <div class="pane-scroll">
@@ -435,16 +453,22 @@
     <!-- TODO PANE -->
     <div class="pane" id="todo-pane">
         <div class="pane-header">
-            <span class="pane-title">To-Do List</span>
-            <div class="pane-actions">
-                <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">Show Hidden</button>
-                <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
-                    <option value="never">No purge</option>
-                    <option value="1">Purge 1d</option>
-                    <option value="3">Purge 3d</option>
-                    <option value="7">Purge 7d</option>
-                </select>
-                <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
+            <div class="pane-header-row">
+                <span class="pane-title">To-Do List</span>
+                <div class="pane-actions">
+                    <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
+                </div>
+            </div>
+            <div class="pane-header-row">
+                <div class="pane-actions">
+                    <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">👁 Hidden</button>
+                    <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
+                        <option value="never">No purge</option>
+                        <option value="1">Purge 1d</option>
+                        <option value="3">Purge 3d</option>
+                        <option value="7">Purge 7d</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="pane-scroll" id="todo-list"></div>
