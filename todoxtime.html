@@ -1,690 +1,787 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Split Tear-Off Planner</title>
+    <title>Split Tear-Off Planner · Banyan Logic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #f4f4f2;
-            color: #333;
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        
-        .panel {
-            background: #fff;
-            border: 2px solid #333;
-            border-radius: 4px;
-            padding: 15px;
-            box-shadow: 3px 3px 0px #333;
-            transition: flex 0.2s ease, padding 0.2s ease;
-        }
-        
-        #top-panel { flex: 1.2; overflow-y: auto; }
-        #bottom-panel { flex: 1; overflow-y: auto; }
-        #analytics-panel { flex: 0.5; overflow-y: auto; }
-
-        /* Collapsed Main Panels */
-        .panel.collapsed {
-            flex: 0 0 45px !important;
-            overflow: hidden;
-            padding-top: 5px;
-            padding-bottom: 5px;
-            background: #eaeaea;
-        }
-        .panel.collapsed .panel-content {
-            display: none;
+        :root {
+            --sand:        #F5F0E8;
+            --sand-dark:   #EAE3D5;
+            --sand-deeper: #DDD5C4;
+            --night:       #1A2744;
+            --night-mid:   #243560;
+            --gold:        #D4A017;
+            --gold-pale:   #F5E8B8;
+            --teal:        #2A7B7C;
+            --mauve:       #C4748A;
+            --mauve-pale:  #F5E0E6;
+            --ink:         #2C2416;
+            --ink-mid:     #5C4F3A;
+            --ink-light:   #9C8E7A;
+            --white:       #FDFAF5;
+            --purushartha: #1A2744;
+            --prarabdha:   #D4A017;
+            --ow-bg:  #FFF8E1;
+            --ow-bdr: #D4A017;
+            --od-bg:  #FAE0E6;
+            --od-bdr: #C4748A;
         }
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        .collapsed .panel-header {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+```
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+    html, body {
+        height: 100%;
+        overflow: hidden;
+        font-family: 'DM Sans', sans-serif;
+        background: var(--sand);
+        color: var(--ink);
+        font-size: 13px;
+    }
 
-        .tear-off-btn {
-            background: #ff4d4d;
-            color: white;
-            border: 1px solid #333;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 2px 2px 0px #333;
-        }
-        .tear-off-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #333; }
+    /* ── APP SHELL ─────────────────────────────────────────── */
+    #app {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 7px 9px 5px;
+        gap: 5px;
+    }
 
-        .toggle-btn {
-            background: #666;
-            color: white;
-            border: 1px solid #333;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 2px 2px 0px #333;
-        }
+    /* ── MASTHEAD ──────────────────────────────────────────── */
+    #masthead {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid var(--night);
+        flex-shrink: 0;
+    }
+    .masthead-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--night);
+    }
+    .masthead-sub {
+        font-size: 9px;
+        font-weight: 500;
+        color: var(--ink-light);
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        border-left: 2px solid var(--gold);
+        padding-left: 8px;
+    }
+    .masthead-spacer { flex: 1; }
+    .legend {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-size: 9px;
+        color: var(--ink-mid);
+    }
+    .legend-item { display: flex; align-items: center; gap: 3px; }
+    .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
 
-        .settings-select {
-            font-family: inherit;
-            padding: 4px;
-            border: 1px solid #333;
-            background: #fff;
-        }
+    /* ── MAIN SPLIT ────────────────────────────────────────── */
+    #main {
+        display: flex;
+        gap: 7px;
+        flex: 1;
+        min-height: 0;
+    }
 
-        /* Calendar Layout */
-        .months-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .month-box {
-            border: 1px solid #ccc;
-            padding: 10px;
-            transition: background-color 0.2s;
-        }
-        .month-box.month-hidden { padding: 5px 10px; background: #e8e8e8; }
-        .month-box.month-hidden .calendar-grid { display: none; }
-        .month-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #eee;
-            padding: 2px 6px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        .month-box.month-hidden .month-header-row { margin-bottom: 0; }
-        .month-actions { display: flex; gap: 4px; }
-        .month-btn {
-            background: #fff;
-            border: 1px solid #777;
-            cursor: pointer;
-            font-size: 11px;
-            padding: 2px 6px;
-            font-family: inherit;
-        }
-        .month-btn.purge:hover { background: #ffcccc; }
+    /* ── PANE CHROME ───────────────────────────────────────── */
+    .pane {
+        display: flex;
+        flex-direction: column;
+        background: var(--white);
+        border: 1.5px solid var(--night);
+        border-radius: 3px;
+        box-shadow: 3px 3px 0 var(--night);
+        min-height: 0;
+        overflow: hidden;
+    }
+    .pane-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 8px;
+        background: var(--night);
+        flex-shrink: 0;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    .pane-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .pane-actions { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
 
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            text-align: center;
-            font-size: 12px;
-        }
-        .day-header { font-weight: bold; background: #ddd; padding: 2px; }
-        
-        .day-cell {
-            border: 1px solid #eee;
-            min-height: 55px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: #fafafa;
-            padding: 4px;
-            box-sizing: border-box;
-            transition: background-color 0.3s;
-        }
-        
-        /* Overload Threshold Styling Rules */
-        .day-cell.overload-warning { background-color: #fff3cd !important; border-color: #ffeba0; } /* 3-4 tasks assigned */
-        .day-cell.overload-danger { background-color: #f8d7da !important; border-color: #f5c6cb; }  /* 5+ tasks assigned */
-        
-        .day-number { font-size: 10px; text-align: left; color: #666; }
-        
-        .day-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-            font-family: inherit;
-            font-weight: bold;
-            color: #0056b3;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .day-input:focus { background: #ffffcc; outline: none; }
-        .day-input.task-struck-out { text-decoration: line-through; color: #bbb; font-style: italic; }
+    .pane-scroll {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 0;
+        padding: 5px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--sand-deeper) transparent;
+    }
+    .pane-scroll::-webkit-scrollbar { width: 4px; }
+    .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
 
-        /* To-Do List Layout */
-        .todo-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 16px;
-            gap: 10px;
-        }
-        .todo-item.hidden-task-style { background: #f0f0f0; opacity: 0.6; border-left: 3px dashed #999; padding-left: 4px; }
-        .todo-number { font-weight: bold; width: 40px; color: #555; }
-        
-        /* Badge tags */
-        .todo-tag {
-            font-size: 11px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #fff;
-            text-transform: uppercase;
-        }
-        .todo-tag.tag-w { background-color: #0056b3; }
-        .todo-tag.tag-l { background-color: #28a745; }
+    /* ── CALENDAR PANE ─────────────────────────────────────── */
+    #cal-pane { flex: 1.2; }
 
-        .todo-text { cursor: pointer; flex-grow: 1; }
-        .completed .todo-text { text-decoration: line-through; color: #999; }
-        
-        .action-btn { background: transparent; border: none; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 3px; }
-        .action-btn:hover { background: #ddd; }
-        .action-btn.delete-item-btn:hover { background: #ffcccc; }
+    .months-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .month-box {
+        border: 1px solid var(--sand-deeper);
+        border-radius: 2px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .month-box.month-hidden { }
+    .month-box.month-hidden .calendar-grid { display: none; }
 
-        .todo-input-zone {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        #new-todo { flex-grow: 1; padding: 6px; font-family: inherit; }
-        
-        /* Analytics Cards */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            font-size: 14px;
-        }
-        .stat-card {
-            background: #f8f9fa;
-            border: 1px solid #333;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .stat-val { font-size: 18px; font-weight: bold; color: #0056b3; margin-top: 5px;}
-    </style>
+    .month-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--night-mid);
+        color: var(--gold);
+        padding: 3px 6px;
+        font-family: 'Playfair Display', serif;
+        font-size: 10px;
+        font-weight: 600;
+    }
+    .month-box.month-hidden .month-header-row { background: var(--sand-deeper); color: var(--ink-mid); }
+    .month-actions { display: flex; gap: 3px; }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        background: var(--sand-deeper);
+    }
+    .day-header {
+        background: var(--sand-dark);
+        color: var(--ink-light);
+        text-align: center;
+        font-size: 8px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        padding: 2px 0;
+    }
+    .day-cell {
+        background: var(--white);
+        display: flex;
+        flex-direction: column;
+        padding: 2px 2px 1px;
+        min-height: 40px;
+        transition: background 0.12s;
+    }
+    .day-cell:hover { background: var(--sand); }
+    .day-number {
+        font-size: 7px;
+        font-weight: 600;
+        color: var(--ink-light);
+        line-height: 1;
+        margin-bottom: 1px;
+    }
+    .day-input {
+        flex: 1;
+        width: 100%;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        color: var(--purushartha);
+        font-size: 10px;
+        outline: none;
+        padding: 0;
+        line-height: 1.2;
+    }
+    .day-input:focus { background: var(--gold-pale); border-radius: 1px; }
+    .day-input::placeholder { color: var(--sand-deeper); font-weight: 300; font-size: 9px; }
+    .day-input.task-struck-out { text-decoration: line-through; color: var(--ink-light); font-style: italic; }
+    .day-cell.overload-warning { background: var(--ow-bg) !important; outline: 1px solid var(--ow-bdr); }
+    .day-cell.overload-danger  { background: var(--od-bg) !important; outline: 1px solid var(--od-bdr); }
+
+    /* ── TODO PANE ─────────────────────────────────────────── */
+    #todo-pane { flex: 0.8; }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 3px;
+        border-bottom: 1px solid var(--sand);
+        min-height: 24px;
+        transition: background 0.1s;
+    }
+    .todo-item:hover { background: var(--sand); }
+    .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
+    .todo-item.hidden-task-style {
+        background: var(--sand-dark); opacity: 0.6;
+        border-left: 2px dashed var(--ink-light);
+    }
+    .todo-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--prarabdha);
+        min-width: 24px;
+    }
+    .todo-tag {
+        font-size: 8px;
+        font-weight: 700;
+        padding: 1px 4px;
+        border-radius: 1px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+    .todo-tag.tag-w { background: var(--purushartha); color: var(--white); }
+    .todo-tag.tag-l { background: var(--teal); color: var(--white); }
+
+    .todo-text {
+        cursor: pointer;
+        flex-grow: 1;
+        font-size: 11px;
+        color: var(--ink);
+        line-height: 1.25;
+    }
+    .action-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 10px;
+        padding: 1px 3px;
+        border-radius: 2px;
+        opacity: 0.45;
+        line-height: 1;
+        transition: opacity 0.1s, background 0.1s;
+    }
+    .action-btn:hover { opacity: 1; background: var(--sand-dark); }
+    .action-btn.delete-item-btn:hover { background: var(--mauve-pale); }
+
+    .todo-add-bar {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 4px 5px;
+        border-top: 1px dashed var(--sand-deeper);
+        background: var(--white);
+        flex-shrink: 0;
+    }
+    .todo-add-bar input { flex: 1; min-width: 0; }
+
+    /* ── BUTTONS ───────────────────────────────────────────── */
+    .btn {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 600;
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 2px 7px;
+        cursor: pointer;
+        border-radius: 2px;
+        letter-spacing: 0.2px;
+        transition: opacity 0.08s;
+        white-space: nowrap;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-tear   { background: var(--mauve); color: var(--white); }
+    .btn-show-hidden { background: var(--teal); color: var(--white); border: none; }
+    .btn-show-hidden.active { background: var(--gold); color: var(--night); }
+    .btn-add {
+        background: var(--purushartha); color: var(--white);
+        font-size: 11px; padding: 3px 9px; border: none;
+        border-radius: 2px; cursor: pointer;
+        font-family: 'DM Sans', sans-serif; font-weight: 600;
+    }
+    .btn-ghost {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: rgba(255,255,255,0.7);
+        font-size: 8px;
+        padding: 1px 5px;
+        cursor: pointer;
+        border-radius: 2px;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.12); }
+    .btn-ghost.purge:hover { background: rgba(196,116,138,0.3); }
+
+    select, input[type="text"] {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 10px;
+        border: 1px solid var(--sand-deeper);
+        border-radius: 2px;
+        padding: 2px 5px;
+        background: var(--white);
+        color: var(--ink);
+        outline: none;
+    }
+    select:focus, input[type="text"]:focus {
+        border-color: var(--teal);
+    }
+
+    /* ── ANALYTICS BAR ─────────────────────────────────────── */
+    #analytics-bar {
+        display: flex;
+        gap: 0;
+        align-items: center;
+        flex-shrink: 0;
+        background: var(--night);
+        border: 1.5px solid var(--night);
+        border-radius: 3px;
+        padding: 4px 10px;
+        overflow: hidden;
+        transition: padding 0.2s;
+    }
+    #analytics-bar.collapsed { padding: 3px 10px; }
+    #analytics-bar.collapsed .stat-pill { display: none; }
+
+    .stat-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        padding: 0 8px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-pill:first-child { padding-left: 0; }
+    .stat-pill:last-of-type { border-right: none; }
+
+    .stat-label {
+        font-size: 8px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: rgba(212,160,23,0.7);
+        white-space: nowrap;
+    }
+    .stat-val {
+        font-family: 'Playfair Display', serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--white);
+    }
+    .stat-val.multi {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 10px;
+    }
+    #analytics-toggle {
+        background: transparent; border: none; cursor: pointer;
+        color: rgba(255,255,255,0.4); font-size: 9px;
+        padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif;
+        flex-shrink: 0;
+    }
+    #analytics-toggle:hover { color: var(--white); }
+</style>
+```
+
 </head>
 <body>
+<div id="app">
 
-    <!-- TOP PANEL: 3-MONTH CALENDAR -->
-    <div id="top-panel" class="panel">
-        <div class="panel-header">
-            <h2>3-Month Planning Window</h2>
-            <div class="header-actions">
-                <button class="tear-off-btn" onclick="tearOffCalendar()">✂ Tear Off Full Calendar</button>
-                <button class="toggle-btn" id="toggle-cal-btn" onclick="togglePanel('top-panel', 'toggle-cal-btn')">Hide Panel</button>
+```
+<!-- MASTHEAD -->
+<div id="masthead">
+    <span class="masthead-title">Split Tear-Off Planner</span>
+    <span class="masthead-sub">Banyan Logic</span>
+    <div class="masthead-spacer"></div>
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
+            <span>3–4 tasks</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
+            <span>5+ tasks</span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN SPLIT -->
+<div id="main">
+
+    <!-- CALENDAR PANE -->
+    <div class="pane" id="cal-pane">
+        <div class="pane-header">
+            <span class="pane-title">3-Month Calendar</span>
+            <div class="pane-actions">
+                <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
             </div>
         </div>
-        <div class="panel-content">
+        <div class="pane-scroll">
             <div class="months-container" id="calendar-container"></div>
         </div>
     </div>
 
-    <!-- BOTTOM PANEL: NUMBERED TO-DOS -->
-    <div id="bottom-panel" class="panel">
-        <div class="panel-header">
-            <h2>Numbered To-Do List</h2>
-            <div class="header-actions">
-                <button id="show-hidden-toggle" class="toggle-btn" style="background:#5cb85c;" onclick="toggleShowHiddenTasks()">Show Hidden Tasks</button>
-                
-                <label for="purge-setting" style="font-size: 12px; font-weight: bold; margin-left:10px;">Auto-Purge Done:</label>
-                <select id="purge-setting" class="settings-select" onchange="changePurgeSetting(this.value)">
-                    <option value="never">Never (Manual)</option>
-                    <option value="1">After 1 Day</option>
-                    <option value="3">After 3 Days</option>
-                    <option value="7">After 7 Days</option>
+    <!-- TODO PANE -->
+    <div class="pane" id="todo-pane">
+        <div class="pane-header">
+            <span class="pane-title">To-Do List</span>
+            <div class="pane-actions">
+                <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">Show Hidden</button>
+                <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
+                    <option value="never">No purge</option>
+                    <option value="1">Purge 1d</option>
+                    <option value="3">Purge 3d</option>
+                    <option value="7">Purge 7d</option>
                 </select>
-                <button class="tear-off-btn" onclick="tearOffTodos()">✂ Tear Off Done Tasks</button>
-                <button class="toggle-btn" id="toggle-todo-btn" onclick="togglePanel('bottom-panel', 'toggle-todo-btn')">Hide Panel</button>
+                <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
             </div>
         </div>
-        <div class="panel-content">
-            <div id="todo-list"></div>
-            <div class="todo-input-zone">
-                <input type="text" id="new-todo" placeholder="Enter a new task..." onkeypress="if(event.key === 'Enter') addTodo()">
-                <select id="new-todo-tag" class="settings-select" style="padding: 5px;">
-                    <option value="W">Work [W]</option>
-                    <option value="L">Living [L]</option>
-                </select>
-                <button style="padding: 5px 15px; font-weight: bold;" onclick="addTodo()">Add</button>
-            </div>
+        <div class="pane-scroll" id="todo-list"></div>
+        <div class="todo-add-bar">
+            <input type="text" id="new-todo" placeholder="New task…"
+                onkeypress="if(event.key==='Enter') addTodo()">
+            <select id="new-todo-tag">
+                <option value="W">W</option>
+                <option value="L">L</option>
+            </select>
+            <button class="btn-add" onclick="addTodo()">Add</button>
         </div>
     </div>
 
-    <!-- METRICS & ANALYTICS PANEL -->
-    <div id="analytics-panel" class="panel">
-        <div class="panel-header">
-            <h2>Productivity Metrics & Analytics</h2>
-            <button class="toggle-btn" id="toggle-analytics-btn" onclick="togglePanel('analytics-panel', 'toggle-analytics-btn')">Hide Panel</button>
-        </div>
-        <div class="panel-content">
-            <div class="analytics-grid">
-                <div class="stat-card">
-                    <div>Busiest Output Day (Day of Week):</div>
-                    <div id="stat-peak-day" class="stat-val">No Data Yet</div>
-                </div>
-                <div class="stat-card">
-                    <div>Highest Production Week (This Month):</div>
-                    <div id="stat-peak-week" class="stat-val">No Data Yet</div>
-                </div>
-                <div class="stat-card">
-                    <div>Active Task Allocation:</div>
-                    <div id="stat-tag-ratio" class="stat-val" style="font-size:14px; color: #333;">W: 0 | L: 0</div>
-                </div>
-            </div>
-        </div>
+</div>
+
+<!-- ANALYTICS FOOTER BAR -->
+<div id="analytics-bar">
+    <div class="stat-pill">
+        <span class="stat-label">Peak Day</span>
+        <span id="stat-peak-day" class="stat-val">—</span>
     </div>
+    <div class="stat-pill">
+        <span class="stat-label">Best Week</span>
+        <span id="stat-peak-week" class="stat-val">—</span>
+    </div>
+    <div class="stat-pill">
+        <span class="stat-label">Tasks W · L</span>
+        <span id="stat-tag-ratio" class="stat-val multi">0 · 0</span>
+    </div>
+    <button id="analytics-toggle" onclick="toggleAnalytics()" title="Collapse">▼</button>
+</div>
+```
 
-    <script>
-        // --- DATA SETUP & LOCAL STORAGE ---
-        let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
-        let nextTodoId = parseInt(localStorage.getItem('planner_next_id')) || 1;
-        let calendarData = JSON.parse(localStorage.getItem('planner_calendar')) || {};
-        let hiddenMonths = JSON.parse(localStorage.getItem('planner_hidden_months')) || {};
-        let purgeThresholdDays = localStorage.getItem('planner_purge_days') || 'never';
-        let showHiddenTasksState = false; 
+</div>
 
-        document.getElementById('purge-setting').value = purgeThresholdDays;
+<script>
+    // ─── STATE ───────────────────────────────────────────────────────────────
+    let todos              = JSON.parse(localStorage.getItem('planner_todos'))         || [];
+    let nextTodoId         = parseInt(localStorage.getItem('planner_next_id'))         || 1;
+    let calendarData       = JSON.parse(localStorage.getItem('planner_calendar'))      || {};
+    let hiddenMonths       = JSON.parse(localStorage.getItem('planner_hidden_months')) || {};
+    let purgeThresholdDays = localStorage.getItem('planner_purge_days')                || 'never';
+    let showHiddenTasksState = false;
+    let analyticsCollapsed   = false;
 
-        // --- PANEL DISPLAY TOGGLES ---
-        function togglePanel(panelId, btnId) {
-            const panel = document.getElementById(panelId);
-            const btn = document.getElementById(btnId);
-            if (panel.classList.contains('collapsed')) {
-                panel.classList.remove('collapsed');
-                btn.innerText = "Hide Panel";
-            } else {
-                panel.classList.add('collapsed');
-                btn.innerText = "Show Panel";
-            }
-        }
+    document.getElementById('purge-setting').value = purgeThresholdDays;
 
-        function toggleShowHiddenTasks() {
-            showHiddenTasksState = !showHiddenTasksState;
-            document.getElementById('show-hidden-toggle').innerText = showHiddenTasksState ? "Hide Hidden Tasks" : "Show Hidden Tasks";
-            document.getElementById('show-hidden-toggle').style.background = showHiddenTasksState ? "#f0ad4e" : "#5cb85c";
-            renderTodos();
-        }
+    // ─── ANALYTICS TOGGLE ────────────────────────────────────────────────────
+    function toggleAnalytics() {
+        analyticsCollapsed = !analyticsCollapsed;
+        document.getElementById('analytics-bar').classList.toggle('collapsed', analyticsCollapsed);
+        document.getElementById('analytics-toggle').innerText = analyticsCollapsed ? '▲' : '▼';
+    }
 
-        // --- AUTOMATIC PURGE ENGINE ---
-        function runAutoPurgeCheck() {
-            if (purgeThresholdDays === 'never') return;
-            const targetDays = parseInt(purgeThresholdDays);
-            const now = new Date().getTime();
-            const msThreshold = targetDays * 24 * 60 * 60 * 1000;
-            const originalLength = todos.length;
-            
-            todos = todos.filter(todo => {
-                if (!todo.completed || !todo.completedAt) return true;
-                return (now - todo.completedAt) < msThreshold;
-            });
-
-            if (todos.length !== originalLength) {
-                localStorage.setItem('planner_todos', JSON.stringify(todos));
-                renderTodos();
-                renderCalendar();
-                calculateAnalytics();
-            }
-        }
-
-        function changePurgeSetting(val) {
-            purgeThresholdDays = val;
-            localStorage.setItem('planner_purge_days', val);
-            runAutoPurgeCheck();
-        }
-
-        // --- CALENDAR MANAGEMENT ---
-        function renderCalendar() {
-            const container = document.getElementById('calendar-container');
-            container.innerHTML = '';
-            const d = new Date();
-            let currentMonth = d.getMonth();
-            let currentYear = d.getFullYear();
-
-            for (let m = 0; m < 3; m++) {
-                let displayMonth = (currentMonth + m) % 12;
-                let displayYear = currentYear + Math.floor((currentMonth + m) / 12);
-                container.appendChild(createMonthElement(displayYear, displayMonth));
-            }
-        }
-
-        function createMonthElement(year, month) {
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const daysShort = ["S", "M", "T", "W", "T", "F", "S"];
-            const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
-            
-            const monthBox = document.createElement('div');
-            monthBox.className = 'month-box';
-            if (hiddenMonths[monthKey]) monthBox.classList.add('month-hidden');
-            
-            const headerRow = document.createElement('div');
-            headerRow.className = 'month-header-row';
-            
-            const titleSpan = document.createElement('span');
-            titleSpan.innerText = `${monthNames[month]} ${year}`;
-            headerRow.appendChild(titleSpan);
-            
-            const actionWrapper = document.createElement('div');
-            actionWrapper.className = 'month-actions';
-            
-            const toggleVisBtn = document.createElement('button');
-            toggleVisBtn.className = 'month-btn';
-            toggleVisBtn.innerText = hiddenMonths[monthKey] ? "👁️ Show" : "👁️ Hide";
-            toggleVisBtn.onclick = () => {
-                hiddenMonths[monthKey] = !hiddenMonths[monthKey];
-                localStorage.setItem('planner_hidden_months', JSON.stringify(hiddenMonths));
-                renderCalendar();
-            };
-            actionWrapper.appendChild(toggleVisBtn);
-            
-            const purgeMonthBtn = document.createElement('button');
-            purgeMonthBtn.className = 'month-btn purge';
-            purgeMonthBtn.innerText = "🗑️ Clear";
-            purgeMonthBtn.onclick = () => purgeSingleMonth(year, month, monthNames[month]);
-            actionWrapper.appendChild(purgeMonthBtn);
-
-            headerRow.appendChild(actionWrapper);
-            monthBox.appendChild(headerRow);
-            
-            const grid = document.createElement('div');
-            grid.className = 'calendar-grid';
-            
-            daysShort.forEach(d => {
-                const head = document.createElement('div');
-                head.className = 'day-header';
-                head.innerText = d;
-                grid.appendChild(head);
-            });
-            
-            const firstDay = new Date(year, month, 1).getDay();
-            for (let i = 0; i < firstDay; i++) {
-                grid.appendChild(document.createElement('div'));
-            }
-            
-            const totalDays = new Date(year, month + 1, 0).getDate();
-            for (let day = 1; day <= totalDays; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'day-cell';
-                
-                const numSpan = document.createElement('div');
-                numSpan.className = 'day-number';
-                numSpan.innerText = day;
-                cell.appendChild(numSpan);
-                
-                const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                const input = document.createElement('input');
-                input.className = 'day-input';
-                input.type = 'text';
-                input.placeholder = "-";
-                input.value = calendarData[dateKey] || '';
-                
-                // Track styling rules for strike-through loops and task overloads
-                evaluateDayOverload(cell, input.value);
-                evaluateStrikeThrough(input, input.value);
-                
-                input.oninput = (e) => {
-                    calendarData[dateKey] = e.target.value;
-                    localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
-                    evaluateStrikeThrough(input, e.target.value);
-                    evaluateDayOverload(cell, e.target.value);
-                };
-                
-                cell.appendChild(input);
-                grid.appendChild(cell);
-            }
-            
-            monthBox.appendChild(grid);
-            return monthBox;
-        }
-
-        function purgeSingleMonth(year, month, monthName) {
-            if (confirm(`Wipe out all planned entries for ${monthName} ${year}?`)) {
-                const prefix = `${year}-${String(month + 1).padStart(2, '0')}-`;
-                Object.keys(calendarData).forEach(key => {
-                    if (key.startsWith(prefix)) delete calendarData[key];
-                });
-                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
-                renderCalendar();
-            }
-        }
-
-        // --- OVERLOAD & STRIKE ENGINE ---
-        function evaluateDayOverload(cellElement, value) {
-            cellElement.classList.remove('overload-warning', 'overload-danger');
-            const foundNumbers = value.match(/\d+/g) || [];
-            const activeTaskCount = foundNumbers.length;
-
-            if (activeTaskCount >= 5) {
-                cellElement.classList.add('overload-danger');  // Crimson warning
-            } else if (activeTaskCount >= 3) {
-                cellElement.classList.add('overload-warning'); // Amber warning
-            }
-        }
-
-        function evaluateStrikeThrough(inputElement, value) {
-            if (!value.trim()) {
-                inputElement.classList.remove('task-struck-out');
-                return;
-            }
-            const foundNumbers = value.match(/\d+/g) || [];
-            if (foundNumbers.length === 0) {
-                inputElement.classList.remove('task-struck-out');
-                return;
-            }
-            const allFinished = foundNumbers.every(numStr => {
-                const id = parseInt(numStr);
-                const match = todos.find(t => t.id === id);
-                return match ? match.completed : false;
-            });
-            if (allFinished) {
-                inputElement.classList.add('task-struck-out');
-            } else {
-                inputElement.classList.remove('task-struck-out');
-            }
-        }
-
-        // --- TO-DO MANAGEMENT ---
-        function renderTodos() {
-            const listDiv = document.getElementById('todo-list');
-            listDiv.innerHTML = '';
-            
-            todos.forEach(todo => {
-                if (todo.hidden && !showHiddenTasksState) return;
-
-                const item = document.createElement('div');
-                item.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-                if (todo.hidden) item.classList.add('hidden-task-style');
-                
-                const num = document.createElement('span');
-                num.className = 'todo-number';
-                num.innerText = `#${todo.id}`;
-                
-                // Color-coded classification tag badge
-                const tagSpan = document.createElement('span');
-                tagSpan.className = `todo-tag tag-${todo.tag.toLowerCase()}`;
-                tagSpan.innerText = todo.tag;
-                
-                const text = document.createElement('span');
-                text.className = 'todo-text';
-                text.innerText = " " + todo.text + (todo.hidden ? " [HIDDEN]" : "");
-                text.onclick = () => toggleTodo(todo.id);
-                
-                const hideBtn = document.createElement('button');
-                hideBtn.className = 'action-btn';
-                hideBtn.innerHTML = todo.hidden ? '👁️' : '👁️‍🗨️';
-                hideBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    toggleHideTodoItem(todo.id);
-                };
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'action-btn delete-item-btn';
-                deleteBtn.innerHTML = '🗑️';
-                deleteBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteTodoItem(todo.id);
-                };
-                
-                item.appendChild(num);
-                item.appendChild(tagSpan);
-                item.appendChild(text);
-                item.appendChild(hideBtn);
-                item.appendChild(deleteBtn);
-                listDiv.appendChild(item);
-            });
-            calculateAnalytics();
-        }
-
-        function addTodo() {
-            const input = document.getElementById('new-todo');
-            const tagSelect = document.getElementById('new-todo-tag');
-            const text = input.value.trim();
-            if (!text) return;
-            
-            todos.push({ 
-                id: nextTodoId, 
-                text: text, 
-                completed: false, 
-                completedAt: null, 
-                hidden: false,
-                tag: tagSelect.value 
-            });
-            nextTodoId++;
-            
-            localStorage.setItem('planner_todos', JSON.stringify(todos));
-            localStorage.setItem('planner_next_id', nextTodoId);
-            
-            input.value = '';
-            renderTodos();
-            renderCalendar(); 
-        }
-
-        function toggleTodo(id) {
-            todos = todos.map(t => {
-                if (t.id === id) {
-                    const nextStatus = !t.completed;
-                    return { 
-                        ...t, 
-                        completed: nextStatus,
-                        completedAt: nextStatus ? new Date().getTime() : null
-                    };
-                }
-                return t;
-            });
-            localStorage.setItem('planner_todos', JSON.stringify(todos));
-            renderTodos();
-            renderCalendar(); 
-        }
-
-        function toggleHideTodoItem(id) {
-            todos = todos.map(t => t.id === id ? { ...t, hidden: !t.hidden } : t);
-            localStorage.setItem('planner_todos', JSON.stringify(todos));
-            renderTodos();
-        }
-
-        function deleteTodoItem(id) {
-            if (confirm(`Destroy task #${id}?`)) {
-                todos = todos.filter(t => t.id !== id);
-                localStorage.setItem('planner_todos', JSON.stringify(todos));
-                renderTodos();
-                renderCalendar();
-            }
-        }
-
-        // --- PRODUCTIVITY METRICS ENGINE ---
-        function calculateAnalytics() {
-            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            let completedTasks = todos.filter(t => t.completed && t.completedAt);
-            
-            // 1. Calculate Day of the week with the most checked boxes
-            let dayCounts = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
-            completedTasks.forEach(t => {
-                const dayOfWeek = new Date(t.completedAt).getDay();
-                dayCounts[dayOfWeek]++;
-            });
-            
-            let bestDayIdx = 0;
-            let maxDayCount = 0;
-            for(let i=0; i<7; i++) {
-                if(dayCounts[i] > maxDayCount) {
-                    maxDayCount = dayCounts[i];
-                    bestDayIdx = i;
-                }
-            }
-            document.getElementById('stat-peak-day').innerText = maxDayCount > 0 ? `${dayNames[bestDayIdx]} (${maxDayCount} done)` : "No items completed yet";
-
-            // 2. Calculate Week of the current month with the most checked boxes
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            let weekCounts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}; // Matrix sizing rows 
-
-            completedTasks.forEach(t => {
-                const compDate = new Date(t.completedAt);
-                if(compDate.getMonth() === currentMonth && compDate.getFullYear() === currentYear) {
-                    const dayOfMonth = compDate.getDate();
-                    // Get correct week indexing based on calendar start row padding offset
-                    const weekNo = Math.ceil((dayOfMonth + new Date(currentYear, currentMonth, 1).getDay()) / 7);
-                    if(weekCounts[weekNo] !== undefined) weekCounts[weekNo]++;
-                }
-            });
-
-            let bestWeekIdx = 1;
-            let maxWeekCount = 0;
-            for(let w in weekCounts) {
-                if(weekCounts[w] > maxWeekCount) {
-                    maxWeekCount = weekCounts[w];
-                    bestWeekIdx = w;
-                }
-            }
-            document.getElementById('stat-peak-week').innerText = maxWeekCount > 0 ? `Week ${bestWeekIdx} (${maxWeekCount} done)` : "No work logged this month";
-
-            // 3. Simple contextual categorization metrics
-            let workCount = todos.filter(t => t.tag === 'W' && !t.hidden).length;
-            let livingCount = todos.filter(t => t.tag === 'L' && !t.hidden).length;
-            document.getElementById('stat-tag-ratio').innerHTML = `Active Tasks:<br><span style="color:#0056b3; font-weight:bold;">Work [W]: ${workCount}</span><br><span style="color:#28a745; font-weight:bold;">Living [L]: ${livingCount}</span>`;
-        }
-
-        // --- TEAR-OFF OPERATIONS ---
-        function tearOffCalendar() {
-            if (confirm("Tear off all calendar entries?")) {
-                calendarData = {};
-                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
-                renderCalendar();
-            }
-        }
-
-        function tearOffTodos() {
-            if (confirm("Tear off page? This removes completed tasks entirely.")) {
-                todos = todos.filter(t => !t.completed);
-                localStorage.setItem('planner_todos', JSON.stringify(todos));
-                renderTodos();
-                renderCalendar();
-            }
-        }
-
-        // --- INITIALIZATION ---
-        renderCalendar();
+    // ─── SHOW HIDDEN ─────────────────────────────────────────────────────────
+    function toggleShowHiddenTasks() {
+        showHiddenTasksState = !showHiddenTasksState;
+        const btn = document.getElementById('show-hidden-toggle');
+        btn.innerText = showHiddenTasksState ? 'Hide Hidden' : 'Show Hidden';
+        btn.classList.toggle('active', showHiddenTasksState);
         renderTodos();
+    }
+
+    // ─── AUTO-PURGE ──────────────────────────────────────────────────────────
+    function runAutoPurgeCheck() {
+        if (purgeThresholdDays === 'never') return;
+        const ms = parseInt(purgeThresholdDays) * 86400000;
+        const before = todos.length;
+        todos = todos.filter(t => !t.completed || !t.completedAt || (Date.now() - t.completedAt) < ms);
+        if (todos.length !== before) { save(); renderTodos(); renderCalendar(); calculateAnalytics(); }
+    }
+
+    function changePurgeSetting(val) {
+        purgeThresholdDays = val;
+        localStorage.setItem('planner_purge_days', val);
         runAutoPurgeCheck();
-        setInterval(runAutoPurgeCheck, 3600000);
-    </script>
+    }
+
+    // ─── CALENDAR ────────────────────────────────────────────────────────────
+    function renderCalendar() {
+        const container = document.getElementById('calendar-container');
+        container.innerHTML = '';
+        const d = new Date();
+        for (let m = 0; m < 3; m++) {
+            const mo = (d.getMonth() + m) % 12;
+            const yr = d.getFullYear() + Math.floor((d.getMonth() + m) / 12);
+            container.appendChild(createMonthElement(yr, mo));
+        }
+    }
+
+    function createMonthElement(year, month) {
+        const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const DAYS   = ["S","M","T","W","T","F","S"];
+        const mk = `${year}-${String(month+1).padStart(2,'0')}`;
+
+        const box = document.createElement('div');
+        box.className = 'month-box' + (hiddenMonths[mk] ? ' month-hidden' : '');
+
+        const hdr = document.createElement('div');
+        hdr.className = 'month-header-row';
+
+        const title = document.createElement('span');
+        title.innerText = `${MONTHS[month]} ${year}`;
+        hdr.appendChild(title);
+
+        const acts = document.createElement('div');
+        acts.className = 'month-actions';
+
+        const visBtn = document.createElement('button');
+        visBtn.className = 'btn-ghost';
+        visBtn.innerText = hiddenMonths[mk] ? '👁 Show' : '👁 Hide';
+        visBtn.onclick = () => {
+            hiddenMonths[mk] = !hiddenMonths[mk];
+            localStorage.setItem('planner_hidden_months', JSON.stringify(hiddenMonths));
+            renderCalendar();
+        };
+        acts.appendChild(visBtn);
+
+        const clearBtn = document.createElement('button');
+        clearBtn.className = 'btn-ghost purge';
+        clearBtn.innerText = '🗑 Clear';
+        clearBtn.onclick = () => purgeSingleMonth(year, month, MONTHS[month]);
+        acts.appendChild(clearBtn);
+
+        hdr.appendChild(acts);
+        box.appendChild(hdr);
+
+        if (hiddenMonths[mk]) return box;
+
+        const grid = document.createElement('div');
+        grid.className = 'calendar-grid';
+
+        DAYS.forEach(d => {
+            const h = document.createElement('div');
+            h.className = 'day-header';
+            h.innerText = d;
+            grid.appendChild(h);
+        });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+
+        const totalDays = new Date(year, month+1, 0).getDate();
+        for (let day = 1; day <= totalDays; day++) {
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+
+            const num = document.createElement('div');
+            num.className = 'day-number';
+            num.innerText = day;
+            cell.appendChild(num);
+
+            const dk = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const inp = document.createElement('input');
+            inp.className = 'day-input';
+            inp.type = 'text';
+            inp.placeholder = '·';
+            inp.value = calendarData[dk] || '';
+            inp.setAttribute('spellcheck', 'false');
+
+            evaluateDayOverload(cell, inp.value);
+            evaluateStrikeThrough(inp, inp.value);
+
+            inp.oninput = e => {
+                calendarData[dk] = e.target.value;
+                localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                evaluateStrikeThrough(inp, e.target.value);
+                evaluateDayOverload(cell, e.target.value);
+            };
+
+            cell.appendChild(inp);
+            grid.appendChild(cell);
+        }
+
+        box.appendChild(grid);
+        return box;
+    }
+
+    function purgeSingleMonth(year, month, name) {
+        if (!confirm(`Clear all entries for ${name} ${year}?`)) return;
+        const prefix = `${year}-${String(month+1).padStart(2,'0')}-`;
+        Object.keys(calendarData).forEach(k => { if (k.startsWith(prefix)) delete calendarData[k]; });
+        localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+        renderCalendar();
+    }
+
+    // ─── OVERLOAD & STRIKE ───────────────────────────────────────────────────
+    function evaluateDayOverload(cell, val) {
+        cell.classList.remove('overload-warning','overload-danger');
+        const n = (val.match(/\d+/g) || []).length;
+        if      (n >= 5) cell.classList.add('overload-danger');
+        else if (n >= 3) cell.classList.add('overload-warning');
+    }
+
+    function evaluateStrikeThrough(inp, val) {
+        if (!val.trim()) { inp.classList.remove('task-struck-out'); return; }
+        const nums = val.match(/\d+/g) || [];
+        if (!nums.length) { inp.classList.remove('task-struck-out'); return; }
+        const allDone = nums.every(n => {
+            const t = todos.find(t => t.id === parseInt(n));
+            return t ? t.completed : false;
+        });
+        inp.classList.toggle('task-struck-out', allDone);
+    }
+
+    // ─── TO-DO ───────────────────────────────────────────────────────────────
+    function renderTodos() {
+        const list = document.getElementById('todo-list');
+        list.innerHTML = '';
+
+        todos.forEach(todo => {
+            if (todo.hidden && !showHiddenTasksState) return;
+
+            const item = document.createElement('div');
+            item.className = `todo-item${todo.completed ? ' completed' : ''}${todo.hidden ? ' hidden-task-style' : ''}`;
+
+            const num = document.createElement('span');
+            num.className = 'todo-number';
+            num.innerText = `#${todo.id}`;
+
+            const tag = document.createElement('span');
+            tag.className = `todo-tag tag-${todo.tag.toLowerCase()}`;
+            tag.innerText = todo.tag;
+
+            const txt = document.createElement('span');
+            txt.className = 'todo-text';
+            txt.innerText = todo.text + (todo.hidden ? ' [hidden]' : '');
+            txt.onclick = () => toggleTodo(todo.id);
+
+            const hideBtn = document.createElement('button');
+            hideBtn.className = 'action-btn';
+            hideBtn.innerHTML = todo.hidden ? '👁' : '🫣';
+            hideBtn.title = todo.hidden ? 'Un-hide' : 'Hide';
+            hideBtn.onclick = e => { e.stopPropagation(); toggleHideTodoItem(todo.id); };
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'action-btn delete-item-btn';
+            delBtn.innerHTML = '🗑';
+            delBtn.title = 'Delete';
+            delBtn.onclick = e => { e.stopPropagation(); deleteTodoItem(todo.id); };
+
+            item.append(num, tag, txt, hideBtn, delBtn);
+            list.appendChild(item);
+        });
+
+        calculateAnalytics();
+    }
+
+    function addTodo() {
+        const inp = document.getElementById('new-todo');
+        const tag = document.getElementById('new-todo-tag').value;
+        const text = inp.value.trim();
+        if (!text) return;
+        todos.push({ id: nextTodoId, text, completed: false, completedAt: null, hidden: false, tag });
+        nextTodoId++;
+        save();
+        inp.value = '';
+        renderTodos();
+        renderCalendar();
+    }
+
+    function toggleTodo(id) {
+        todos = todos.map(t => t.id !== id ? t : {
+            ...t, completed: !t.completed, completedAt: !t.completed ? Date.now() : null
+        });
+        save(); renderTodos(); renderCalendar();
+    }
+
+    function toggleHideTodoItem(id) {
+        todos = todos.map(t => t.id === id ? { ...t, hidden: !t.hidden } : t);
+        save(); renderTodos();
+    }
+
+    function deleteTodoItem(id) {
+        if (!confirm(`Permanently delete task #${id}?`)) return;
+        todos = todos.filter(t => t.id !== id);
+        save(); renderTodos(); renderCalendar();
+    }
+
+    function save() {
+        localStorage.setItem('planner_todos',   JSON.stringify(todos));
+        localStorage.setItem('planner_next_id', nextTodoId);
+    }
+
+    // ─── ANALYTICS ───────────────────────────────────────────────────────────
+    function calculateAnalytics() {
+        const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+        const done = todos.filter(t => t.completed && t.completedAt);
+
+        const dc = {0:0,1:0,2:0,3:0,4:0,5:0,6:0};
+        done.forEach(t => dc[new Date(t.completedAt).getDay()]++);
+        let bestDay = 0, maxDC = 0;
+        for (let i=0;i<7;i++) if (dc[i] > maxDC) { maxDC = dc[i]; bestDay = i; }
+        document.getElementById('stat-peak-day').innerText =
+            maxDC > 0 ? `${DAY_NAMES[bestDay]} (${maxDC})` : '—';
+
+        const now = new Date();
+        const wc = {1:0,2:0,3:0,4:0,5:0};
+        done.forEach(t => {
+            const d = new Date(t.completedAt);
+            if (d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()) {
+                const wn = Math.ceil((d.getDate() + new Date(now.getFullYear(),now.getMonth(),1).getDay()) / 7);
+                if (wc[wn]!==undefined) wc[wn]++;
+            }
+        });
+        let bestWk = 1, maxWC = 0;
+        for (let w in wc) if (wc[w] > maxWC) { maxWC = wc[w]; bestWk = w; }
+        document.getElementById('stat-peak-week').innerText =
+            maxWC > 0 ? `Wk ${bestWk} (${maxWC})` : '—';
+
+        const wCount = todos.filter(t => t.tag==='W' && !t.hidden).length;
+        const lCount = todos.filter(t => t.tag==='L' && !t.hidden).length;
+        document.getElementById('stat-tag-ratio').innerHTML =
+            `<span style="color:#7EB3E8;font-weight:600;">${wCount}</span> · <span style="color:#5BBFB5;">${lCount}</span>`;
+    }
+
+    // ─── TEAR-OFF ────────────────────────────────────────────────────────────
+    function tearOffCalendar() {
+        if (!confirm('Clear all calendar entries?')) return;
+        calendarData = {};
+        localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+        renderCalendar();
+    }
+
+    function tearOffTodos() {
+        if (!confirm('Remove all completed tasks?')) return;
+        todos = todos.filter(t => !t.completed);
+        save(); renderTodos(); renderCalendar();
+    }
+
+    // ─── INIT ────────────────────────────────────────────────────────────────
+    renderCalendar();
+    renderTodos();
+    runAutoPurgeCheck();
+    setInterval(runAutoPurgeCheck, 3600000);
+</script>
+
 </body>
 </html>
