@@ -17,6 +17,7 @@
             --gold:        #D4A017;
             --gold-pale:   #F5E8B8;
             --teal:        #2A7B7C;
+            --teal-pale:   #C8EAEA;
             --mauve:       #C4748A;
             --mauve-pale:  #F5E0E6;
             --ink:         #2C2416;
@@ -242,6 +243,12 @@
         transition: background 0.1s;
     }
     .todo-item:hover { background: var(--sand); }
+    .todo-item[draggable="true"] { cursor: grab; }
+    .todo-item.dragging { opacity: 0.4; background: var(--gold-pale); }
+    .day-cell.drag-over {
+        background: var(--teal-pale, #D0EEEE) !important;
+        outline: 2px dashed var(--teal) !important;
+    }
     .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
     .todo-item.hidden-task-style {
         background: var(--sand-dark); opacity: 0.6;
@@ -635,6 +642,29 @@
             };
 
             cell.appendChild(inp);
+
+            cell.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                cell.classList.add('drag-over');
+            });
+            cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
+            cell.addEventListener('drop', e => {
+                e.preventDefault();
+                cell.classList.remove('drag-over');
+                const todoId = e.dataTransfer.getData('text/plain');
+                if (!todoId) return;
+                const current = inp.value.trim();
+                const ids = current ? current.split(',').map(s => s.trim()) : [];
+                if (!ids.includes(todoId)) {
+                    inp.value = ids.length ? current + ',' + todoId : todoId;
+                    calendarData[dk] = inp.value;
+                    localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
+                    evaluateStrikeThrough(inp, inp.value);
+                    evaluateDayOverload(cell, inp.value);
+                }
+            });
+
             grid.appendChild(cell);
         }
 
@@ -679,6 +709,13 @@
 
             const item = document.createElement('div');
             item.className = `todo-item${todo.completed ? ' completed' : ''}${todo.hidden ? ' hidden-task-style' : ''}`;
+            item.draggable = true;
+            item.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', todo.id);
+                e.dataTransfer.effectAllowed = 'copy';
+                item.classList.add('dragging');
+            });
+            item.addEventListener('dragend', () => item.classList.remove('dragging'));
 
             const num = document.createElement('span');
             num.className = 'todo-number';
