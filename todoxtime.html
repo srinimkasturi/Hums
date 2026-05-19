@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Split Tear-Off Planner · Banyan Logic</title>
+    <title>ToDo X Calendar / Kanban - Banyan Logic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -29,15 +29,19 @@
             --ow-bdr: #D4A017;
             --od-bg:  #FAE0E6;
             --od-bdr: #C4748A;
+
+            --funnel-col:      #4A6FA5;
+            --analyzing-col:   #7B5EA7;
+            --ready-col:       #2A7B7C;
+            --implementing-col:#C4740A;
+            --done-col:        #3A7A4A;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
             font-family: 'DM Sans', sans-serif;
             background: var(--sand);
@@ -45,7 +49,6 @@
             font-size: 13px;
         }
 
-        /* -- APP SHELL --- */
         #app {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -56,7 +59,7 @@
             overflow: hidden;
         }
 
-        /* -- MASTHEAD --- */
+        /* MASTHEAD */
         #masthead {
             display: flex;
             align-items: center;
@@ -81,17 +84,38 @@
             padding-left: 8px;
         }
         .masthead-spacer { flex: 1; }
-        .legend {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 9px;
-            color: var(--ink-mid);
-        }
+        .legend { display: flex; gap: 10px; align-items: center; font-size: 9px; color: var(--ink-mid); }
         .legend-item { display: flex; align-items: center; gap: 3px; }
         .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
 
-        /* -- MAIN SPLIT --- */
+        /* VIEW TABS */
+        .view-tabs {
+            display: flex;
+            gap: 3px;
+            background: var(--night);
+            border-radius: 3px;
+            padding: 3px;
+        }
+        .view-tab {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.15s;
+        }
+        .view-tab.active {
+            background: var(--gold);
+            color: var(--night);
+        }
+
+        /* MAIN SPLIT */
         #main {
             display: flex;
             gap: 7px;
@@ -99,7 +123,16 @@
             min-height: 0;
         }
 
-        /* -- PANE CHROME --- */
+        /* LEFT PANE (calendar or kanban) */
+        #left-pane {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            min-width: 0;
+        }
+
+        /* PANE CHROME */
         .pane {
             display: flex;
             flex-direction: column;
@@ -109,6 +142,7 @@
             box-shadow: 3px 3px 0 var(--night);
             min-height: 0;
             overflow: hidden;
+            flex: 1;
         }
         .pane-header {
             display: flex;
@@ -145,281 +179,234 @@
         .pane-scroll::-webkit-scrollbar { width: 4px; }
         .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
 
-        /* -- CALENDAR PANE --- */
-        #cal-pane { flex: 1.2; }
-
-        .months-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .month-box {
-            border: 1px solid var(--sand-deeper);
-            border-radius: 2px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .month-box.month-hidden { }
+        /* CALENDAR */
+        .months-container { display: flex; flex-direction: column; gap: 8px; }
+        .month-box { border: 1px solid var(--sand-deeper); border-radius: 2px; overflow: hidden; flex-shrink: 0; }
         .month-box.month-hidden .calendar-grid { display: none; }
-
         .month-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--night-mid);
-            color: var(--gold);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--night-mid); color: var(--gold);
             padding: 3px 6px;
-            font-family: 'Playfair Display', serif;
-            font-size: 10px;
-            font-weight: 600;
+            font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 600;
         }
         .month-box.month-hidden .month-header-row { background: var(--sand-deeper); color: var(--ink-mid); }
         .month-actions { display: flex; gap: 3px; }
-
         .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: var(--sand-deeper);
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 1px; background: var(--sand-deeper);
         }
         .day-header {
-            background: var(--sand-dark);
-            color: var(--ink-light);
-            text-align: center;
-            font-size: 8px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            padding: 2px 0;
+            background: var(--sand-dark); color: var(--ink-light);
+            text-align: center; font-size: 8px; font-weight: 600;
+            letter-spacing: 0.3px; text-transform: uppercase; padding: 2px 0;
         }
         .day-cell {
-            background: var(--white);
-            display: flex;
-            flex-direction: column;
-            padding: 2px 2px 1px;
-            min-height: 40px;
-            transition: background 0.12s;
+            background: var(--white); display: flex; flex-direction: column;
+            padding: 2px 2px 1px; min-height: 40px; transition: background 0.12s;
         }
         .day-cell:hover { background: var(--sand); }
-        .day-number {
-            font-size: 7px;
-            font-weight: 600;
-            color: var(--ink-light);
-            line-height: 1;
-            margin-bottom: 1px;
-        }
+        .day-number { font-size: 7px; font-weight: 600; color: var(--ink-light); line-height: 1; margin-bottom: 1px; }
         .day-input {
-            flex: 1;
-            width: 100%;
-            border: none;
-            background: transparent;
-            text-align: center;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            color: var(--purushartha);
-            font-size: 10px;
-            outline: none;
-            padding: 0;
-            line-height: 1.2;
+            flex: 1; width: 100%; border: none; background: transparent;
+            text-align: center; font-family: 'DM Sans', sans-serif;
+            font-weight: 600; color: var(--purushartha); font-size: 10px;
+            outline: none; padding: 0; line-height: 1.2;
         }
         .day-input:focus { background: var(--gold-pale); border-radius: 1px; }
         .day-input::placeholder { color: var(--sand-deeper); font-weight: 300; font-size: 9px; }
         .day-input.task-struck-out { text-decoration: line-through; color: var(--ink-light); font-style: italic; }
         .day-cell.overload-warning { background: var(--ow-bg) !important; outline: 1px solid var(--ow-bdr); }
         .day-cell.overload-danger  { background: var(--od-bg) !important; outline: 1px solid var(--od-bdr); }
+        .day-cell.drag-over { background: var(--teal-pale) !important; outline: 2px dashed var(--teal) !important; }
 
-        /* -- TODO PANE --- */
-        #todo-pane { flex: 0.8; }
+        /* KANBAN */
+        #kanban-pane { display: none; }
+        #kanban-pane.active { display: flex; }
 
-        .todo-item {
+        .kanban-scroll {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            min-height: 0;
+            padding: 6px;
             display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 3px;
-            border-bottom: 1px solid var(--sand);
-            min-height: 24px;
-            transition: background 0.1s;
+            gap: 6px;
+            -webkit-overflow-scrolling: touch;
         }
-        .todo-item:hover { background: var(--sand); }
-        .todo-item[draggable="true"] { cursor: grab; }
-        .todo-item.dragging { opacity: 0.4; background: var(--gold-pale); }
-        .day-cell.drag-over {
-            background: var(--teal-pale, #D0EEEE) !important;
-            outline: 2px dashed var(--teal) !important;
+
+        .kanban-col {
+            flex: 0 0 140px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1.5px solid var(--sand-deeper);
+            min-height: 0;
         }
-        .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
-        .todo-item.hidden-task-style {
-            background: var(--sand-dark); opacity: 0.6;
-            border-left: 2px dashed var(--ink-light);
-        }
-        .todo-number {
+        .kanban-col-header {
+            padding: 5px 7px;
             font-family: 'Playfair Display', serif;
             font-size: 10px;
             font-weight: 700;
-            color: var(--prarabdha);
-            min-width: 24px;
-        }
-        .todo-tag {
-            font-size: 8px;
-            font-weight: 700;
-            padding: 1px 4px;
-            border-radius: 1px;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
+            color: var(--white);
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             flex-shrink: 0;
         }
+        .kanban-col-header .col-count {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.25);
+            padding: 1px 5px;
+            border-radius: 8px;
+        }
+        .kanban-col[data-col="Funnel"]        .kanban-col-header { background: var(--funnel-col); }
+        .kanban-col[data-col="Analyzing"]     .kanban-col-header { background: var(--analyzing-col); }
+        .kanban-col[data-col="Ready"]         .kanban-col-header { background: var(--ready-col); }
+        .kanban-col[data-col="Implementing"]  .kanban-col-header { background: var(--implementing-col); }
+        .kanban-col[data-col="Done"]          .kanban-col-header { background: var(--done-col); }
+
+        .kanban-col-body {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: var(--sand);
+            -webkit-overflow-scrolling: touch;
+            min-height: 60px;
+        }
+        .kanban-col-body.drag-over {
+            background: var(--teal-pale);
+            outline: 2px dashed var(--teal);
+        }
+
+        .kanban-card {
+            background: var(--white);
+            border: 1px solid var(--sand-deeper);
+            border-radius: 2px;
+            padding: 5px 6px;
+            font-size: 10px;
+            color: var(--ink);
+            cursor: grab;
+            transition: box-shadow 0.12s, opacity 0.12s;
+            box-shadow: 1px 1px 0 var(--sand-deeper);
+        }
+        .kanban-card:hover { box-shadow: 2px 2px 0 var(--sand-deeper); }
+        .kanban-card.dragging { opacity: 0.4; }
+        .kanban-card.completed-card { opacity: 0.55; }
+        .kanban-card.completed-card .kcard-text { text-decoration: line-through; color: var(--ink-light); }
+
+        .kcard-top { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+        .kcard-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 9px; font-weight: 700; color: var(--prarabdha);
+        }
+        .kcard-tag {
+            font-size: 7px; font-weight: 700; padding: 1px 4px;
+            border-radius: 1px; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .kcard-tag.tag-w { background: var(--purushartha); color: var(--white); }
+        .kcard-tag.tag-l { background: var(--teal); color: var(--white); }
+        .kcard-text { font-size: 10px; line-height: 1.3; color: var(--ink); }
+        .kcard-del {
+            float: right; background: transparent; border: none;
+            font-size: 9px; cursor: pointer; opacity: 0.3; padding: 0 2px;
+            line-height: 1;
+        }
+        .kcard-del:hover { opacity: 1; }
+
+        /* TODO PANE */
+        #todo-pane { flex: 0.8; }
+
+        .todo-item {
+            display: flex; align-items: center; gap: 4px;
+            padding: 2px 3px; border-bottom: 1px solid var(--sand);
+            min-height: 24px; transition: background 0.1s;
+        }
+        .todo-item:hover { background: var(--sand); }
+        .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
+        .todo-item.hidden-task-style { background: var(--sand-dark); opacity: 0.6; border-left: 2px dashed var(--ink-light); }
+        .todo-item[draggable="true"] { cursor: grab; }
+        .todo-item.dragging { opacity: 0.4; background: var(--gold-pale); }
+
+        .todo-number { font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 700; color: var(--prarabdha); min-width: 24px; }
+        .todo-tag { font-size: 8px; font-weight: 700; padding: 1px 4px; border-radius: 1px; letter-spacing: 0.4px; text-transform: uppercase; flex-shrink: 0; }
         .todo-tag.tag-w { background: var(--purushartha); color: var(--white); }
         .todo-tag.tag-l { background: var(--teal); color: var(--white); }
-
-        .todo-text {
-            cursor: pointer;
-            flex-grow: 1;
-            font-size: 11px;
-            color: var(--ink);
-            line-height: 1.25;
-        }
-        .action-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 10px;
-            padding: 1px 3px;
-            border-radius: 2px;
-            opacity: 0.45;
-            line-height: 1;
-            transition: opacity 0.1s, background 0.1s;
-        }
+        .todo-text { cursor: pointer; flex-grow: 1; font-size: 11px; color: var(--ink); line-height: 1.25; }
+        .action-btn { background: transparent; border: none; cursor: pointer; font-size: 10px; padding: 1px 3px; border-radius: 2px; opacity: 0.45; line-height: 1; transition: opacity 0.1s, background 0.1s; }
         .action-btn:hover { opacity: 1; background: var(--sand-dark); }
         .action-btn.delete-item-btn:hover { background: var(--mauve-pale); }
 
         .todo-add-bar {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            padding: 4px 5px;
-            border-top: 1px dashed var(--sand-deeper);
-            background: var(--white);
-            flex-shrink: 0;
+            display: flex; gap: 4px; align-items: center;
+            padding: 4px 5px; border-top: 1px dashed var(--sand-deeper);
+            background: var(--white); flex-shrink: 0;
         }
         .todo-add-bar input { flex: 1; min-width: 0; }
 
-        /* -- BUTTONS --- */
+        /* BUTTONS */
         .btn {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 9px;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 2px 7px;
-            cursor: pointer;
-            border-radius: 2px;
-            letter-spacing: 0.2px;
-            transition: opacity 0.08s;
-            white-space: nowrap;
+            font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.3); padding: 2px 7px;
+            cursor: pointer; border-radius: 2px; letter-spacing: 0.2px;
+            transition: opacity 0.08s; white-space: nowrap;
         }
         .btn:active { opacity: 0.8; }
         .btn-tear   { background: var(--mauve); color: var(--white); }
         .btn-show-hidden { background: var(--teal); color: var(--white); border: none; }
         .btn-show-hidden.active { background: var(--gold); color: var(--night); }
-        .btn-add {
-            background: var(--purushartha); color: var(--white);
-            font-size: 11px; padding: 3px 9px; border: none;
-            border-radius: 2px; cursor: pointer;
-            font-family: 'DM Sans', sans-serif; font-weight: 600;
-        }
-        .btn-ghost {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.7);
-            font-size: 8px;
-            padding: 1px 5px;
-            cursor: pointer;
-            border-radius: 2px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 500;
-        }
+        .btn-add { background: var(--purushartha); color: var(--white); font-size: 11px; padding: 3px 9px; border: none; border-radius: 2px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+        .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); font-size: 8px; padding: 1px 5px; cursor: pointer; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-weight: 500; }
         .btn-ghost:hover { background: rgba(255,255,255,0.12); }
         .btn-ghost.purge:hover { background: rgba(196,116,138,0.3); }
 
         select, input[type="text"] {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 10px;
-            border: 1px solid var(--sand-deeper);
-            border-radius: 2px;
-            padding: 2px 5px;
-            background: var(--white);
-            color: var(--ink);
-            outline: none;
+            font-family: 'DM Sans', sans-serif; font-size: 10px;
+            border: 1px solid var(--sand-deeper); border-radius: 2px;
+            padding: 2px 5px; background: var(--white); color: var(--ink); outline: none;
         }
-        select:focus, input[type="text"]:focus {
-            border-color: var(--teal);
-        }
+        select:focus, input[type="text"]:focus { border-color: var(--teal); }
 
-        /* -- ANALYTICS BAR --- */
+        /* ANALYTICS BAR */
         #analytics-bar {
-            display: flex;
-            gap: 0;
-            align-items: center;
-            flex-shrink: 0;
-            background: var(--night);
-            border: 1.5px solid var(--night);
-            border-radius: 3px;
-            padding: 4px 10px;
-            overflow: hidden;
-            transition: padding 0.2s;
+            display: flex; gap: 0; align-items: center; flex-shrink: 0;
+            background: var(--night); border: 1.5px solid var(--night);
+            border-radius: 3px; padding: 4px 10px; overflow: hidden; transition: padding 0.2s;
         }
         #analytics-bar.collapsed { padding: 3px 10px; }
         #analytics-bar.collapsed .stat-pill { display: none; }
-
-        .stat-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex: 1;
-            padding: 0 8px;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
+        .stat-pill { display: flex; align-items: center; gap: 6px; flex: 1; padding: 0 8px; border-right: 1px solid rgba(255,255,255,0.1); }
         .stat-pill:first-child { padding-left: 0; }
         .stat-pill:last-of-type { border-right: none; }
-
-        .stat-label {
-            font-size: 8px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: rgba(212,160,23,0.7);
-            white-space: nowrap;
-        }
-        .stat-val {
-            font-family: 'Playfair Display', serif;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--white);
-        }
-        .stat-val.multi {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 10px;
-        }
-        #analytics-toggle {
-            background: transparent; border: none; cursor: pointer;
-            color: rgba(255,255,255,0.4); font-size: 9px;
-            padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif;
-            flex-shrink: 0;
-        }
+        .stat-label { font-size: 8px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(212,160,23,0.7); white-space: nowrap; }
+        .stat-val { font-family: 'Playfair Display', serif; font-size: 11px; font-weight: 600; color: var(--white); }
+        .stat-val.multi { font-family: 'DM Sans', sans-serif; font-size: 10px; }
+        #analytics-toggle { background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,0.4); font-size: 9px; padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
         #analytics-toggle:hover { color: var(--white); }
     </style>
 </head>
 <body>
 <div id="app">
 
-    <!-- MASTHEAD -->
     <div id="masthead">
-        <span class="masthead-title">Split Tear-Off Planner</span>
+        <span class="masthead-title">ToDo X Calendar / Kanban</span>
         <span class="masthead-sub">Banyan Logic</span>
         <div class="masthead-spacer"></div>
+        <div class="view-tabs">
+            <button class="view-tab active" id="tab-cal" onclick="switchView('calendar')">Calendar</button>
+            <button class="view-tab" id="tab-kanban" onclick="switchView('kanban')">Kanban</button>
+        </div>
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
-                <span>3–4</span>
+                <span>3-4</span>
             </div>
             <div class="legend-item">
                 <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
@@ -428,22 +415,38 @@
         </div>
     </div>
 
-    <!-- MAIN SPLIT -->
     <div id="main">
 
-        <!-- CALENDAR PANE -->
-        <div class="pane" id="cal-pane">
-            <div class="pane-header">
-                <div class="pane-header-row">
-                    <span class="pane-title">3-Month Calendar</span>
-                    <div class="pane-actions">
-                        <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
+        <div id="left-pane">
+
+            <!-- CALENDAR VIEW -->
+            <div class="pane" id="cal-pane">
+                <div class="pane-header">
+                    <div class="pane-header-row">
+                        <span class="pane-title">3-Month Calendar</span>
+                        <div class="pane-actions">
+                            <button class="btn btn-tear" onclick="tearOffCalendar()">Tear Off</button>
+                        </div>
                     </div>
                 </div>
+                <div class="pane-scroll">
+                    <div class="months-container" id="calendar-container"></div>
+                </div>
             </div>
-            <div class="pane-scroll">
-                <div class="months-container" id="calendar-container"></div>
+
+            <!-- KANBAN VIEW -->
+            <div class="pane" id="kanban-pane">
+                <div class="pane-header">
+                    <div class="pane-header-row">
+                        <span class="pane-title">SAFe Team Funnel</span>
+                        <div class="pane-actions">
+                            <button class="btn btn-tear" onclick="clearKanbanDone()">Clear Done</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="kanban-scroll" id="kanban-board"></div>
             </div>
+
         </div>
 
         <!-- TODO PANE -->
@@ -452,12 +455,12 @@
                 <div class="pane-header-row">
                     <span class="pane-title">To-Do List</span>
                     <div class="pane-actions">
-                        <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
+                        <button class="btn btn-tear" onclick="tearOffTodos()">Tear Done</button>
                     </div>
                 </div>
                 <div class="pane-header-row">
                     <div class="pane-actions">
-                        <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">👁 Hidden</button>
+                        <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">Show Hidden</button>
                         <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
                             <option value="never">No purge</option>
                             <option value="1">Purge 1d</option>
@@ -469,7 +472,7 @@
             </div>
             <div class="pane-scroll" id="todo-list"></div>
             <div class="todo-add-bar">
-                <input type="text" id="new-todo" placeholder="New task…"
+                <input type="text" id="new-todo" placeholder="New task..."
                     onkeypress="if(event.key==='Enter') addTodo()">
                 <select id="new-todo-tag">
                     <option value="W">W</option>
@@ -481,45 +484,59 @@
 
     </div>
 
-    <!-- ANALYTICS FOOTER BAR -->
     <div id="analytics-bar">
         <div class="stat-pill">
             <span class="stat-label">Peak Day</span>
-            <span id="stat-peak-day" class="stat-val">—</span>
+            <span id="stat-peak-day" class="stat-val">-</span>
         </div>
         <div class="stat-pill">
             <span class="stat-label">Best Week</span>
-            <span id="stat-peak-week" class="stat-val">—</span>
+            <span id="stat-peak-week" class="stat-val">-</span>
         </div>
         <div class="stat-pill">
-            <span class="stat-label">Tasks W · L</span>
-            <span id="stat-tag-ratio" class="stat-val multi">0 · 0</span>
+            <span class="stat-label">Tasks W - L</span>
+            <span id="stat-tag-ratio" class="stat-val multi">0 - 0</span>
         </div>
-        <button id="analytics-toggle" onclick="toggleAnalytics()" title="Collapse">▼</button>
+        <button id="analytics-toggle" onclick="toggleAnalytics()" title="Collapse">down</button>
     </div>
 
 </div>
-
 <script>
-    // --- STATE ---
+    const KANBAN_COLS = ['Funnel', 'Analyzing', 'Ready', 'Implementing', 'Done'];
+
     let todos              = JSON.parse(localStorage.getItem('planner_todos'))         || [];
     let nextTodoId         = parseInt(localStorage.getItem('planner_next_id'))         || 1;
     let calendarData       = JSON.parse(localStorage.getItem('planner_calendar'))      || {};
     let hiddenMonths       = JSON.parse(localStorage.getItem('planner_hidden_months')) || {};
+    let kanbanData         = JSON.parse(localStorage.getItem('planner_kanban'))        || {};
     let purgeThresholdDays = localStorage.getItem('planner_purge_days')                || 'never';
     let showHiddenTasksState = false;
     let analyticsCollapsed   = false;
+    let currentView          = 'calendar';
 
     document.getElementById('purge-setting').value = purgeThresholdDays;
 
-    // --- ANALYTICS TOGGLE ---
+    // ensure every todo has a kanban column
+    todos = todos.map(t => ({ kanbanCol: 'Funnel', ...t }));
+
+    // VIEW SWITCH
+    function switchView(view) {
+        currentView = view;
+        document.getElementById('cal-pane').style.display    = view === 'calendar' ? 'flex' : 'none';
+        document.getElementById('kanban-pane').style.display = view === 'kanban'   ? 'flex' : 'none';
+        document.getElementById('tab-cal').classList.toggle('active',    view === 'calendar');
+        document.getElementById('tab-kanban').classList.toggle('active', view === 'kanban');
+        if (view === 'kanban') renderKanban();
+    }
+
+    // ANALYTICS TOGGLE
     function toggleAnalytics() {
         analyticsCollapsed = !analyticsCollapsed;
         document.getElementById('analytics-bar').classList.toggle('collapsed', analyticsCollapsed);
-        document.getElementById('analytics-toggle').innerText = analyticsCollapsed ? '▲' : '▼';
+        document.getElementById('analytics-toggle').innerText = analyticsCollapsed ? 'up' : 'down';
     }
 
-    // --- SHOW HIDDEN ---
+    // SHOW HIDDEN
     function toggleShowHiddenTasks() {
         showHiddenTasksState = !showHiddenTasksState;
         const btn = document.getElementById('show-hidden-toggle');
@@ -528,7 +545,7 @@
         renderTodos();
     }
 
-    // --- AUTO-PURGE ---
+    // AUTO-PURGE
     function runAutoPurgeCheck() {
         if (purgeThresholdDays === 'never') return;
         const ms = parseInt(purgeThresholdDays) * 86400000;
@@ -543,7 +560,7 @@
         runAutoPurgeCheck();
     }
 
-    // --- CALENDAR ---
+    // CALENDAR
     function renderCalendar() {
         const container = document.getElementById('calendar-container');
         container.innerHTML = '';
@@ -558,16 +575,15 @@
     function createMonthElement(year, month) {
         const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
         const DAYS   = ["S","M","T","W","T","F","S"];
-        const mk = `${year}-${String(month+1).padStart(2,'0')}`;
+        const mk = year + '-' + String(month+1).padStart(2,'0');
 
         const box = document.createElement('div');
         box.className = 'month-box' + (hiddenMonths[mk] ? ' month-hidden' : '');
 
         const hdr = document.createElement('div');
         hdr.className = 'month-header-row';
-
         const title = document.createElement('span');
-        title.innerText = `${MONTHS[month]} ${year}`;
+        title.innerText = MONTHS[month] + ' ' + year;
         hdr.appendChild(title);
 
         const acts = document.createElement('div');
@@ -575,8 +591,8 @@
 
         const visBtn = document.createElement('button');
         visBtn.className = 'btn-ghost';
-        visBtn.innerText = hiddenMonths[mk] ? '👁 Show' : '👁 Hide';
-        visBtn.onclick = () => {
+        visBtn.innerText = hiddenMonths[mk] ? 'Show' : 'Hide';
+        visBtn.onclick = function() {
             hiddenMonths[mk] = !hiddenMonths[mk];
             localStorage.setItem('planner_hidden_months', JSON.stringify(hiddenMonths));
             renderCalendar();
@@ -585,8 +601,8 @@
 
         const clearBtn = document.createElement('button');
         clearBtn.className = 'btn-ghost purge';
-        clearBtn.innerText = '🗑 Clear';
-        clearBtn.onclick = () => purgeSingleMonth(year, month, MONTHS[month]);
+        clearBtn.innerText = 'Clear';
+        clearBtn.onclick = function() { purgeSingleMonth(year, month, MONTHS[month]); };
         acts.appendChild(clearBtn);
 
         hdr.appendChild(acts);
@@ -597,7 +613,7 @@
         const grid = document.createElement('div');
         grid.className = 'calendar-grid';
 
-        DAYS.forEach(d => {
+        DAYS.forEach(function(d) {
             const h = document.createElement('div');
             h.className = 'day-header';
             h.innerText = d;
@@ -617,18 +633,18 @@
             num.innerText = day;
             cell.appendChild(num);
 
-            const dk = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const dk = year + '-' + String(month+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
             const inp = document.createElement('input');
             inp.className = 'day-input';
             inp.type = 'text';
-            inp.placeholder = '·';
+            inp.placeholder = '.';
             inp.value = calendarData[dk] || '';
             inp.setAttribute('spellcheck', 'false');
 
             evaluateDayOverload(cell, inp.value);
             evaluateStrikeThrough(inp, inp.value);
 
-            inp.oninput = e => {
+            inp.oninput = function(e) {
                 calendarData[dk] = e.target.value;
                 localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
                 evaluateStrikeThrough(inp, e.target.value);
@@ -637,19 +653,19 @@
 
             cell.appendChild(inp);
 
-            cell.addEventListener('dragover', e => {
+            cell.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 e.dataTransfer.dropEffect = 'copy';
                 cell.classList.add('drag-over');
             });
-            cell.addEventListener('dragleave', () => cell.classList.remove('drag-over'));
-            cell.addEventListener('drop', e => {
+            cell.addEventListener('dragleave', function() { cell.classList.remove('drag-over'); });
+            cell.addEventListener('drop', function(e) {
                 e.preventDefault();
                 cell.classList.remove('drag-over');
                 const todoId = e.dataTransfer.getData('text/plain');
                 if (!todoId) return;
                 const current = inp.value.trim();
-                const ids = current ? current.split(',').map(s => s.trim()) : [];
+                const ids = current ? current.split(',').map(function(s) { return s.trim(); }) : [];
                 if (!ids.includes(todoId)) {
                     inp.value = ids.length ? current + ',' + todoId : todoId;
                     calendarData[dk] = inp.value;
@@ -667,14 +683,118 @@
     }
 
     function purgeSingleMonth(year, month, name) {
-        if (!confirm(`Clear all entries for ${name} ${year}?`)) return;
-        const prefix = `${year}-${String(month+1).padStart(2,'0')}-`;
-        Object.keys(calendarData).forEach(k => { if (k.startsWith(prefix)) delete calendarData[k]; });
+        if (!confirm('Clear all entries for ' + name + ' ' + year + '?')) return;
+        const prefix = year + '-' + String(month+1).padStart(2,'0') + '-';
+        Object.keys(calendarData).forEach(function(k) { if (k.startsWith(prefix)) delete calendarData[k]; });
         localStorage.setItem('planner_calendar', JSON.stringify(calendarData));
         renderCalendar();
     }
 
-    // --- OVERLOAD & STRIKE ---
+    // KANBAN
+    function renderKanban() {
+        const board = document.getElementById('kanban-board');
+        board.innerHTML = '';
+
+        KANBAN_COLS.forEach(function(col) {
+            const colEl = document.createElement('div');
+            colEl.className = 'kanban-col';
+            colEl.dataset.col = col;
+
+            const colTodos = todos.filter(function(t) { return t.kanbanCol === col && !t.hidden; });
+
+            const hdr = document.createElement('div');
+            hdr.className = 'kanban-col-header';
+            hdr.innerHTML = col + '<span class="col-count">' + colTodos.length + '</span>';
+            colEl.appendChild(hdr);
+
+            const body = document.createElement('div');
+            body.className = 'kanban-col-body';
+
+            body.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                body.classList.add('drag-over');
+            });
+            body.addEventListener('dragleave', function() { body.classList.remove('drag-over'); });
+            body.addEventListener('drop', function(e) {
+                e.preventDefault();
+                body.classList.remove('drag-over');
+                const todoId = parseInt(e.dataTransfer.getData('text/plain'));
+                if (!todoId) return;
+                todos = todos.map(function(t) {
+                    if (t.id !== todoId) return t;
+                    const updated = Object.assign({}, t, { kanbanCol: col });
+                    if (col === 'Done' && !t.completed) {
+                        updated.completed = true;
+                        updated.completedAt = Date.now();
+                    }
+                    if (col !== 'Done' && t.completed) {
+                        updated.completed = false;
+                        updated.completedAt = null;
+                    }
+                    return updated;
+                });
+                save();
+                renderKanban();
+                renderTodos();
+                renderCalendar();
+            });
+
+            colTodos.forEach(function(todo) {
+                const card = document.createElement('div');
+                card.className = 'kanban-card' + (todo.completed ? ' completed-card' : '');
+                card.draggable = true;
+
+                card.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', todo.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                    card.classList.add('dragging');
+                });
+                card.addEventListener('dragend', function() { card.classList.remove('dragging'); });
+
+                const top = document.createElement('div');
+                top.className = 'kcard-top';
+
+                const num = document.createElement('span');
+                num.className = 'kcard-num';
+                num.innerText = '#' + todo.id;
+
+                const tag = document.createElement('span');
+                tag.className = 'kcard-tag tag-' + todo.tag.toLowerCase();
+                tag.innerText = todo.tag;
+
+                const del = document.createElement('button');
+                del.className = 'kcard-del';
+                del.innerHTML = 'x';
+                del.title = 'Delete';
+                del.onclick = function(e) {
+                    e.stopPropagation();
+                    if (!confirm('Delete task #' + todo.id + '?')) return;
+                    todos = todos.filter(function(t) { return t.id !== todo.id; });
+                    save(); renderKanban(); renderTodos(); renderCalendar();
+                };
+
+                top.append(num, tag, del);
+
+                const text = document.createElement('div');
+                text.className = 'kcard-text';
+                text.innerText = todo.text;
+
+                card.append(top, text);
+                body.appendChild(card);
+            });
+
+            colEl.appendChild(body);
+            board.appendChild(colEl);
+        });
+    }
+
+    function clearKanbanDone() {
+        if (!confirm('Remove all tasks in Done column?')) return;
+        todos = todos.filter(function(t) { return t.kanbanCol !== 'Done'; });
+        save(); renderKanban(); renderTodos(); renderCalendar();
+    }
+
+    // OVERLOAD & STRIKE
     function evaluateDayOverload(cell, val) {
         cell.classList.remove('overload-warning','overload-danger');
         const n = (val.match(/\d+/g) || []).length;
@@ -686,55 +806,55 @@
         if (!val.trim()) { inp.classList.remove('task-struck-out'); return; }
         const nums = val.match(/\d+/g) || [];
         if (!nums.length) { inp.classList.remove('task-struck-out'); return; }
-        const allDone = nums.every(n => {
-            const t = todos.find(t => t.id === parseInt(n));
+        const allDone = nums.every(function(n) {
+            const t = todos.find(function(t) { return t.id === parseInt(n); });
             return t ? t.completed : false;
         });
         inp.classList.toggle('task-struck-out', allDone);
     }
 
-    // --- TO-DO ---
+    // TODO
     function renderTodos() {
         const list = document.getElementById('todo-list');
         list.innerHTML = '';
 
-        todos.forEach(todo => {
+        todos.forEach(function(todo) {
             if (todo.hidden && !showHiddenTasksState) return;
 
             const item = document.createElement('div');
-            item.className = `todo-item${todo.completed ? ' completed' : ''}${todo.hidden ? ' hidden-task-style' : ''}`;
+            item.className = 'todo-item' + (todo.completed ? ' completed' : '') + (todo.hidden ? ' hidden-task-style' : '');
             item.draggable = true;
-            item.addEventListener('dragstart', e => {
+            item.addEventListener('dragstart', function(e) {
                 e.dataTransfer.setData('text/plain', todo.id);
                 e.dataTransfer.effectAllowed = 'copy';
                 item.classList.add('dragging');
             });
-            item.addEventListener('dragend', () => item.classList.remove('dragging'));
+            item.addEventListener('dragend', function() { item.classList.remove('dragging'); });
 
             const num = document.createElement('span');
             num.className = 'todo-number';
-            num.innerText = `#${todo.id}`;
+            num.innerText = '#' + todo.id;
 
             const tag = document.createElement('span');
-            tag.className = `todo-tag tag-${todo.tag.toLowerCase()}`;
+            tag.className = 'todo-tag tag-' + todo.tag.toLowerCase();
             tag.innerText = todo.tag;
 
             const txt = document.createElement('span');
             txt.className = 'todo-text';
             txt.innerText = todo.text + (todo.hidden ? ' [hidden]' : '');
-            txt.onclick = () => toggleTodo(todo.id);
+            txt.onclick = function() { toggleTodo(todo.id); };
 
             const hideBtn = document.createElement('button');
             hideBtn.className = 'action-btn';
-            hideBtn.innerHTML = todo.hidden ? '👁' : '🫣';
+            hideBtn.innerHTML = todo.hidden ? 'show' : 'hide';
             hideBtn.title = todo.hidden ? 'Un-hide' : 'Hide';
-            hideBtn.onclick = e => { e.stopPropagation(); toggleHideTodoItem(todo.id); };
+            hideBtn.onclick = function(e) { e.stopPropagation(); toggleHideTodoItem(todo.id); };
 
             const delBtn = document.createElement('button');
             delBtn.className = 'action-btn delete-item-btn';
-            delBtn.innerHTML = '🗑';
+            delBtn.innerHTML = 'del';
             delBtn.title = 'Delete';
-            delBtn.onclick = e => { e.stopPropagation(); deleteTodoItem(todo.id); };
+            delBtn.onclick = function(e) { e.stopPropagation(); deleteTodoItem(todo.id); };
 
             item.append(num, tag, txt, hideBtn, delBtn);
             list.appendChild(item);
@@ -748,30 +868,39 @@
         const tag = document.getElementById('new-todo-tag').value;
         const text = inp.value.trim();
         if (!text) return;
-        todos.push({ id: nextTodoId, text, completed: false, completedAt: null, hidden: false, tag });
+        todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null, hidden: false, tag: tag, kanbanCol: 'Funnel' });
         nextTodoId++;
         save();
         inp.value = '';
         renderTodos();
         renderCalendar();
+        if (currentView === 'kanban') renderKanban();
     }
 
     function toggleTodo(id) {
-        todos = todos.map(t => t.id !== id ? t : {
-            ...t, completed: !t.completed, completedAt: !t.completed ? Date.now() : null
+        todos = todos.map(function(t) {
+            if (t.id !== id) return t;
+            const next = !t.completed;
+            return Object.assign({}, t, {
+                completed: next,
+                completedAt: next ? Date.now() : null,
+                kanbanCol: next ? 'Done' : 'Funnel'
+            });
         });
         save(); renderTodos(); renderCalendar();
+        if (currentView === 'kanban') renderKanban();
     }
 
     function toggleHideTodoItem(id) {
-        todos = todos.map(t => t.id === id ? { ...t, hidden: !t.hidden } : t);
+        todos = todos.map(function(t) { return t.id === id ? Object.assign({}, t, { hidden: !t.hidden }) : t; });
         save(); renderTodos();
     }
 
     function deleteTodoItem(id) {
-        if (!confirm(`Permanently delete task #${id}?`)) return;
-        todos = todos.filter(t => t.id !== id);
+        if (!confirm('Permanently delete task #' + id + '?')) return;
+        todos = todos.filter(function(t) { return t.id !== id; });
         save(); renderTodos(); renderCalendar();
+        if (currentView === 'kanban') renderKanban();
     }
 
     function save() {
@@ -779,21 +908,20 @@
         localStorage.setItem('planner_next_id', nextTodoId);
     }
 
-    // --- ANALYTICS ---
+    // ANALYTICS
     function calculateAnalytics() {
         const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-        const done = todos.filter(t => t.completed && t.completedAt);
+        const done = todos.filter(function(t) { return t.completed && t.completedAt; });
 
         const dc = {0:0,1:0,2:0,3:0,4:0,5:0,6:0};
-        done.forEach(t => dc[new Date(t.completedAt).getDay()]++);
+        done.forEach(function(t) { dc[new Date(t.completedAt).getDay()]++; });
         let bestDay = 0, maxDC = 0;
         for (let i=0;i<7;i++) if (dc[i] > maxDC) { maxDC = dc[i]; bestDay = i; }
-        document.getElementById('stat-peak-day').innerText =
-            maxDC > 0 ? `${DAY_NAMES[bestDay]} (${maxDC})` : '—';
+        document.getElementById('stat-peak-day').innerText = maxDC > 0 ? DAY_NAMES[bestDay] + ' (' + maxDC + ')' : '-';
 
         const now = new Date();
         const wc = {1:0,2:0,3:0,4:0,5:0};
-        done.forEach(t => {
+        done.forEach(function(t) {
             const d = new Date(t.completedAt);
             if (d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear()) {
                 const wn = Math.ceil((d.getDate() + new Date(now.getFullYear(),now.getMonth(),1).getDay()) / 7);
@@ -802,16 +930,15 @@
         });
         let bestWk = 1, maxWC = 0;
         for (let w in wc) if (wc[w] > maxWC) { maxWC = wc[w]; bestWk = w; }
-        document.getElementById('stat-peak-week').innerText =
-            maxWC > 0 ? `Wk ${bestWk} (${maxWC})` : '—';
+        document.getElementById('stat-peak-week').innerText = maxWC > 0 ? 'Wk ' + bestWk + ' (' + maxWC + ')' : '-';
 
-        const wCount = todos.filter(t => t.tag==='W' && !t.hidden).length;
-        const lCount = todos.filter(t => t.tag==='L' && !t.hidden).length;
+        const wCount = todos.filter(function(t) { return t.tag==='W' && !t.hidden; }).length;
+        const lCount = todos.filter(function(t) { return t.tag==='L' && !t.hidden; }).length;
         document.getElementById('stat-tag-ratio').innerHTML =
-            `<span style="color:#7EB3E8;font-weight:600;">${wCount}</span> · <span style="color:#5BBFB5;">${lCount}</span>`;
+            '<span style="color:#7EB3E8;font-weight:600;">' + wCount + '</span> - <span style="color:#5BBFB5;">' + lCount + '</span>';
     }
 
-    // --- TEAR-OFF ---
+    // TEAR-OFF
     function tearOffCalendar() {
         if (!confirm('Clear all calendar entries?')) return;
         calendarData = {};
@@ -821,11 +948,12 @@
 
     function tearOffTodos() {
         if (!confirm('Remove all completed tasks?')) return;
-        todos = todos.filter(t => !t.completed);
+        todos = todos.filter(function(t) { return !t.completed; });
         save(); renderTodos(); renderCalendar();
+        if (currentView === 'kanban') renderKanban();
     }
 
-    // --- INIT ---
+    // INIT
     renderCalendar();
     renderTodos();
     runAutoPurgeCheck();
