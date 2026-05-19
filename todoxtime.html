@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo X Calendar / Kanban - Banyan Logic</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         :root {
             --sand:        #F5F0E8;
@@ -390,6 +390,206 @@
         .stat-val.multi { font-family: 'DM Sans', sans-serif; font-size: 10px; }
         #analytics-toggle { background: transparent; border: none; cursor: pointer; color: rgba(255,255,255,0.4); font-size: 9px; padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
         #analytics-toggle:hover { color: var(--white); }
+
+        /* -- PDCA BAR -- */
+        #pdca-bar {
+            flex-shrink: 0;
+            background: var(--white);
+            border: 1.5px solid var(--night);
+            border-radius: 3px;
+            box-shadow: 2px 2px 0 var(--night);
+            padding: 0 10px;
+            display: flex;
+            align-items: stretch;
+            height: 42px;
+            user-select: none;
+        }
+        .pdca-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-light);
+            display: flex;
+            align-items: center;
+            padding-right: 10px;
+            border-right: 1px solid var(--sand-deeper);
+            margin-right: 2px;
+            flex-shrink: 0;
+        }
+        .pdca-chevrons {
+            display: flex;
+            align-items: stretch;
+            flex: 1;
+        }
+        .pdca-step {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0 8px 0 6px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.15s;
+            border-radius: 2px;
+        }
+        .pdca-step:hover { background: var(--sand); }
+        .pdca-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0; height: 0;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 6px solid var(--sand-deeper);
+            z-index: 2;
+            transition: border-left-color 0.2s;
+        }
+        .pdca-step.active:not(:last-child)::after,
+        .pdca-step.done:not(:last-child)::after {
+            border-left-color: currentColor;
+            opacity: 0.3;
+        }
+        .pdca-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            border: 1.5px solid var(--ink-light);
+            flex-shrink: 0;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .pdca-letter {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.05em;
+            color: var(--ink-light);
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .pdca-name {
+            font-size: 9px;
+            font-weight: 400;
+            color: var(--ink-light);
+            line-height: 1;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .pdca-time {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            color: var(--ink-light);
+            opacity: 0.55;
+            line-height: 1;
+        }
+        .pdca-step[data-phase="P"] { color: #2563a8; }
+        .pdca-step[data-phase="D"] { color: #1a7a4a; }
+        .pdca-step[data-phase="C"] { color: #b85c00; }
+        .pdca-step[data-phase="A"] { color: #7c3a8c; }
+
+        .pdca-step.active .pdca-dot {
+            border-color: currentColor;
+            background: transparent;
+            animation: pdca-pulse 2s ease-in-out infinite;
+        }
+        .pdca-step.active .pdca-letter,
+        .pdca-step.active .pdca-name,
+        .pdca-step.active .pdca-time { color: currentColor; font-weight: 600; }
+
+        .pdca-step.done .pdca-dot { background: currentColor; border-color: currentColor; }
+        .pdca-step.done .pdca-letter,
+        .pdca-step.done .pdca-name,
+        .pdca-step.done .pdca-time { color: currentColor; opacity: 0.6; }
+
+        .pdca-step.ambient .pdca-dot { border-color: currentColor; background: currentColor; opacity: 0.35; }
+        .pdca-step.ambient .pdca-letter,
+        .pdca-step.ambient .pdca-name,
+        .pdca-step.ambient .pdca-time { color: currentColor; opacity: 0.65; }
+
+        @keyframes pdca-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+            50%       { box-shadow: 0 0 0 3px transparent; }
+        }
+
+        .pdca-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 10px;
+            border-left: 1px solid var(--sand-deeper);
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .pdca-clock {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--ink-mid);
+            letter-spacing: 0.04em;
+        }
+        .pdca-toggle {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 2px;
+            border: 1px solid var(--sand-deeper);
+            background: none;
+            color: var(--ink-light);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .pdca-toggle:hover { border-color: var(--ink-mid); color: var(--ink-mid); }
+        .pdca-toggle.on { border-color: #1a7a4a; color: #1a7a4a; background: rgba(26,122,74,0.08); }
+
+        @media (max-width: 480px) {
+            .pdca-step { padding: 0 6px 0 5px; }
+            .pdca-label { display: none; }
+        }
+
+        /* -- MONTH SLIDER -- */
+        .month-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .month-slider-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            color: var(--ink-mid);
+            min-width: 28px;
+            text-align: right;
+            white-space: nowrap;
+        }
+        .month-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 80px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--sand-deeper);
+            outline: none;
+            cursor: pointer;
+        }
+        .month-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--night);
+            border: 2px solid var(--gold);
+            cursor: pointer;
+        }
+        .month-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--night);
+            border: 2px solid var(--gold);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -403,15 +603,55 @@
             <button class="view-tab active" id="tab-cal" onclick="switchView('calendar')">Calendar</button>
             <button class="view-tab" id="tab-kanban" onclick="switchView('kanban')">Kanban</button>
         </div>
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
-                <span>3-4</span>
+        <div class="month-slider-wrap">
+            <span class="month-slider-label" id="month-slider-val">3 mo</span>
+            <input type="range" id="month-slider" class="month-slider"
+                min="1" max="24" value="3"
+                oninput="changeMonthCount(this.value)">
+        </div>
+    </div>
+
+
+    <!-- PDCA BAR -->
+    <div id="pdca-bar">
+        <div class="pdca-label">PDCA</div>
+        <div class="pdca-chevrons">
+            <div class="pdca-step" data-phase="P" data-index="0" onclick="pdcaTap(0)">
+                <div class="pdca-dot"></div>
+                <div style="display:flex;flex-direction:column;gap:1px">
+                    <div class="pdca-letter">P</div>
+                    <div class="pdca-name">Plan</div>
+                    <div class="pdca-time">9 AM</div>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
-                <span>5+</span>
+            <div class="pdca-step" data-phase="D" data-index="1" onclick="pdcaTap(1)">
+                <div class="pdca-dot"></div>
+                <div style="display:flex;flex-direction:column;gap:1px">
+                    <div class="pdca-letter">D</div>
+                    <div class="pdca-name">Do</div>
+                    <div class="pdca-time">9A-2P</div>
+                </div>
             </div>
+            <div class="pdca-step" data-phase="C" data-index="2" onclick="pdcaTap(2)">
+                <div class="pdca-dot"></div>
+                <div style="display:flex;flex-direction:column;gap:1px">
+                    <div class="pdca-letter">C</div>
+                    <div class="pdca-name">Check</div>
+                    <div class="pdca-time">2 PM</div>
+                </div>
+            </div>
+            <div class="pdca-step" data-phase="A" data-index="3" onclick="pdcaTap(3)">
+                <div class="pdca-dot"></div>
+                <div style="display:flex;flex-direction:column;gap:1px">
+                    <div class="pdca-letter">A</div>
+                    <div class="pdca-name">Adjust</div>
+                    <div class="pdca-time">2P-EOD</div>
+                </div>
+            </div>
+        </div>
+        <div class="pdca-right">
+            <div class="pdca-clock" id="pdca-clock"></div>
+            <button class="pdca-toggle" id="pdca-toggle" onclick="pdcaToggle()">Off</button>
         </div>
     </div>
 
@@ -561,11 +801,20 @@
     }
 
     // CALENDAR
+    var monthCount = 3;
+
+    function changeMonthCount(val) {
+        monthCount = parseInt(val);
+        var label = monthCount === 1 ? '1 mo' : monthCount + ' mo';
+        document.getElementById('month-slider-val').textContent = label;
+        renderCalendar();
+    }
+
     function renderCalendar() {
         const container = document.getElementById('calendar-container');
         container.innerHTML = '';
         const d = new Date();
-        for (let m = 0; m < 3; m++) {
+        for (let m = 0; m < monthCount; m++) {
             const mo = (d.getMonth() + m) % 12;
             const yr = d.getFullYear() + Math.floor((d.getMonth() + m) / 12);
             container.appendChild(createMonthElement(yr, mo));
@@ -953,6 +1202,63 @@
         if (currentView === 'kanban') renderKanban();
     }
 
+
+    // -- PDCA --
+    var pdcaOn   = false;
+    var pdcaDone = [false, false, false, false];
+
+    function pdcaFmt(h, m) {
+        var ap = h >= 12 ? 'PM' : 'AM';
+        return (h % 12 || 12) + ':' + (m < 10 ? '0' + m : m) + ' ' + ap;
+    }
+
+    function pdcaTick() {
+        var d = new Date();
+        document.getElementById('pdca-clock').textContent = pdcaFmt(d.getHours(), d.getMinutes());
+        if (pdcaOn) pdcaRender(d.getHours());
+    }
+
+    function pdcaRender(h) {
+        var steps = document.querySelectorAll('.pdca-step');
+        steps.forEach(function(s) { s.classList.remove('active', 'done', 'ambient'); });
+
+        // P — active at 9 AM
+        if (pdcaDone[0])      steps[0].classList.add('done');
+        else if (h === 9)     steps[0].classList.add('active');
+
+        // D — ambient 9 AM to 2 PM
+        if (pdcaDone[1])               steps[1].classList.add('done');
+        else if (h >= 9 && h < 14)     steps[1].classList.add('ambient');
+
+        // C — active at 2 PM (point in time)
+        if (pdcaDone[2])      steps[2].classList.add('done');
+        else if (h === 14)    steps[2].classList.add('active');
+
+        // A — active from 2 PM through end of day
+        if (pdcaDone[3])               steps[3].classList.add('done');
+        else if (h >= 14)              steps[3].classList.add('active');
+    }
+
+    function pdcaTap(i) {
+        if (!pdcaOn) return;
+        pdcaDone[i] = true;
+        if (i === 0) pdcaDone[1] = true;
+        pdcaRender(new Date().getHours());
+    }
+
+    function pdcaToggle() {
+        pdcaOn = !pdcaOn;
+        var btn = document.getElementById('pdca-toggle');
+        btn.textContent = pdcaOn ? 'On' : 'Off';
+        btn.className = pdcaOn ? 'pdca-toggle on' : 'pdca-toggle';
+        if (pdcaOn) pdcaRender(new Date().getHours());
+        else document.querySelectorAll('.pdca-step').forEach(function(s) {
+            s.classList.remove('active', 'done', 'ambient');
+        });
+    }
+
+    pdcaTick();
+    setInterval(pdcaTick, 30000);
     // INIT
     renderCalendar();
     renderTodos();
