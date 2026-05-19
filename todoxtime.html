@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,477 +31,472 @@
             --od-bdr: #C4748A;
         }
 
-```
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        font-family: 'DM Sans', sans-serif;
-        background: var(--sand);
-        color: var(--ink);
-        font-size: 13px;
-    }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--sand);
+            color: var(--ink);
+            font-size: 13px;
+        }
 
-    /* -- APP SHELL --- */
-    #app {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        display: flex;
-        flex-direction: column;
-        padding: 6px 9px 5px;
-        gap: 5px;
-        overflow: hidden;
-    }
+        /* -- APP SHELL --- */
+        #app {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 6px 9px 5px;
+            gap: 5px;
+            overflow: hidden;
+        }
 
-    /* -- MASTHEAD --- */
-    #masthead {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding-bottom: 5px;
-        border-bottom: 2px solid var(--night);
-        flex-shrink: 0;
-    }
-    .masthead-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--night);
-    }
-    .masthead-sub {
-        font-size: 9px;
-        font-weight: 500;
-        color: var(--ink-light);
-        letter-spacing: 1.2px;
-        text-transform: uppercase;
-        border-left: 2px solid var(--gold);
-        padding-left: 8px;
-    }
-    .masthead-spacer { flex: 1; }
-    .legend {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        font-size: 9px;
-        color: var(--ink-mid);
-    }
-    .legend-item { display: flex; align-items: center; gap: 3px; }
-    .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
+        /* -- MASTHEAD --- */
+        #masthead {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--night);
+            flex-shrink: 0;
+        }
+        .masthead-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--night);
+        }
+        .masthead-sub {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--ink-light);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            border-left: 2px solid var(--gold);
+            padding-left: 8px;
+        }
+        .masthead-spacer { flex: 1; }
+        .legend {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 9px;
+            color: var(--ink-mid);
+        }
+        .legend-item { display: flex; align-items: center; gap: 3px; }
+        .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
 
-    /* -- MAIN SPLIT --- */
-    #main {
-        display: flex;
-        gap: 7px;
-        flex: 1;
-        min-height: 0;
-    }
+        /* -- MAIN SPLIT --- */
+        #main {
+            display: flex;
+            gap: 7px;
+            flex: 1;
+            min-height: 0;
+        }
 
-    /* -- PANE CHROME --- */
-    .pane {
-        display: flex;
-        flex-direction: column;
-        background: var(--white);
-        border: 1.5px solid var(--night);
-        border-radius: 3px;
-        box-shadow: 3px 3px 0 var(--night);
-        min-height: 0;
-        overflow: hidden;
-    }
-    .pane-header {
-        display: flex;
-        flex-direction: column;
-        padding: 4px 8px;
-        background: var(--night);
-        flex-shrink: 0;
-        gap: 4px;
-    }
-    .pane-header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 5px;
-    }
-    .pane-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--gold);
-    }
-    .pane-actions { display: flex; gap: 4px; align-items: center; }
+        /* -- PANE CHROME --- */
+        .pane {
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+            border: 1.5px solid var(--night);
+            border-radius: 3px;
+            box-shadow: 3px 3px 0 var(--night);
+            min-height: 0;
+            overflow: hidden;
+        }
+        .pane-header {
+            display: flex;
+            flex-direction: column;
+            padding: 4px 8px;
+            background: var(--night);
+            flex-shrink: 0;
+            gap: 4px;
+        }
+        .pane-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 5px;
+        }
+        .pane-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold);
+        }
+        .pane-actions { display: flex; gap: 4px; align-items: center; }
 
-    .pane-scroll {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
-        min-height: 0;
-        padding: 5px;
-        scrollbar-width: thin;
-        scrollbar-color: var(--sand-deeper) transparent;
-        -webkit-overflow-scrolling: touch;
-    }
-    .pane-scroll::-webkit-scrollbar { width: 4px; }
-    .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
+        .pane-scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 0;
+            padding: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--sand-deeper) transparent;
+            -webkit-overflow-scrolling: touch;
+        }
+        .pane-scroll::-webkit-scrollbar { width: 4px; }
+        .pane-scroll::-webkit-scrollbar-thumb { background: var(--sand-deeper); border-radius: 2px; }
 
-    /* -- CALENDAR PANE --- */
-    #cal-pane { flex: 1.2; }
+        /* -- CALENDAR PANE --- */
+        #cal-pane { flex: 1.2; }
 
-    .months-container {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .month-box {
-        border: 1px solid var(--sand-deeper);
-        border-radius: 2px;
-        overflow: hidden;
-        flex-shrink: 0;
-    }
-    .month-box.month-hidden { }
-    .month-box.month-hidden .calendar-grid { display: none; }
+        .months-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .month-box {
+            border: 1px solid var(--sand-deeper);
+            border-radius: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .month-box.month-hidden { }
+        .month-box.month-hidden .calendar-grid { display: none; }
 
-    .month-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: var(--night-mid);
-        color: var(--gold);
-        padding: 3px 6px;
-        font-family: 'Playfair Display', serif;
-        font-size: 10px;
-        font-weight: 600;
-    }
-    .month-box.month-hidden .month-header-row { background: var(--sand-deeper); color: var(--ink-mid); }
-    .month-actions { display: flex; gap: 3px; }
+        .month-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--night-mid);
+            color: var(--gold);
+            padding: 3px 6px;
+            font-family: 'Playfair Display', serif;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .month-box.month-hidden .month-header-row { background: var(--sand-deeper); color: var(--ink-mid); }
+        .month-actions { display: flex; gap: 3px; }
 
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 1px;
-        background: var(--sand-deeper);
-    }
-    .day-header {
-        background: var(--sand-dark);
-        color: var(--ink-light);
-        text-align: center;
-        font-size: 8px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-        padding: 2px 0;
-    }
-    .day-cell {
-        background: var(--white);
-        display: flex;
-        flex-direction: column;
-        padding: 2px 2px 1px;
-        min-height: 40px;
-        transition: background 0.12s;
-    }
-    .day-cell:hover { background: var(--sand); }
-    .day-number {
-        font-size: 7px;
-        font-weight: 600;
-        color: var(--ink-light);
-        line-height: 1;
-        margin-bottom: 1px;
-    }
-    .day-input {
-        flex: 1;
-        width: 100%;
-        border: none;
-        background: transparent;
-        text-align: center;
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 600;
-        color: var(--purushartha);
-        font-size: 10px;
-        outline: none;
-        padding: 0;
-        line-height: 1.2;
-    }
-    .day-input:focus { background: var(--gold-pale); border-radius: 1px; }
-    .day-input::placeholder { color: var(--sand-deeper); font-weight: 300; font-size: 9px; }
-    .day-input.task-struck-out { text-decoration: line-through; color: var(--ink-light); font-style: italic; }
-    .day-cell.overload-warning { background: var(--ow-bg) !important; outline: 1px solid var(--ow-bdr); }
-    .day-cell.overload-danger  { background: var(--od-bg) !important; outline: 1px solid var(--od-bdr); }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--sand-deeper);
+        }
+        .day-header {
+            background: var(--sand-dark);
+            color: var(--ink-light);
+            text-align: center;
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            padding: 2px 0;
+        }
+        .day-cell {
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 2px 2px 1px;
+            min-height: 40px;
+            transition: background 0.12s;
+        }
+        .day-cell:hover { background: var(--sand); }
+        .day-number {
+            font-size: 7px;
+            font-weight: 600;
+            color: var(--ink-light);
+            line-height: 1;
+            margin-bottom: 1px;
+        }
+        .day-input {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            color: var(--purushartha);
+            font-size: 10px;
+            outline: none;
+            padding: 0;
+            line-height: 1.2;
+        }
+        .day-input:focus { background: var(--gold-pale); border-radius: 1px; }
+        .day-input::placeholder { color: var(--sand-deeper); font-weight: 300; font-size: 9px; }
+        .day-input.task-struck-out { text-decoration: line-through; color: var(--ink-light); font-style: italic; }
+        .day-cell.overload-warning { background: var(--ow-bg) !important; outline: 1px solid var(--ow-bdr); }
+        .day-cell.overload-danger  { background: var(--od-bg) !important; outline: 1px solid var(--od-bdr); }
 
-    /* -- TODO PANE --- */
-    #todo-pane { flex: 0.8; }
+        /* -- TODO PANE --- */
+        #todo-pane { flex: 0.8; }
 
-    .todo-item {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 3px;
-        border-bottom: 1px solid var(--sand);
-        min-height: 24px;
-        transition: background 0.1s;
-    }
-    .todo-item:hover { background: var(--sand); }
-    .todo-item[draggable="true"] { cursor: grab; }
-    .todo-item.dragging { opacity: 0.4; background: var(--gold-pale); }
-    .day-cell.drag-over {
-        background: var(--teal-pale, #D0EEEE) !important;
-        outline: 2px dashed var(--teal) !important;
-    }
-    .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
-    .todo-item.hidden-task-style {
-        background: var(--sand-dark); opacity: 0.6;
-        border-left: 2px dashed var(--ink-light);
-    }
-    .todo-number {
-        font-family: 'Playfair Display', serif;
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--prarabdha);
-        min-width: 24px;
-    }
-    .todo-tag {
-        font-size: 8px;
-        font-weight: 700;
-        padding: 1px 4px;
-        border-radius: 1px;
-        letter-spacing: 0.4px;
-        text-transform: uppercase;
-        flex-shrink: 0;
-    }
-    .todo-tag.tag-w { background: var(--purushartha); color: var(--white); }
-    .todo-tag.tag-l { background: var(--teal); color: var(--white); }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 3px;
+            border-bottom: 1px solid var(--sand);
+            min-height: 24px;
+            transition: background 0.1s;
+        }
+        .todo-item:hover { background: var(--sand); }
+        .todo-item[draggable="true"] { cursor: grab; }
+        .todo-item.dragging { opacity: 0.4; background: var(--gold-pale); }
+        .day-cell.drag-over {
+            background: var(--teal-pale, #D0EEEE) !important;
+            outline: 2px dashed var(--teal) !important;
+        }
+        .todo-item.completed .todo-text { text-decoration: line-through; color: var(--ink-light); }
+        .todo-item.hidden-task-style {
+            background: var(--sand-dark); opacity: 0.6;
+            border-left: 2px dashed var(--ink-light);
+        }
+        .todo-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--prarabdha);
+            min-width: 24px;
+        }
+        .todo-tag {
+            font-size: 8px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 1px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .todo-tag.tag-w { background: var(--purushartha); color: var(--white); }
+        .todo-tag.tag-l { background: var(--teal); color: var(--white); }
 
-    .todo-text {
-        cursor: pointer;
-        flex-grow: 1;
-        font-size: 11px;
-        color: var(--ink);
-        line-height: 1.25;
-    }
-    .action-btn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 10px;
-        padding: 1px 3px;
-        border-radius: 2px;
-        opacity: 0.45;
-        line-height: 1;
-        transition: opacity 0.1s, background 0.1s;
-    }
-    .action-btn:hover { opacity: 1; background: var(--sand-dark); }
-    .action-btn.delete-item-btn:hover { background: var(--mauve-pale); }
+        .todo-text {
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 11px;
+            color: var(--ink);
+            line-height: 1.25;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 1px 3px;
+            border-radius: 2px;
+            opacity: 0.45;
+            line-height: 1;
+            transition: opacity 0.1s, background 0.1s;
+        }
+        .action-btn:hover { opacity: 1; background: var(--sand-dark); }
+        .action-btn.delete-item-btn:hover { background: var(--mauve-pale); }
 
-    .todo-add-bar {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        padding: 4px 5px;
-        border-top: 1px dashed var(--sand-deeper);
-        background: var(--white);
-        flex-shrink: 0;
-    }
-    .todo-add-bar input { flex: 1; min-width: 0; }
+        .todo-add-bar {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 4px 5px;
+            border-top: 1px dashed var(--sand-deeper);
+            background: var(--white);
+            flex-shrink: 0;
+        }
+        .todo-add-bar input { flex: 1; min-width: 0; }
 
-    /* -- BUTTONS --- */
-    .btn {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 9px;
-        font-weight: 600;
-        border: 1px solid rgba(255,255,255,0.3);
-        padding: 2px 7px;
-        cursor: pointer;
-        border-radius: 2px;
-        letter-spacing: 0.2px;
-        transition: opacity 0.08s;
-        white-space: nowrap;
-    }
-    .btn:active { opacity: 0.8; }
-    .btn-tear   { background: var(--mauve); color: var(--white); }
-    .btn-show-hidden { background: var(--teal); color: var(--white); border: none; }
-    .btn-show-hidden.active { background: var(--gold); color: var(--night); }
-    .btn-add {
-        background: var(--purushartha); color: var(--white);
-        font-size: 11px; padding: 3px 9px; border: none;
-        border-radius: 2px; cursor: pointer;
-        font-family: 'DM Sans', sans-serif; font-weight: 600;
-    }
-    .btn-ghost {
-        background: transparent;
-        border: 1px solid rgba(255,255,255,0.2);
-        color: rgba(255,255,255,0.7);
-        font-size: 8px;
-        padding: 1px 5px;
-        cursor: pointer;
-        border-radius: 2px;
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 500;
-    }
-    .btn-ghost:hover { background: rgba(255,255,255,0.12); }
-    .btn-ghost.purge:hover { background: rgba(196,116,138,0.3); }
+        /* -- BUTTONS --- */
+        .btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 9px;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 2px 7px;
+            cursor: pointer;
+            border-radius: 2px;
+            letter-spacing: 0.2px;
+            transition: opacity 0.08s;
+            white-space: nowrap;
+        }
+        .btn:active { opacity: 0.8; }
+        .btn-tear   { background: var(--mauve); color: var(--white); }
+        .btn-show-hidden { background: var(--teal); color: var(--white); border: none; }
+        .btn-show-hidden.active { background: var(--gold); color: var(--night); }
+        .btn-add {
+            background: var(--purushartha); color: var(--white);
+            font-size: 11px; padding: 3px 9px; border: none;
+            border-radius: 2px; cursor: pointer;
+            font-family: 'DM Sans', sans-serif; font-weight: 600;
+        }
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+            font-size: 8px;
+            padding: 1px 5px;
+            cursor: pointer;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.12); }
+        .btn-ghost.purge:hover { background: rgba(196,116,138,0.3); }
 
-    select, input[type="text"] {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 10px;
-        border: 1px solid var(--sand-deeper);
-        border-radius: 2px;
-        padding: 2px 5px;
-        background: var(--white);
-        color: var(--ink);
-        outline: none;
-    }
-    select:focus, input[type="text"]:focus {
-        border-color: var(--teal);
-    }
+        select, input[type="text"] {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+            border: 1px solid var(--sand-deeper);
+            border-radius: 2px;
+            padding: 2px 5px;
+            background: var(--white);
+            color: var(--ink);
+            outline: none;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: var(--teal);
+        }
 
-    /* -- ANALYTICS BAR --- */
-    #analytics-bar {
-        display: flex;
-        gap: 0;
-        align-items: center;
-        flex-shrink: 0;
-        background: var(--night);
-        border: 1.5px solid var(--night);
-        border-radius: 3px;
-        padding: 4px 10px;
-        overflow: hidden;
-        transition: padding 0.2s;
-    }
-    #analytics-bar.collapsed { padding: 3px 10px; }
-    #analytics-bar.collapsed .stat-pill { display: none; }
+        /* -- ANALYTICS BAR --- */
+        #analytics-bar {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            flex-shrink: 0;
+            background: var(--night);
+            border: 1.5px solid var(--night);
+            border-radius: 3px;
+            padding: 4px 10px;
+            overflow: hidden;
+            transition: padding 0.2s;
+        }
+        #analytics-bar.collapsed { padding: 3px 10px; }
+        #analytics-bar.collapsed .stat-pill { display: none; }
 
-    .stat-pill {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex: 1;
-        padding: 0 8px;
-        border-right: 1px solid rgba(255,255,255,0.1);
-    }
-    .stat-pill:first-child { padding-left: 0; }
-    .stat-pill:last-of-type { border-right: none; }
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            padding: 0 8px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-pill:first-child { padding-left: 0; }
+        .stat-pill:last-of-type { border-right: none; }
 
-    .stat-label {
-        font-size: 8px;
-        font-weight: 600;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        color: rgba(212,160,23,0.7);
-        white-space: nowrap;
-    }
-    .stat-val {
-        font-family: 'Playfair Display', serif;
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--white);
-    }
-    .stat-val.multi {
-        font-family: 'DM Sans', sans-serif;
-        font-size: 10px;
-    }
-    #analytics-toggle {
-        background: transparent; border: none; cursor: pointer;
-        color: rgba(255,255,255,0.4); font-size: 9px;
-        padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif;
-        flex-shrink: 0;
-    }
-    #analytics-toggle:hover { color: var(--white); }
-</style>
-```
-
+        .stat-label {
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(212,160,23,0.7);
+            white-space: nowrap;
+        }
+        .stat-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        .stat-val.multi {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10px;
+        }
+        #analytics-toggle {
+            background: transparent; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.4); font-size: 9px;
+            padding: 0 0 0 8px; font-family: 'DM Sans', sans-serif;
+            flex-shrink: 0;
+        }
+        #analytics-toggle:hover { color: var(--white); }
+    </style>
 </head>
 <body>
 <div id="app">
 
-```
-<!-- MASTHEAD -->
-<div id="masthead">
-    <span class="masthead-title">Split Tear-Off Planner</span>
-    <span class="masthead-sub">Banyan Logic</span>
-    <div class="masthead-spacer"></div>
-    <div class="legend">
-        <div class="legend-item">
-            <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
-            <span>3–4</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
-            <span>5+</span>
-        </div>
-    </div>
-</div>
-
-<!-- MAIN SPLIT -->
-<div id="main">
-
-    <!-- CALENDAR PANE -->
-    <div class="pane" id="cal-pane">
-        <div class="pane-header">
-            <div class="pane-header-row">
-                <span class="pane-title">3-Month Calendar</span>
-                <div class="pane-actions">
-                    <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
-                </div>
+    <!-- MASTHEAD -->
+    <div id="masthead">
+        <span class="masthead-title">Split Tear-Off Planner</span>
+        <span class="masthead-sub">Banyan Logic</span>
+        <div class="masthead-spacer"></div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-swatch" style="background:var(--ow-bg);border:1px solid var(--gold);"></div>
+                <span>3–4</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-swatch" style="background:var(--od-bg);border:1px solid var(--mauve);"></div>
+                <span>5+</span>
             </div>
         </div>
-        <div class="pane-scroll">
-            <div class="months-container" id="calendar-container"></div>
-        </div>
     </div>
 
-    <!-- TODO PANE -->
-    <div class="pane" id="todo-pane">
-        <div class="pane-header">
-            <div class="pane-header-row">
-                <span class="pane-title">To-Do List</span>
-                <div class="pane-actions">
-                    <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
+    <!-- MAIN SPLIT -->
+    <div id="main">
+
+        <!-- CALENDAR PANE -->
+        <div class="pane" id="cal-pane">
+            <div class="pane-header">
+                <div class="pane-header-row">
+                    <span class="pane-title">3-Month Calendar</span>
+                    <div class="pane-actions">
+                        <button class="btn btn-tear" onclick="tearOffCalendar()">✂ Tear Off</button>
+                    </div>
                 </div>
             </div>
-            <div class="pane-header-row">
-                <div class="pane-actions">
-                    <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">👁 Hidden</button>
-                    <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
-                        <option value="never">No purge</option>
-                        <option value="1">Purge 1d</option>
-                        <option value="3">Purge 3d</option>
-                        <option value="7">Purge 7d</option>
-                    </select>
-                </div>
+            <div class="pane-scroll">
+                <div class="months-container" id="calendar-container"></div>
             </div>
         </div>
-        <div class="pane-scroll" id="todo-list"></div>
-        <div class="todo-add-bar">
-            <input type="text" id="new-todo" placeholder="New task…"
-                onkeypress="if(event.key==='Enter') addTodo()">
-            <select id="new-todo-tag">
-                <option value="W">W</option>
-                <option value="L">L</option>
-            </select>
-            <button class="btn-add" onclick="addTodo()">Add</button>
+
+        <!-- TODO PANE -->
+        <div class="pane" id="todo-pane">
+            <div class="pane-header">
+                <div class="pane-header-row">
+                    <span class="pane-title">To-Do List</span>
+                    <div class="pane-actions">
+                        <button class="btn btn-tear" onclick="tearOffTodos()">✂ Tear Done</button>
+                    </div>
+                </div>
+                <div class="pane-header-row">
+                    <div class="pane-actions">
+                        <button id="show-hidden-toggle" class="btn btn-show-hidden" onclick="toggleShowHiddenTasks()">👁 Hidden</button>
+                        <select id="purge-setting" onchange="changePurgeSetting(this.value)" title="Auto-purge">
+                            <option value="never">No purge</option>
+                            <option value="1">Purge 1d</option>
+                            <option value="3">Purge 3d</option>
+                            <option value="7">Purge 7d</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="pane-scroll" id="todo-list"></div>
+            <div class="todo-add-bar">
+                <input type="text" id="new-todo" placeholder="New task…"
+                    onkeypress="if(event.key==='Enter') addTodo()">
+                <select id="new-todo-tag">
+                    <option value="W">W</option>
+                    <option value="L">L</option>
+                </select>
+                <button class="btn-add" onclick="addTodo()">Add</button>
+            </div>
         </div>
+
     </div>
 
-</div>
-
-<!-- ANALYTICS FOOTER BAR -->
-<div id="analytics-bar">
-    <div class="stat-pill">
-        <span class="stat-label">Peak Day</span>
-        <span id="stat-peak-day" class="stat-val">—</span>
+    <!-- ANALYTICS FOOTER BAR -->
+    <div id="analytics-bar">
+        <div class="stat-pill">
+            <span class="stat-label">Peak Day</span>
+            <span id="stat-peak-day" class="stat-val">—</span>
+        </div>
+        <div class="stat-pill">
+            <span class="stat-label">Best Week</span>
+            <span id="stat-peak-week" class="stat-val">—</span>
+        </div>
+        <div class="stat-pill">
+            <span class="stat-label">Tasks W · L</span>
+            <span id="stat-tag-ratio" class="stat-val multi">0 · 0</span>
+        </div>
+        <button id="analytics-toggle" onclick="toggleAnalytics()" title="Collapse">▼</button>
     </div>
-    <div class="stat-pill">
-        <span class="stat-label">Best Week</span>
-        <span id="stat-peak-week" class="stat-val">—</span>
-    </div>
-    <div class="stat-pill">
-        <span class="stat-label">Tasks W · L</span>
-        <span id="stat-tag-ratio" class="stat-val multi">0 · 0</span>
-    </div>
-    <button id="analytics-toggle" onclick="toggleAnalytics()" title="Collapse">▼</button>
-</div>
-```
 
 </div>
 
@@ -837,6 +831,5 @@
     runAutoPurgeCheck();
     setInterval(runAutoPurgeCheck, 3600000);
 </script>
-
 </body>
 </html>
