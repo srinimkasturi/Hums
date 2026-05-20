@@ -63,27 +63,30 @@
         #masthead {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding-bottom: 5px;
+            gap: 6px;
+            padding-bottom: 4px;
             border-bottom: 2px solid var(--night);
             flex-shrink: 0;
+            flex-wrap: nowrap;
         }
         .masthead-title {
             font-family: 'Playfair Display', serif;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--night);
+            white-space: nowrap;
         }
         .masthead-sub {
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 500;
             color: var(--ink-light);
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             border-left: 2px solid var(--gold);
-            padding-left: 8px;
+            padding-left: 6px;
+            white-space: nowrap;
         }
-        .masthead-spacer { flex: 1; }
+        .masthead-spacer { flex: 1; min-width: 4px; max-width: 20px; }
         .legend { display: flex; gap: 10px; align-items: center; font-size: 9px; color: var(--ink-mid); }
         .legend-item { display: flex; align-items: center; gap: 3px; }
         .legend-swatch { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
@@ -91,20 +94,21 @@
         /* VIEW TABS */
         .view-tabs {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             background: var(--night);
             border-radius: 3px;
-            padding: 3px;
+            padding: 2px;
+            flex-shrink: 0;
         }
         .view-tab {
             font-family: 'DM Sans', sans-serif;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 600;
-            padding: 3px 9px;
+            padding: 2px 6px;
             border: none;
             border-radius: 2px;
             cursor: pointer;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             text-transform: uppercase;
             background: transparent;
             color: rgba(255,255,255,0.5);
@@ -556,40 +560,82 @@
         }
         .month-slider-label {
             font-family: 'DM Mono', monospace;
-            font-size: 9px;
-            color: var(--ink-mid);
-            min-width: 28px;
+            font-size: 8px;
+            color: rgba(212,160,23,0.85);
+            min-width: 24px;
             text-align: right;
             white-space: nowrap;
         }
         .month-slider {
             -webkit-appearance: none;
             appearance: none;
-            width: 80px;
+            width: 60px;
             height: 3px;
             border-radius: 2px;
-            background: var(--sand-deeper);
+            background: rgba(255,255,255,0.2);
             outline: none;
             cursor: pointer;
         }
         .month-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 12px;
-            height: 12px;
+            width: 11px;
+            height: 11px;
             border-radius: 50%;
-            background: var(--night);
-            border: 2px solid var(--gold);
+            background: var(--gold);
+            border: 2px solid var(--white);
             cursor: pointer;
         }
         .month-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
+            width: 11px;
+            height: 11px;
             border-radius: 50%;
-            background: var(--night);
-            border: 2px solid var(--gold);
+            background: var(--gold);
+            border: 2px solid var(--white);
             cursor: pointer;
         }
+
+        /* -- PRIORITY BADGE -- */
+        .pri-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            flex-shrink: 0;
+            min-width: 16px;
+            text-align: center;
+            letter-spacing: 0;
+        }
+        .pri-UI { color: #CC2200; }
+        .pri-U  { color: #E07000; }
+        .pri-I  { color: #2563a8; }
+        .pri-W  { color: #2A7B7C; }
+        .pri-N  { color: #9C8E7A; }
+
+        /* -- INLINE TAG/PRI SELECTS -- */
+        .inline-sel {
+            font-family: 'DM Mono', monospace;
+            font-size: 8px;
+            font-weight: 700;
+            border: none;
+            border-radius: 2px;
+            padding: 1px 2px;
+            cursor: pointer;
+            outline: none;
+            flex-shrink: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            text-align: center;
+            width: 28px;
+        }
+        .pri-sel { background: transparent; }
+        .pri-sel.pri-UI { color: #CC2200; }
+        .pri-sel.pri-U  { color: #E07000; }
+        .pri-sel.pri-I  { color: #2563a8; }
+        .pri-sel.pri-W  { color: #2A7B7C; }
+        .pri-sel.pri-N  { color: #9C8E7A; }
+        .tag-sel { background: transparent; }
+        .tag-sel.tag-w { color: var(--purushartha); }
+        .tag-sel.tag-l { color: var(--teal); }
     </style>
 </head>
 <body>
@@ -603,12 +649,7 @@
             <button class="view-tab active" id="tab-cal" onclick="switchView('calendar')">Calendar</button>
             <button class="view-tab" id="tab-kanban" onclick="switchView('kanban')">Kanban</button>
         </div>
-        <div class="month-slider-wrap">
-            <span class="month-slider-label" id="month-slider-val">3 mo</span>
-            <input type="range" id="month-slider" class="month-slider"
-                min="1" max="24" value="3"
-                oninput="changeMonthCount(this.value)">
-        </div>
+
     </div>
 
 
@@ -663,8 +704,12 @@
             <div class="pane" id="cal-pane">
                 <div class="pane-header">
                     <div class="pane-header-row">
-                        <span class="pane-title">3-Month Calendar</span>
+                        <span class="pane-title" id="cal-pane-title">3-Month Calendar</span>
                         <div class="pane-actions">
+                            <span class="month-slider-label" id="month-slider-val">3 mo</span>
+                            <input type="range" id="month-slider" class="month-slider"
+                                min="1" max="24" value="3"
+                                oninput="changeMonthCount(this.value)">
                             <button class="btn btn-tear" onclick="tearOffCalendar()">Tear Off</button>
                         </div>
                     </div>
@@ -718,6 +763,13 @@
                     <option value="W">W</option>
                     <option value="L">L</option>
                 </select>
+                <select id="new-todo-pri">
+                    <option value="UI">UI</option>
+                    <option value="U">U</option>
+                    <option value="I">I</option>
+                    <option value="W">W</option>
+                    <option value="N">N</option>
+                </select>
                 <button class="btn-add" onclick="addTodo()">Add</button>
             </div>
         </div>
@@ -757,7 +809,7 @@
     document.getElementById('purge-setting').value = purgeThresholdDays;
 
     // ensure every todo has a kanban column
-    todos = todos.map(t => ({ kanbanCol: 'Funnel', ...t }));
+    todos = todos.map(t => ({ kanbanCol: 'Funnel', pri: 'N', ...t }));
 
     // VIEW SWITCH
     function switchView(view) {
@@ -1105,7 +1157,41 @@
             delBtn.title = 'Delete';
             delBtn.onclick = function(e) { e.stopPropagation(); deleteTodoItem(todo.id); };
 
-            item.append(num, tag, txt, hideBtn, delBtn);
+            var pri = todo.pri || 'N';
+
+            var priSel = document.createElement('select');
+            priSel.className = 'inline-sel pri-sel pri-' + pri;
+            ['UI','U','I','W','N'].forEach(function(p) {
+                var o = document.createElement('option');
+                o.value = p; o.textContent = p;
+                if (p === pri) o.selected = true;
+                priSel.appendChild(o);
+            });
+            priSel.title = {UI:'Urgent+Important',U:'Urgent',I:'Important',W:'Want',N:'Nice to do'}[pri] || pri;
+            priSel.onchange = function(e) {
+                e.stopPropagation();
+                todos = todos.map(function(t) { return t.id === todo.id ? Object.assign({}, t, { pri: priSel.value }) : t; });
+                priSel.className = 'inline-sel pri-sel pri-' + priSel.value;
+                priSel.title = {UI:'Urgent+Important',U:'Urgent',I:'Important',W:'Want',N:'Nice to do'}[priSel.value] || priSel.value;
+                save();
+            };
+
+            var tagSel = document.createElement('select');
+            tagSel.className = 'inline-sel tag-sel tag-' + todo.tag.toLowerCase();
+            ['W','L'].forEach(function(tg) {
+                var o = document.createElement('option');
+                o.value = tg; o.textContent = tg;
+                if (tg === todo.tag) o.selected = true;
+                tagSel.appendChild(o);
+            });
+            tagSel.onchange = function(e) {
+                e.stopPropagation();
+                todos = todos.map(function(t) { return t.id === todo.id ? Object.assign({}, t, { tag: tagSel.value }) : t; });
+                tagSel.className = 'inline-sel tag-sel tag-' + tagSel.value.toLowerCase();
+                save();
+            };
+
+            item.append(num, priSel, tagSel, txt, hideBtn, delBtn);
             list.appendChild(item);
         });
 
@@ -1117,7 +1203,8 @@
         const tag = document.getElementById('new-todo-tag').value;
         const text = inp.value.trim();
         if (!text) return;
-        todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null, hidden: false, tag: tag, kanbanCol: 'Funnel' });
+        var pri = document.getElementById('new-todo-pri').value;
+        todos.push({ id: nextTodoId, text: text, completed: false, completedAt: null, hidden: false, tag: tag, kanbanCol: 'Funnel', pri: pri });
         nextTodoId++;
         save();
         inp.value = '';
