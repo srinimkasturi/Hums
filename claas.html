@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLAAS · Banyan Logic · Srinivasa M. Kasturi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cosmos:    #0A0C14;
+    --cosmos-2:  #0F1220;
+    --cosmos-3:  #161B2E;
+    --cosmos-4:  #1E2440;
+    --blue:      #3B7BF6;   /* Purushartha — free will, infinite */
+    --blue-dim:  #1E3A6E;
+    --blue-glow: rgba(59,123,246,0.18);
+    --yellow:    #F5A623;   /* Prarabdha — destiny, finite/given */
+    --yellow-dim:#7A4E0D;
+    --yellow-glow:rgba(245,166,35,0.15);
+    --text:      #E8EAF2;
+    --text-dim:  #8890A8;
+    --text-mute: #4A5068;
+    --border:    rgba(255,255,255,0.07);
+    --border-hi: rgba(255,255,255,0.14);
+    --radius:    12px;
+    --radius-sm: 6px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cosmos);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Starfield ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.6) 0%, transparent 0%),
+      radial-gradient(1px 1px at 34% 7%,  rgba(255,255,255,0.4) 0%, transparent 0%),
+      radial-gradient(1px 1px at 56% 23%, rgba(255,255,255,0.5) 0%, transparent 0%),
+      radial-gradient(1px 1px at 78% 11%, rgba(255,255,255,0.3) 0%, transparent 0%),
+      radial-gradient(1px 1px at 91% 44%, rgba(255,255,255,0.5) 0%, transparent 0%),
+      radial-gradient(1px 1px at 23% 61%, rgba(255,255,255,0.3) 0%, transparent 0%),
+      radial-gradient(1px 1px at 67% 53%, rgba(255,255,255,0.4) 0%, transparent 0%),
+      radial-gradient(1px 1px at 45% 78%, rgba(255,255,255,0.3) 0%, transparent 0%),
+      radial-gradient(1px 1px at 88% 82%, rgba(255,255,255,0.5) 0%, transparent 0%),
+      radial-gradient(1px 1px at 7%  89%, rgba(255,255,255,0.4) 0%, transparent 0%),
+      radial-gradient(2px 2px at 52% 41%, rgba(245,166,35,0.25) 0%, transparent 0%),
+      radial-gradient(2px 2px at 19% 33%, rgba(59,123,246,0.2)  0%, transparent 0%);
+    pointer-events: none;
+  }
+
+  /* ── Layout ── */
+  .wrap {
+    position: relative; z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,20,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap;
+  }
+  nav .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--yellow);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    flex: 1;
+  }
+  nav a {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--text); }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    border: 1px solid var(--yellow-dim);
+    background: var(--yellow-glow);
+    padding: 5px 14px;
+    border-radius: 99px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 span.c { color: var(--blue); }
+  .hero h1 span.y { color: var(--yellow); }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+
+  .hero-axiom {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-dim);
+    border-left: 2px solid var(--yellow);
+    padding: 4px 0 4px 16px;
+    text-align: left;
+    max-width: 480px;
+  }
+
+  /* ── Section ── */
+  section {
+    margin-top: 64px;
+    scroll-margin-top: 70px;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  h2 em { font-style: italic; color: var(--yellow); }
+  p { color: var(--text-dim); margin-bottom: 14px; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* ── Honest Positioning Box ── */
+  .honest-box {
+    background: var(--cosmos-3);
+    border: 1px solid var(--border-hi);
+    border-left: 3px solid var(--yellow);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .honest-box p { margin: 0; }
+
+  /* ── Architecture Layers ── */
+  .arch-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 24px 0;
+  }
+  .arch-layer {
+    display: grid;
+    grid-template-columns: 40px 80px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .arch-layer:hover { border-color: var(--border-hi); background: var(--cosmos-2); }
+  .arch-layer.l1 { border-left: 3px solid var(--yellow); }
+  .arch-layer.l2 { border-left: 3px solid #5B9EF5; }
+  .arch-layer.l3 { border-left: 3px solid var(--blue); }
+  .arch-layer.l4 { border-left: 3px solid #7DD3FC; }
+  .layer-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-mute);
+  }
+  .layer-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .layer-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+  .layer-exit {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-mute);
+    white-space: nowrap;
+  }
+  .layer-exit.perm { color: var(--yellow); }
+
+  /* ── CLAAS Dimensions ── */
+  .dims-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .dim-card {
+    background: var(--cosmos-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .dim-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .dim-card.cyber::before  { background: var(--blue); }
+  .dim-card.lean::before   { background: var(--yellow); }
+  .dim-card.agile::before  { background: #5B9EF5; }
+  .dim-card.auto::before   { background: #7DD3FC; }
+  .dim-card.scale::before  { background: #A78BFA; }
+  .dim-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+  .dim-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .dim-card.cyber .dim-letter  { color: var(--blue); }
+  .dim-card.lean .dim-letter   { color: var(--yellow); }
+  .dim-card.agile .dim-letter  { color: #5B9EF5; }
+  .dim-card.auto .dim-letter   { color: #7DD3FC; }
+  .dim-card.scale .dim-letter  { color: #A78BFA; }
+  .dim-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .dim-body {
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .dim-body .tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-mute);
+    margin-top: 8px;
+  }
+  .evolution-note {
+    background: var(--blue-glow);
+    border: 1px solid var(--blue-dim);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: var(--blue);
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+
+  /* ── History Timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin: 24px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--blue-dim), var(--yellow-dim));
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute; left: -24px; top: 7px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cosmos-4);
+    border: 2px solid var(--blue);
+  }
+  .tl-item.key::before { background: var(--yellow); border-color: var(--yellow); }
+  .tl-era {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-mute);
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+  }
+  .tl-insight {
+    font-size: 0.88rem;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+  .tl-detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  /* ── BRD Six Story Types ── */
+  .story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .story-card {
+    background: var(--cosmos-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .story-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--blue);
+    margin-bottom: 5px;
+    letter-spacing: 0.06em;
+  }
+  .story-type.adv { color: #F87171; }
+  .story-type.res { color: var(--yellow); }
+  .story-type.per { color: #5B9EF5; }
+  .story-type.cap { color: #7DD3FC; }
+  .story-type.adm { color: #A78BFA; }
+  .story-body {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  /* ── Relay Table ── */
+  .relay-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 20px 0;
+  }
+  .relay-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-hi);
+  }
+  .relay-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+  .relay-table tr:hover td { background: var(--cosmos-2); }
+  .relay-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .phase-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background: var(--blue);
+    vertical-align: middle;
+  }
+  .phase-dot.y0 { background: var(--yellow); }
+
+  /* ── Colour Philosophy ── */
+  .colour-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .colour-card {
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .colour-card.blue-card {
+    background: var(--blue-glow);
+    border: 1px solid var(--blue-dim);
+  }
+  .colour-card.yellow-card {
+    background: var(--yellow-glow);
+    border: 1px solid var(--yellow-dim);
+  }
+  .colour-swatch {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    margin-bottom: 6px;
+  }
+  .colour-card.blue-card .colour-swatch { background: var(--blue); }
+  .colour-card.yellow-card .colour-swatch { background: var(--yellow); }
+  .colour-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .colour-meaning {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+  }
+
+  /* ── Context Payload ── */
+  .context-box {
+    background: var(--cosmos-2);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .context-box pre {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cosmos-4);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--radius-sm);
+    padding: 7px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 12px;
+  }
+  .copy-btn:hover { background: var(--blue-glow); border-color: var(--blue-dim); }
+  .copy-btn.copied { color: var(--yellow); border-color: var(--yellow-dim); }
+
+  /* ── Footer ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 80px;
+  }
+  footer .bl-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+  footer p {
+    font-size: 0.78rem;
+    color: var(--text-mute);
+    margin: 0;
+  }
+
+  /* ── Utility ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border-hi), transparent);
+    margin: 48px 0;
+  }
+
+  @media (max-width: 600px) {
+    .arch-layer { grid-template-columns: 30px 60px 1fr; }
+    .layer-exit { display: none; }
+    .colour-pair { grid-template-columns: 1fr; }
+    .relay-table { font-size: 0.75rem; }
+    .relay-table th, .relay-table td { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">Banyan Logic · CLAAS</span>
+  <a href="#what">What</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#dimensions">Dimensions</a>
+  <a href="#relay">Relay</a>
+  <a href="#context">Context</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Banyan Logic · Layer 3 · 2026</div>
+    <h1>
+      <span class="c">C</span><span class="c">L</span><span class="c">A</span><span class="y">A</span><span class="c">S</span>
+    </h1>
+    <p class="hero-sub">
+      Cybersecurity · Lean · Agile · <em style="font-style:italic;color:var(--yellow)">Automation</em> · at Scale<br>
+      One era's curated selection of upskilling dimensions for T-shaped people in enterprise IT.
+    </p>
+    <div class="hero-axiom">
+      "Framing the problem is half the Transformation."<br>
+      — Srinivasa M. Kasturi · Banyan Logic, LLC · 2026
+    </div>
+  </div>
+
+  <!-- WHAT IS CLAAS -->
+  <section id="what">
+    <div class="section-label">§ 01 · What CLAAS Is</div>
+    <h2>A curated selection, <em>not an invention</em></h2>
+
+    <div class="honest-box">
+      <p><strong>Honest positioning — this is the moat.</strong> CLAAS is not a methodology BL invented. It is a personally curated subset of existing organizational research — selected through 30 years of lived enterprise observation at IBM, TRW, Freddie Mac, and the World Bank Group. BL claims to have selected the subset that matters most right now, integrated it through one coherent diagnostic lens, and made it teachable. The 30-year credential paired with this honesty is the moat — not a universal theory claim.</p>
+    </div>
+
+    <p>CLAAS names <strong>what dimensions a T-shaped person needs to develop toward, in this era.</strong> It is historically situated. It will evolve. It is intentionally mortal — transferring at Year 8 of the Banyan Logic roadmap precisely because its dimensions will shift. HUMS™ is the permanent instrument underneath it.</p>
+
+    <p>The name evolved: the original ISACA December 2025 presentation was titled <em>"Transformation @ Cyber @ Lean + Agile @ Scale"</em> — CLASS without the A. <strong>Automation</strong> was added in 2026 to explicitly name the full spectrum: AI through robotics through all non-human intelligence.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <div class="section-label">§ 02 · The Four-Layer Architecture</div>
+    <h2>Where CLAAS sits in the <em>Banyan Logic</em> stack</h2>
+
+    <p>CLAAS is <strong>Layer 3</strong> in a four-layer self-organizing operating framework. Each layer has a precise role and a defined exit condition — except HUMS™, which BL retains forever.</p>
+
+    <div class="arch-stack">
+      <div class="arch-layer l4">
+        <div class="layer-num">L4</div>
+        <div class="layer-name">CLAAS</div>
+        <div class="layer-desc"><strong style="color:var(--text)">Upskilling Dimensions.</strong> Names what to grow toward, this era. 5 dimensions. Curated org research.</div>
+        <div class="layer-exit">Transfers Y8</div>
+      </div>
+      <div class="arch-layer l3">
+        <div class="layer-num">L3</div>
+        <div class="layer-name">C-SALF</div>
+        <div class="layer-desc"><strong style="color:var(--text)">T-shaped in Action.</strong> Self-organizing framework from a $3M team. 6 phases · 7 roles · BRD 6 story types.</div>
+        <div class="layer-exit">Exits Y8</div>
+      </div>
+      <div class="arch-layer l2">
+        <div class="layer-num">L2</div>
+        <div class="layer-name">T-Class</div>
+        <div class="layer-desc"><strong style="color:var(--text)">Upskilling Method.</strong> Artifact-based. ISO 17020 certified. AI is the pencil. 18 cells (6 phases × 3 tracks).</div>
+        <div class="layer-exit">Exits Y8</div>
+      </div>
+      <div class="arch-layer l1">
+        <div class="layer-num">L1</div>
+        <div class="layer-name">HUMS™</div>
+        <div class="layer-desc"><strong style="color:var(--yellow)">Diagnostic Instrument.</strong> Excavated from perennial wisdom. 27 signals · 6 buckets. The stethoscope. Never exits.</div>
+        <div class="layer-exit perm">BL retains ∞</div>
+      </div>
+    </div>
+
+    <p>Together these layers lower the <strong>activation energy for the People layer to jump to a higher orbit</strong>. CLAAS names the destination. C-SALF maps the route. T-Class is how you walk it. HUMS™ tells you whether the people are actually moving.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DIMENSIONS -->
+  <section id="dimensions">
+    <div class="section-label">§ 03 · The Five Dimensions</div>
+    <h2>What CLAAS <em>actually means</em></h2>
+
+    <div class="dims-grid">
+      <div class="dim-card cyber">
+        <div class="dim-letter">C</div>
+        <div class="dim-title">Cybersecurity</div>
+        <div class="dim-body">
+          Security as the <strong>axle, not a phase</strong>. Zero Trust as loss-value framing — not just performance. Adversarial attack story type mirrors every user story. Every BRD carries all six story types simultaneously.
+          <br><span class="tag">NIST 800-53 · CSF 2.0 · RMF · FedRAMP</span>
+        </div>
+      </div>
+      <div class="dim-card lean">
+        <div class="dim-letter">L</div>
+        <div class="dim-title">Lean</div>
+        <div class="dim-body">
+          Value-driven focus. Waste elimination. The ROI Analyst is the Ph6 role — measuring S25 (Live), S26 (Love: workaround rate), S27 (Connect: People layer health). Evidence, not estimates.
+          <br><span class="tag">Six Sigma · Phase 6 · ISO 17020</span>
+        </div>
+      </div>
+      <div class="dim-card agile">
+        <div class="dim-letter">A</div>
+        <div class="dim-title">Agile</div>
+        <div class="dim-body">
+          Iteration, user stories, shift-left. SAFe PI planning as Year 0 roadmap structure. Agile Release Trolley (ARTrolley) as an efficient, right-sized ART. PDCA as the continuous cadence.
+          <br><span class="tag">SAFe · CMMI · BRD iteration</span>
+        </div>
+      </div>
+      <div class="dim-card auto">
+        <div class="dim-letter">A</div>
+        <div class="dim-title">Automation</div>
+        <div class="dim-body">
+          <strong>Expanded in 2026</strong> from DevSecOps/LCNC to the full spectrum. AI through robotics through all non-human intelligence. The threat is the same People layer failure — different era. NAtU (Not Automation Unease) is the book built on this insight.
+          <div class="evolution-note">Originally CLASS (no Automation). The second A was added explicitly in 2026 to name what was already happening.</div>
+        </div>
+      </div>
+      <div class="dim-card scale">
+        <div class="dim-letter">S</div>
+        <div class="dim-title">at Scale</div>
+        <div class="dim-body">
+          Systems thinking. Cadence and synchronization. Decentralization. How does shift-left actually scale across 250+ apps, 3 continents, 10+10 mixed teams? The WBG 4-PI program is the proof of concept.
+          <br><span class="tag">SAFe · 853 NIST controls · 4-PI structure</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ORIGIN STORY -->
+  <section id="origin">
+    <div class="section-label">§ 04 · The 30-Year Diagnostic Record</div>
+    <h2>Same dropped baton, <em>different technology</em></h2>
+
+    <p>CLAAS was not designed for a market. It is the distillation of a consistent observation across four organizations and 30 years: the technology changed, but the <strong>People layer failure</strong> was always the same.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-era">IBM · 1990s · C++ · US Patent 6,715,073</div>
+        <div class="tl-insight">Systems built correctly, deployed incorrectly.</div>
+        <div class="tl-detail">Baton quality: build is not handoff. The completed artifact and the usable handoff are different things.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-era">TRW · IRS Critical Infrastructure · Encryption</div>
+        <div class="tl-insight">Technical correctness ≠ operational trust.</div>
+        <div class="tl-detail">Security must be the axle, not a phase. CLAAS Cybersecurity dimension formed here.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-era">Freddie Mac · Policy-Driven Governance</div>
+        <div class="tl-insight">Controls without lifecycle discipline.</div>
+        <div class="tl-detail">Stage-gate plus risk discipline. CLAAS Lean layer lineage begins.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-era">FedRAMP · 30+ 3PAO Lead Assessments · ISO 17020</div>
+        <div class="tl-insight">Self-assessment without impartiality is not inspection.</div>
+        <div class="tl-detail">ISO 17020 independence earned in practice — 30+ times delivering the finding nobody wanted to hear. The baton quality insight crystallized.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-era">WBG · 2011–2016 · First Cloud Migrations</div>
+        <div class="tl-insight">Requirements missing adversarial stories.</div>
+        <div class="tl-detail">A Nurse Training guide only has user stories. The 6 BRD story types formed: User + Adversarial + Resilience + Performance + Capacity + Administrability.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-era">WBG · 2016–2023 · DevSecOps · 250+ Apps</div>
+        <div class="tl-insight">Automation without People layer = fragile.</div>
+        <div class="tl-detail">HUMS S14–S17 operational health signals named. CLAAS Automation dimension takes shape.</div>
+      </div>
+      <div class="tl-item key">
+        <div class="tl-era">WBG · 2023–Present · $3M · 10+10 · Supervisor</div>
+        <div class="tl-insight">Running a team = running a relay.</div>
+        <div class="tl-detail">C-SALF self-organizing framework crystallized. CLAAS named explicitly. SAFe transformation at WBG becomes the proof of concept for all 5 dimensions simultaneously.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SIX STORY TYPES -->
+  <section id="stories">
+    <div class="section-label">§ 05 · BRD Six Story Types</div>
+    <h2>CLAAS's most direct <em>delivery expression</em></h2>
+
+    <p>A Nurse Training guide only has user stories. C-SALF BRDs capture all six simultaneously. This is the CLAAS Cybersecurity dimension made operational in every phase.</p>
+
+    <div class="story-grid">
+      <div class="story-card">
+        <div class="story-type">User Story</div>
+        <div class="story-body">As a [role], I need [capability] so that [outcome]. 3+ testable acceptance criteria.</div>
+      </div>
+      <div class="story-card">
+        <div class="story-type adv">Adversarial Attack</div>
+        <div class="story-body">As a [threat actor], I would attempt [attack]. Every user story has a mirror. HUMS S06 Reflex · S09 See.</div>
+      </div>
+      <div class="story-card">
+        <div class="story-type res">Resilience</div>
+        <div class="story-body">System must continue [function] when [component] fails. RTO · RPO · degraded mode. HUMS S14 · S17.</div>
+      </div>
+      <div class="story-card">
+        <div class="story-type per">Performance</div>
+        <div class="story-body">As [role], I need [action] in [time] under [load]. SLA: response + throughput + error rate. HUMS S16 Circulate.</div>
+      </div>
+      <div class="story-card">
+        <div class="story-type cap">Capacity</div>
+        <div class="story-body">System must handle [concurrent load]. Growth Y1–Y3. Ceiling + graceful degradation. HUMS S15 Digest.</div>
+      </div>
+      <div class="story-card">
+        <div class="story-type adm">Administrability</div>
+        <div class="story-body">Admin must govern without engineering. Add/remove users. Config without deploy. HUMS S21 · S17.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- RELAY -->
+  <section id="relay">
+    <div class="section-label">§ 06 · The C-SALF Relay</div>
+    <h2>CLAAS as a <em>5-attribute tester</em> across all phases</h2>
+
+    <p>Every phase of C-SALF asks: does this deliverable pass the CLAAS lens? CLAAS runs as a tester across all 18 cells of T-Class (6 phases × 3 tracks). The key insight: <strong>baton quality is defined by the recipient's ability to act — not the sender's completion.</strong></p>
+
+    <table class="relay-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Role</th>
+          <th>HUMS Signals</th>
+          <th>Baton Out</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="phase-dot y0"></span>Year 0 · Reputation</td>
+          <td>Biz Owner</td>
+          <td>S27 Connect</td>
+          <td>200 thinkers + PoE + waitlist</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph1 · Idea</td>
+          <td>Biz Owner</td>
+          <td>S25–S27</td>
+          <td>Impact Canvas + adversarial seeds</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph2 · Requirements</td>
+          <td>Biz Analyst</td>
+          <td>S05–S08</td>
+          <td>BRD — all 6 story types · ISO 17020</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph3 · Plan</td>
+          <td>PM</td>
+          <td>S20–S22</td>
+          <td>ERD + Wireframes + Risk Register</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph4 · Automation</td>
+          <td>SDLC</td>
+          <td>S09–S24</td>
+          <td>Working prototype + Build Log</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph5 · Operations</td>
+          <td>Operations</td>
+          <td>S14–S17</td>
+          <td>Runbook + Security Self-Assessment</td>
+        </tr>
+        <tr>
+          <td><span class="phase-dot"></span>Ph6 · Usage Data</td>
+          <td>ROI Analyst</td>
+          <td>S05 + S25–S27</td>
+          <td>Value Analysis (S25+S26+S27) + Biz Plan Update</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:16px">The <strong>First Pull as a Security Truth Event</strong>: security enters the value stream at the pull point, not bolted on later. This is CLAAS Cybersecurity + Lean combined into one operational principle.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- METHODOLOGY LINEAGE -->
+  <section id="lineage">
+    <div class="section-label">§ 07 · Methodology Lineage</div>
+    <h2>What was <em>selected</em> and why</h2>
+
+    <p>The honesty of curation is the differentiator. BL does not claim to have invented any of these — only to have selected the subset that survives contact with real work.</p>
+
+    <div style="overflow-x:auto">
+    <table class="relay-table">
+      <thead>
+        <tr><th>Methodology</th><th>What it contributed</th><th>Where it lives in CLAAS / C-SALF</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Waterfall / SDLC</td><td>Phase discipline · artifact gates</td><td>C-SALF phase structure</td></tr>
+        <tr><td>CMMI</td><td>Maturity · baton quality</td><td>Handoff integrity model</td></tr>
+        <tr><td>ITIL</td><td>Operations first</td><td>C-SALF Phase 5</td></tr>
+        <tr><td>Six Sigma / Lean</td><td>Waste + measure</td><td>CLAAS Lean layer · Ph6 ROI</td></tr>
+        <tr><td>Agile / Scrum</td><td>Iteration · user stories</td><td>BRD iterative format</td></tr>
+        <tr><td>SAFe</td><td>PI planning · ART</td><td>Year 0 roadmap structure</td></tr>
+        <tr><td>DevOps / DevSecOps</td><td>Security left-shifted</td><td>C-SALF security axle</td></tr>
+        <tr><td>Design Thinking</td><td>Empathy · framing</td><td>HUMS + Phase 1 canvas</td></tr>
+        <tr><td>Stage-Gate</td><td>Go/no-go · gates</td><td>Phase handoff criteria</td></tr>
+        <tr><td>ISO 17020</td><td>Inspection · impartiality</td><td>Cert + ROI Analyst — earned in 30+ FedRAMP assessments</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- COLOUR PHILOSOPHY -->
+  <section id="colour">
+    <div class="section-label">§ 08 · Universal UI Colour Philosophy</div>
+    <h2>The philosophical <em>colour system</em></h2>
+
+    <p>All Banyan Logic interfaces use this foundational colour philosophy. It is not a style choice — it is a semantic one, grounded in Advaita Vedanta.</p>
+
+    <div class="colour-pair">
+      <div class="colour-card blue-card">
+        <div class="colour-swatch"></div>
+        <div class="colour-label">Blue #3B7BF6 — Purushartha</div>
+        <div class="colour-meaning">Free will. The infinite. What the human chooses, creates, and authors. All interactive elements, CTAs, and agent actions.</div>
+      </div>
+      <div class="colour-card yellow-card">
+        <div class="colour-swatch"></div>
+        <div class="colour-label">Yellow #F5A623 — Prarabdha</div>
+        <div class="colour-meaning">Destiny. The finite/given. What arrives from prior causes, context, and constraint. Highlights, warnings, and given conditions.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTEXT PAYLOAD -->
+  <section id="context">
+    <div class="section-label">§ 09 · Context Payload for AI Sessions</div>
+    <h2>Paste this to give Claude <em>full CLAAS context</em></h2>
+
+    <p>This file itself is the context artifact. To use it: provide the URL of this page to Claude with the instruction below, or copy the payload directly.</p>
+
+    <div class="context-box">
+      <pre id="context-text">## CLAAS — Banyan Logic Context Payload
+
+**Source:** srinimkasturi.github.io/Hums/claas.html  
+**Author:** Srinivasa M. Kasturi · Banyan Logic, LLC · 2026  
+**Axiom:** "Framing the problem is half the Transformation."
+
+### What CLAAS is
+CLAAS = Cybersecurity · Lean · Agile · Automation · at Scale.  
+Layer 3 in the Banyan Logic 4-layer architecture. NOT a methodology — a curated selection of upskilling dimensions for T-shaped people in enterprise IT, for this era. Historically situated. Will evolve. Transfers at Year 8.
+
+**Evolution note:** Originally CLASS (ISACA Dec 2025, no Automation). Automation added in 2026 to name the full spectrum: AI → robotics → all non-human intelligence.
+
+### The 4-Layer Architecture
+- L4 CLAAS — Upskilling Dimensions (transfers Y8)  
+- L3 C-SALF — T-shaped in Action, 6 phases · 7 roles · BRD 6 story types (exits Y8)  
+- L2 T-Class — Upskilling Method, artifact-based, ISO 17020 (exits Y8)  
+- L1 HUMS™ — Diagnostic Instrument, 27 signals · 6 buckets, excavated from perennial wisdom (BL retains FOREVER)
+
+### The 5 Dimensions
+- C: Cybersecurity — security as axle, not phase. Adversarial story in every BRD. NIST 800-53 · CSF 2.0 · RMF · FedRAMP.
+- L: Lean — value-driven, waste out, ROI Analyst as Ph6 role (S25/S26/S27). Six Sigma lineage.
+- A: Agile — iteration, user stories, shift-left. SAFe PI planning as Year 0 structure.
+- A: Automation — full spectrum from AI to robotics to all non-human intelligence. DevSecOps origin, expanded 2026.
+- S: at Scale — systems thinking, cadence, synchronization, decentralization. 4-PI WBG program as proof of concept.
+
+### BRD Six Story Types (CLAAS operational expression)
+User · Adversarial Attack · Resilience · Performance · Capacity · Administrability.  
+Every BRD carries all six. A Nurse Training guide only has user stories.
+
+### C-SALF Relay Phases
+Y0 Reputation → Ph1 Idea (Biz Owner S25-27) → Ph2 Requirements (Biz Analyst S05-08) →  
+Ph3 Plan (PM S20-22) → Ph4 Automation (SDLC S09-24) → Ph5 Operations (Ops S14-17) →  
+Ph6 Usage Data (ROI Analyst S05+S25-27)
+
+Key insight: Baton quality = recipient's ability to act, not sender's completion.  
+First Pull as a Security Truth Event: security enters at the pull point, not bolted on.
+
+### Honest Positioning (the moat)
+CLAAS and C-SALF are NOT inventions. Personally curated subset of existing org research, selected through 30 years: IBM → TRW → Freddie Mac → FedRAMP (30+ 3PAO assessments) → WBG $3M 10+10 team.  
+HUMS alone is from perennial wisdom (Vedanta · Ayurveda · Bhagavad Gita) — older and more stable than org research.
+
+### UI Colour Philosophy (all BL interfaces)
+Blue #3B7BF6 = Purushartha (free will, infinite)  
+Yellow #F5A623 = Prarabdha (destiny, finite/given)
+
+### Related frameworks
+HUMS™: 6 buckets, 27 signals — Who We Are (S01-04) · How We Work (S05-08) · How We Feel (S09-13) · Our Health (S14-17) · Our Actions (S18-24) · Our Purposes (S25-27)  
+ASiWiFi / S2L2: Shankara's 5-rung ascent + Gita's 8-rung fall (BG 2.62-63)  
+NAtU: Book in formation — 30-year diagnostic record made narrative for IT professionals facing automation anxiety.</pre>
+    </div>
+    <button class="copy-btn" id="copy-btn" onclick="copyContext()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy Context Payload
+    </button>
+  </section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <div class="bl-mark">Banyan Logic, LLC</div>
+  <p>Srinivasa M. Kasturi · srinikasturi@banyanlogic.com · 2026</p>
+  <p style="margin-top:6px">HUMS™ is excavated from perennial wisdom · MIT licensed · srinimkasturi.github.io/Hums/</p>
+</footer>
+
+<script>
+function copyContext() {
+  const text = document.getElementById('context-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Context Payload';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+</script>
+
+</body>
+</html>
