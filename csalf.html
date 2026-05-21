@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C-SALF · CSALF · Citizen Security & Automation Lifecycle Framework</title>
+<meta name="description" content="C-SALF (also CSALF) — Citizen Security & Automation Lifecycle Framework by Banyan Logic.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d0f14;--surface:#13161e;--surface2:#1a1e28;--border:#252a38;
+    --gold:#F5A623;--blue:#4A90D9;--text:#e8e4dc;--muted:#7a7f94;--accent:#c8b89a;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.7;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.6}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.25rem clamp(1.5rem,6vw,6rem);display:flex;justify-content:space-between;align-items:center;background:rgba(13,15,20,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(37,42,56,.6)}
+  .nav-brand{font-family:'DM Mono',monospace;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text)}
+  .nav-brand strong{color:var(--gold)}
+  .nav-alias{font-size:.65rem;color:var(--muted);margin-left:.5rem}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+
+  .hero{position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:3rem;padding:8rem clamp(1.5rem,6vw,6rem) 4rem;overflow:hidden}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.3;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 100%)}
+  .hero-left{position:relative;z-index:1}
+  .hero-tag{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .1s forwards}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,6vw,5.5rem);font-weight:300;line-height:1.05;letter-spacing:-.02em;opacity:0;animation:fadeUp .9s .25s forwards}
+  .hero h1 em{font-style:italic;color:var(--gold)}
+  .hero-alias{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);letter-spacing:.1em;margin-top:.5rem;opacity:0;animation:fadeUp .9s .35s forwards}
+  .hero-sub{margin-top:1.75rem;font-size:clamp(.95rem,1.6vw,1.1rem);color:var(--accent);max-width:48ch;font-weight:300;line-height:1.8;opacity:0;animation:fadeUp .9s .45s forwards}
+  .hero-meta{margin-top:2.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s .6s forwards}
+  .meta-pill{display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.05em}
+  .meta-pill span{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+  .dot-gold{background:var(--gold)}.dot-blue{background:var(--blue)}.dot-muted{background:var(--muted)}
+
+  .hero-right{position:relative;z-index:1;display:flex;justify-content:center;align-items:center;opacity:0;animation:fadeUp 1s .7s forwards}
+  .wheel-container{position:relative;width:min(460px,90vw);height:min(460px,90vw)}
+  .wheel-svg{width:100%;height:100%;overflow:visible}
+  .role-node{cursor:pointer;transition:opacity .25s}
+  .role-node circle.node-bg{transition:r .2s}
+  .role-node:hover circle.node-bg{filter:drop-shadow(0 0 10px var(--gold))}
+
+  .wheel-tooltip{position:absolute;bottom:-90px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border);padding:.9rem 1.4rem;min-width:240px;max-width:300px;text-align:center;pointer-events:none;opacity:0;transition:opacity .2s;z-index:10}
+  .wheel-tooltip.visible{opacity:1}
+  .wheel-tooltip h4{font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;color:var(--gold);margin-bottom:.3rem}
+  .wheel-tooltip p{font-size:.76rem;color:var(--muted);line-height:1.6}
+
+  .scroll-hint{position:absolute;bottom:2.5rem;left:clamp(1.5rem,6vw,6rem);display:flex;align-items:center;gap:.75rem;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;opacity:0;animation:fadeUp 1s 1.2s forwards;z-index:2}
+  .scroll-line{width:40px;height:1px;background:var(--muted);position:relative;overflow:hidden}
+  .scroll-line::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:var(--gold);animation:scanLine 2s 1.8s infinite}
+
+  main{position:relative;z-index:1}
+  section{padding:clamp(4rem,8vw,8rem) clamp(1.5rem,6vw,6rem);max-width:1200px;margin:0 auto}
+  .section-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+  h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:300;line-height:1.15;margin-bottom:1.5rem}
+  h2 em{font-style:italic;color:var(--gold)}
+  .lead{font-size:clamp(1rem,1.8vw,1.15rem);color:var(--accent);max-width:65ch;margin-bottom:3rem;line-height:1.8}
+
+  .what-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:3rem}
+  .what-cell{background:var(--surface);padding:2.5rem;transition:background .3s}
+  .what-cell:hover{background:var(--surface2)}
+  .what-cell h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:.75rem}
+  .what-cell p{color:var(--muted);font-size:.95rem;line-height:1.75}
+
+  .phases{margin-top:4rem}
+  .phase-item{display:grid;grid-template-columns:80px 1fr;gap:0 2rem;border-top:1px solid var(--border);padding:2rem 0;position:relative;cursor:default;transition:background .2s}
+  .phase-item:last-child{border-bottom:1px solid var(--border)}
+  .phase-item:hover{background:var(--surface)}
+  .phase-item:hover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+  .phase-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--border);line-height:1;padding-top:.25rem;text-align:right;transition:color .3s}
+  .phase-item:hover .phase-num{color:var(--gold)}
+  .phase-body h3{font-family:'DM Sans',sans-serif;font-size:1.05rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.4rem}
+  .phase-body .phase-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--blue);letter-spacing:.1em;display:block;margin-bottom:.5rem}
+  .phase-body p{color:var(--muted);font-size:.9rem;line-height:1.7}
+
+  .citizen-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem;margin-top:3rem}
+  .citizen-card{border:1px solid var(--border);padding:2rem;background:var(--surface);transition:border-color .3s}
+  .citizen-card:hover{border-color:var(--gold)}
+  .citizen-card .profession{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem}
+  .citizen-card h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:.75rem}
+  .citizen-card p{color:var(--muted);font-size:.85rem;line-height:1.7}
+
+  .legend{display:flex;gap:2rem;flex-wrap:wrap;margin-top:3rem;padding:2rem;border:1px solid var(--border);background:var(--surface)}
+  .legend-item{display:flex;align-items:flex-start;gap:1rem}
+  .legend-swatch{width:32px;height:32px;border-radius:4px;flex-shrink:0;margin-top:.15rem}
+  .swatch-gold{background:var(--gold)}.swatch-blue{background:var(--blue)}
+  .legend-item h4{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem}
+  .legend-item p{color:var(--muted);font-size:.82rem;line-height:1.6}
+
+  .philosophy{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:clamp(3rem,6vw,6rem) clamp(1.5rem,6vw,6rem)}
+  .philosophy-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+  .philosophy blockquote{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,2.8vw,2rem);font-weight:300;font-style:italic;line-height:1.45;color:var(--accent);border-left:2px solid var(--gold);padding-left:2rem}
+  .philosophy blockquote cite{display:block;margin-top:1.5rem;font-family:'DM Mono',monospace;font-size:.7rem;font-style:normal;letter-spacing:.15em;color:var(--muted)}
+  .philosophy-text p{color:var(--muted);font-size:.95rem;line-height:1.85;margin-bottom:1rem}
+  .philosophy-text p:last-child{margin-bottom:0}
+
+  footer{border-top:1px solid var(--border);padding:3rem clamp(1.5rem,6vw,6rem);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem}
+  .footer-brand{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--accent)}
+  .footer-brand span{color:var(--gold)}
+  .footer-meta{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em;text-align:right;line-height:1.8}
+  .divider{height:1px;background:var(--border);margin:0 clamp(1.5rem,6vw,6rem)}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scanLine{0%{left:-100%}100%{left:100%}}
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr;padding-top:6rem}
+    .hero-right{margin-top:2rem}
+    .what-grid{grid-template-columns:1fr}
+    .philosophy-inner{grid-template-columns:1fr;gap:2rem}
+    .phase-item{grid-template-columns:50px 1fr}
+    .phase-num{font-size:2rem}
+    .nav-links{display:none}
+    footer{flex-direction:column;align-items:flex-start}
+    .footer-meta{text-align:left}
+    .legend{flex-direction:column}
+    .wheel-tooltip{bottom:-100px;min-width:200px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <strong>C-SALF</strong><span class="nav-alias">/ CSALF</span> · Banyan Logic
+  </div>
+  <ul class="nav-links">
+    <li><a href="#what">Framework</a></li>
+    <li><a href="#phases">Phases</a></li>
+    <li><a href="#citizen">Citizen IT</a></li>
+    <li><a href="#philosophy">Philosophy</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="hero-left">
+    <p class="hero-tag">Banyan Logic · Framework Series</p>
+    <h1>C-SALF<br><em>The Framework</em></h1>
+    <p class="hero-alias">Also written: CSALF</p>
+    <p class="hero-sub">
+      Citizen Security &amp; Automation Lifecycle Framework —
+      a universal lifecycle for any professional who builds, operates, or depends on digital systems.
+      From enterprise security programs to a plumber's workflow.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-pill"><span class="dot-gold"></span> Prarabdha · Given constraints</div>
+      <div class="meta-pill"><span class="dot-blue"></span> Purushartha · Free-will choices</div>
+      <div class="meta-pill"><span class="dot-muted"></span> 5 Phases · 7 Roles · 15 Steps</div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE ROLES WHEEL -->
+  <div class="hero-right">
+    <div class="wheel-container">
+      <svg class="wheel-svg" viewBox="-10 -10 520 540" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1a1e28"/>
+            <stop offset="100%" stop-color="#0d0f14"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Outer dashed orbit -->
+        <circle cx="250" cy="250" r="195" fill="none" stroke="#252a38" stroke-width="1" stroke-dasharray="4 8"/>
+        <!-- Inner ring -->
+        <circle cx="250" cy="250" r="120" fill="none" stroke="#1e2230" stroke-width="1"/>
+
+        <!-- ALL INTERCONNECTIONS (21 lines, every pair of 7 nodes) -->
+        <!-- Node positions on r=195 from centre 250,250 starting at top (-90deg), step 360/7=51.43deg
+             0 top:          250, 55
+             1 upper-right:  434, 140
+             2 right:        426, 336
+             3 lower-right:  304, 436
+             4 lower-left:   196, 436
+             5 left:          74, 336
+             6 upper-left:    66, 140  -->
+        <g id="connLines" stroke="#252a38" stroke-width="1" opacity="0.65">
+          <line id="l01" x1="250" y1="55"  x2="434" y2="140"/>
+          <line id="l02" x1="250" y1="55"  x2="426" y2="336"/>
+          <line id="l03" x1="250" y1="55"  x2="304" y2="436"/>
+          <line id="l04" x1="250" y1="55"  x2="196" y2="436"/>
+          <line id="l05" x1="250" y1="55"  x2="74"  y2="336"/>
+          <line id="l06" x1="250" y1="55"  x2="66"  y2="140"/>
+          <line id="l12" x1="434" y1="140" x2="426" y2="336"/>
+          <line id="l13" x1="434" y1="140" x2="304" y2="436"/>
+          <line id="l14" x1="434" y1="140" x2="196" y2="436"/>
+          <line id="l15" x1="434" y1="140" x2="74"  y2="336"/>
+          <line id="l16" x1="434" y1="140" x2="66"  y2="140"/>
+          <line id="l23" x1="426" y1="336" x2="304" y2="436"/>
+          <line id="l24" x1="426" y1="336" x2="196" y2="436"/>
+          <line id="l25" x1="426" y1="336" x2="74"  y2="336"/>
+          <line id="l26" x1="426" y1="336" x2="66"  y2="140"/>
+          <line id="l34" x1="304" y1="436" x2="196" y2="436"/>
+          <line id="l35" x1="304" y1="436" x2="74"  y2="336"/>
+          <line id="l36" x1="304" y1="436" x2="66"  y2="140"/>
+          <line id="l45" x1="196" y1="436" x2="74"  y2="336"/>
+          <line id="l46" x1="196" y1="436" x2="66"  y2="140"/>
+          <line id="l56" x1="74"  y1="336" x2="66"  y2="140"/>
+        </g>
+
+        <!-- CENTRE -->
+        <circle cx="250" cy="250" r="62" fill="url(#coreGrad)" stroke="#252a38" stroke-width="1.5"/>
+        <text x="250" y="244" text-anchor="middle" font-family="'Cormorant Garamond',serif" font-size="15" font-weight="300" fill="#c8b89a" letter-spacing="1">C-SALF</text>
+        <text x="250" y="263" text-anchor="middle" font-family="'DM Mono',monospace" font-size="8.5" fill="#7a7f94" letter-spacing="2">7 ROLES</text>
+
+        <!-- NODE 0: Business Owner — top — GOLD (value-defining roles) -->
+        <g class="role-node" data-idx="0" data-role="Business Owner" data-desc="Holds the outcome. Asks: what does this need to achieve for the business to prosper? Sets the value intent for the entire lifecycle." transform="translate(250,55)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#F5A623" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-8" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#F5A623">BUSINESS</text>
+          <text x="0" y="4"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#F5A623">OWNER</text>
+          <text x="0" y="16" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·01</text>
+        </g>
+
+        <!-- NODE 1: Citizen Developer — upper right — BLUE -->
+        <g class="role-node" data-idx="1" data-role="Citizen Developer" data-desc="The non-technical builder. Assembles available tools into a workflow without writing code. The CSALF entry point for every professional, from plumbers to lawyers." transform="translate(434,140)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#4A90D9" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-8" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">CITIZEN</text>
+          <text x="0" y="4"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">DEV</text>
+          <text x="0" y="16" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·02</text>
+        </g>
+
+        <!-- NODE 2: Developer — right — BLUE -->
+        <g class="role-node" data-idx="2" data-role="Developer" data-desc="Builds custom logic where existing tools are insufficient. Holds quality standards and owns technical debt decisions within the lifecycle." transform="translate(426,336)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#4A90D9" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-4" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">DEVELOPER</text>
+          <text x="0" y="10" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·03</text>
+        </g>
+
+        <!-- NODE 3: Builder — lower right — BLUE -->
+        <g class="role-node" data-idx="3" data-role="Builder" data-desc="Constructs the infrastructure and integration layer the workflow runs on. Bridges design intent and live operation." transform="translate(304,436)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#4A90D9" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-4" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">BUILDER</text>
+          <text x="0" y="10" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·04</text>
+        </g>
+
+        <!-- NODE 4: Maker — lower left — BLUE -->
+        <g class="role-node" data-idx="4" data-role="Maker" data-desc="Brings the system to life in a specific operational context. Closest to the real work. Translates design into daily professional practice." transform="translate(196,436)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#4A90D9" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-4" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">MAKER</text>
+          <text x="0" y="10" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·05</text>
+        </g>
+
+        <!-- NODE 5: Operator — left — BLUE -->
+        <g class="role-node" data-idx="5" data-role="Operator" data-desc="Runs the live system. First to see failures. The Operate phase belongs to this role. Owns incident response posture and operational continuity." transform="translate(74,336)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#4A90D9" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-4" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#4A90D9">OPERATOR</text>
+          <text x="0" y="10" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·06</text>
+        </g>
+
+        <!-- NODE 6: Value Auditor — upper left — GOLD (value-defining roles) -->
+        <g class="role-node" data-idx="6" data-role="Value Auditor" data-desc="Challenges the system from outside. Asks: does this do what it claims, and is the value real? Measures exit value against the original business intent set by the Business Owner." transform="translate(66,140)">
+          <circle class="node-bg" cx="0" cy="0" r="34" fill="#13161e" stroke="#F5A623" stroke-width="1.8" filter="url(#glow)"/>
+          <text x="0" y="-8" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#F5A623">VALUE</text>
+          <text x="0" y="4"  text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="7" font-weight="500" fill="#F5A623">AUDITOR</text>
+          <text x="0" y="16" text-anchor="middle" font-family="'DM Mono',monospace" font-size="6" fill="#7a7f94">R·07</text>
+        </g>
+
+      </svg>
+
+      <div class="wheel-tooltip" id="wheelTooltip">
+        <h4 id="ttRole">Hover a role</h4>
+        <p id="ttDesc">Each node represents a perspective — and a set of questions — the C-SALF lifecycle requires.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</div>
+
+<main>
+
+<section id="what">
+  <p class="section-label reveal">What is C-SALF · CSALF</p>
+  <h2 class="reveal">Structure before <em>solution.</em></h2>
+  <p class="lead reveal">
+    C-SALF (also written CSALF) is a lifecycle framework that maps how secure, automated work actually flows —
+    from first intention to sustained operation. It is not a tool checklist or a compliance matrix.
+    It is a way of thinking about work as a system.
+  </p>
+  <div class="what-grid reveal">
+    <div class="what-cell">
+      <h3>Durable frameworks</h3>
+      <p>C-SALF is excavated from perennial wisdom rather than invented from current practice.
+         Its structure predates any specific technology, which means it survives technology change.</p>
+    </div>
+    <div class="what-cell">
+      <h3>Universal applicability</h3>
+      <p>Designed for enterprise security programs but equally legible to a solo tradesperson
+         mapping their first digital workflow. The lifecycle is the same; only the scale differs.</p>
+    </div>
+    <div class="what-cell">
+      <h3>Structure over AI output</h3>
+      <p>AI tools amplify whatever structure they receive. C-SALF provides the structure —
+         so that AI augments a coherent system rather than producing coherent-sounding chaos.</p>
+    </div>
+    <div class="what-cell">
+      <h3>Banyan Logic proprietary layer</h3>
+      <p>Built on universal open templates (NIST CSF, RMF, SAFe, OWASP) with a proprietary
+         Banyan Logic layer: decision gates, persona-driven sequencing, and exit-value ROI framing.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="phases">
+  <p class="section-label reveal">The 5 Phases</p>
+  <h2 class="reveal">How work <em>flows.</em></h2>
+  <p class="lead reveal">
+    Every secure, automated workflow — whether a bank's security program or a plumber's job-site system —
+    passes through the same five gates. CSALF names them clearly so decisions at each gate are deliberate.
+  </p>
+  <div class="phases">
+    <div class="phase-item reveal">
+      <div class="phase-num">01</div>
+      <div class="phase-body">
+        <span class="phase-tag">PLAN · Conceive</span>
+        <h3>Plan</h3>
+        <p>Map what actually exists before reaching for a solution. Who are the stakeholders?
+           What is the threat surface? What is the professional's real workflow today?
+           The Plan phase is where most failures are born — by skipping it.</p>
+      </div>
+    </div>
+    <div class="phase-item reveal">
+      <div class="phase-num">02</div>
+      <div class="phase-body">
+        <span class="phase-tag">BUILD · Construct</span>
+        <h3>Build</h3>
+        <p>Design and construct the solution against the map, not against a vendor's feature list.
+           In C-SALF, Build is always downstream of Plan. The Banyan Logic decision gate here
+           asks: does this solve the problem identified, or a different problem?</p>
+      </div>
+    </div>
+    <div class="phase-item reveal">
+      <div class="phase-num">03</div>
+      <div class="phase-body">
+        <span class="phase-tag">TEST · Validate</span>
+        <h3>Test</h3>
+        <p>Stress the solution against the real workflow before deploying it.
+           For enterprise: red team, pen test, tabletop. For citizen IT: walk one real workday
+           through the new workflow and find where it breaks.</p>
+      </div>
+    </div>
+    <div class="phase-item reveal">
+      <div class="phase-num">04</div>
+      <div class="phase-body">
+        <span class="phase-tag">DEPLOY · Release</span>
+        <h3>Deploy</h3>
+        <p>Release into live conditions with a clear rollback posture and change record.
+           C-SALF treats the First Pull — the first real-world use of a system — as a
+           Security Truth Event: the moment you learn what you actually built.</p>
+      </div>
+    </div>
+    <div class="phase-item reveal">
+      <div class="phase-num">05</div>
+      <div class="phase-body">
+        <span class="phase-tag">OPERATE · Sustain</span>
+        <h3>Operate</h3>
+        <p>Continuous operation is not passive. It requires monitoring, incident response posture,
+           periodic re-validation, and intentional improvement cycles.
+           CSALF Operate maps directly to NIST CSF Govern and Respond functions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="citizen">
+  <p class="section-label reveal">Automate to Prosper</p>
+  <h2 class="reveal">CSALF for <em>every professional.</em></h2>
+  <p class="lead reveal">
+    The full CSALF framework runs inside enterprise security programs.
+    Its Citizen IT layer brings the same lifecycle logic to any professional —
+    translated into the language of their daily work, without requiring IT background.
+  </p>
+  <div class="citizen-cards">
+    <div class="citizen-card reveal">
+      <div class="profession">Trades · Plumber</div>
+      <h3>The Field Professional</h3>
+      <p>A day's work generates part photos, supplier searches, job notes, invoices, and receipts.
+         CSALF Citizen maps that workflow, finds the friction points, and automates the repeatable parts —
+         starting with what's already in the pocket: a phone camera and Google.</p>
+    </div>
+    <div class="citizen-card reveal">
+      <div class="profession">Professional Services · Lawyer</div>
+      <h3>The Knowledge Professional</h3>
+      <p>Client intake, matter notes, billing records, deadline tracking, document drafts —
+         all digital, all carrying confidentiality obligations.
+         CSALF Citizen maps the security surface that most solo practitioners never see.</p>
+    </div>
+    <div class="citizen-card reveal">
+      <div class="profession">Healthcare · Clinician</div>
+      <h3>The Care Professional</h3>
+      <p>Scheduling, patient records, referral loops, insurance workflows —
+         each a regulated data flow. CSALF Citizen builds workflow literacy before tool selection,
+         preventing the most common compliance failures.</p>
+    </div>
+    <div class="citizen-card reveal">
+      <div class="profession">Creative · Designer</div>
+      <h3>The Creative Professional</h3>
+      <p>Client briefs, asset libraries, delivery pipelines, invoicing, contracts —
+         a creative practice is a small business. CSALF Citizen helps it run like one,
+         without requiring the creator to become a systems engineer.</p>
+    </div>
+  </div>
+  <div class="legend reveal">
+    <div class="legend-item">
+      <div class="legend-swatch swatch-gold"></div>
+      <div>
+        <h4>Yellow · Prarabdha</h4>
+        <p>Given constraints — the professional's existing workflow, tools already in use,
+           regulatory requirements, time available. The finite starting condition.</p>
+      </div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch swatch-blue"></div>
+      <div>
+        <h4>Blue · Purushartha</h4>
+        <p>Free-will choices — what the professional decides to build, automate, or change.
+           The infinite space of improvement. All UI choice points in CSALF tools are blue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="philosophy">
+  <div class="philosophy-inner" id="philosophy">
+    <blockquote class="reveal">
+      "Durable frameworks are excavated from perennial wisdom —
+       not invented from current practice."
+      <cite>— Banyan Logic founding thesis</cite>
+    </blockquote>
+    <div class="philosophy-text reveal">
+      <p>C-SALF / CSALF sits at the intersection of security engineering, agile delivery, and Advaita epistemology.
+         The 15-step relay architecture mirrors how any coherent system evolves:
+         from intention, through construction, into sustained life.</p>
+      <p>The framework is aligned with NIST CSF 2.0, NIST RMF, SAFe PI planning structure,
+         and OWASP Top 10 — giving enterprise practitioners a familiar scaffold
+         while extending it into domains those frameworks were never designed to reach.</p>
+      <p>The Banyan Logic proprietary layer adds persona-driven sequencing and
+         decision gates that protect the lifecycle from the most common failure mode:
+         building the right thing at the wrong phase.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-brand">Banyan Logic · <span>C-SALF · CSALF</span></div>
+  <div class="footer-meta">
+    Framework by Srinivasa M. Kasturi<br>
+    srinimkasturi.github.io · MIT principles · Open structure
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+      e.target.style.transitionDelay = `${siblings.indexOf(e.target) * 0.08}s`;
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 }).observe && reveals.forEach(el =>
+  new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const siblings = [...e.target.parentElement.querySelectorAll('.reveal')];
+        e.target.style.transitionDelay = `${siblings.indexOf(e.target) * 0.08}s`;
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 }).observe(el)
+);
+
+// Wheel interactions
+const tooltip = document.getElementById('wheelTooltip');
+const ttRole  = document.getElementById('ttRole');
+const ttDesc  = document.getElementById('ttDesc');
+const nodes   = document.querySelectorAll('.role-node');
+const lines   = document.querySelectorAll('#connLines line');
+
+// Map line IDs to node index pairs
+const linePairs = {
+  l01:[0,1],l02:[0,2],l03:[0,3],l04:[0,4],l05:[0,5],l06:[0,6],
+  l12:[1,2],l13:[1,3],l14:[1,4],l15:[1,5],l16:[1,6],
+  l23:[2,3],l24:[2,4],l25:[2,5],l26:[2,6],
+  l34:[3,4],l35:[3,5],l36:[3,6],
+  l45:[4,5],l46:[4,6],
+  l56:[5,6]
+};
+
+nodes.forEach(node => {
+  const idx = parseInt(node.dataset.idx);
+
+  node.addEventListener('mouseenter', () => {
+    ttRole.textContent = node.dataset.role;
+    ttDesc.textContent = node.dataset.desc;
+    tooltip.classList.add('visible');
+
+    lines.forEach(line => {
+      const pair = linePairs[line.id];
+      if (pair && pair.includes(idx)) {
+        line.setAttribute('stroke', '#F5A623');
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('opacity', '1');
+      } else {
+        line.setAttribute('opacity', '0.1');
+      }
+    });
+
+    nodes.forEach(n => {
+      if (n !== node) n.style.opacity = '0.35';
+    });
+  });
+
+  node.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('visible');
+    lines.forEach(line => {
+      line.setAttribute('stroke', '#252a38');
+      line.setAttribute('stroke-width', '1');
+      line.setAttribute('opacity', '0.65');
+    });
+    nodes.forEach(n => { n.style.opacity = '1'; });
+  });
+});
+</script>
+</body>
+</html>
