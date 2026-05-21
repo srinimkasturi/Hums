@@ -650,30 +650,48 @@ function renderCheckin() {
   } else {
     // done panel
     const d = data[ciDate];
-    const avgB = avg([d.B.do, d.B.be, d.B.ch]);
-    const avgM = avg([d.M.do, d.M.be, d.M.ch]);
-    const combined = avg([d.B.do, d.B.be, d.B.ch, d.M.do, d.M.be, d.M.ch]);
-    const smoothness = Math.round((combined / 3) * 100);
+    const bScores = [d.B.do, d.B.be, d.B.ch];
+    const mScores = [d.M.do, d.M.be, d.M.ch];
+    const allScores = [...bScores, ...mScores];
+    const bM = calcMetrics(bScores);
+    const mM = calcMetrics(mScores);
+    const combined = calcMetrics(allScores);
 
     const panel = document.createElement('div');
     panel.className = 'done-panel';
     panel.innerHTML = `
       <h2>Wheel logged ✦</h2>
-      <div class="done-scores">
-        <div class="done-score-item">
-          <div class="done-score-val" style="color:#7ab4f5">${avgB.toFixed(1)}</div>
-          <div class="done-score-label">B · Do</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin:0.8rem 0;">
+        <div style="background:rgba(255,255,255,0.10);border-radius:10px;padding:0.7rem;text-align:center;">
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:0.4rem;">B · Speed</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#7ab4f5;line-height:1">${bM.speed}%</div>
+          <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:0.2rem">${speedLabel(bM.speed)}</div>
         </div>
-        <div class="done-score-item">
-          <div class="done-score-val" style="color:#f5d07a">${avgM.toFixed(1)}</div>
-          <div class="done-score-label">M · Be</div>
+        <div style="background:rgba(255,255,255,0.10);border-radius:10px;padding:0.7rem;text-align:center;">
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:0.4rem;">B · Smooth</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#a0d4ff;line-height:1">${bM.smoothness}%</div>
+          <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:0.2rem">Even spokes</div>
         </div>
-        <div class="done-score-item">
-          <div class="done-score-val" style="color:#7af5b0">${smoothness}%</div>
-          <div class="done-score-label">Smoothness</div>
+        <div style="background:rgba(255,255,255,0.10);border-radius:10px;padding:0.7rem;text-align:center;">
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:0.4rem;">M · Speed</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#f5d07a;line-height:1">${mM.speed}%</div>
+          <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:0.2rem">${speedLabel(mM.speed)}</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.10);border-radius:10px;padding:0.7rem;text-align:center;">
+          <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:0.4rem;">M · Smooth</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#fae0a0;line-height:1">${mM.smoothness}%</div>
+          <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.55);margin-top:0.2rem">Even spokes</div>
         </div>
       </div>
-      <p>${smoothnessMessage(smoothness)}</p>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:0.5rem 0.8rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+        <span style="font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.6)">Combined Speed</span>
+        <span style="font-size:1.1rem;font-weight:800;color:#f0c84a">${combined.speed}%</span>
+      </div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:0.5rem 0.8rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:0.7rem;">
+        <span style="font-size:0.65rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.6)">Combined Smooth</span>
+        <span style="font-size:1.1rem;font-weight:800;color:#f0c84a">${combined.smoothness}%</span>
+      </div>
+      <p style="font-size:0.78rem;font-weight:700;color:rgba(255,255,255,0.85)">${smoothnessMessage(combined.speed, combined.smoothness)}</p>
     `;
     container.appendChild(panel);
 
@@ -692,11 +710,33 @@ function avg(arr) {
   return valid.reduce((a,b) => a+b, 0) / valid.length;
 }
 
-function smoothnessMessage(pct) {
-  if (pct >= 90) return 'Both wheels rolling beautifully together. 🌟';
-  if (pct >= 70) return 'Good smoothness — keep connecting the dots.';
-  if (pct >= 50) return 'Partial motion. Tomorrow, a little more.';
-  if (pct >= 25) return 'The wheelbarrow wobbles — seek smoothness through prayer.';
+// Speed = avg of all scores (0-3 → 0-100%). Bigger wheel = faster.
+// Smoothness = 100% minus normalised std-dev. Even spokes = smoother.
+function calcMetrics(scores) {
+  const valid = scores.filter(v => v !== null && v !== undefined);
+  if (!valid.length) return { speed: 0, smoothness: 0 };
+  const mean = valid.reduce((a,b)=>a+b,0) / valid.length;
+  const speed = Math.round((mean / 3) * 100);
+  const variance = valid.reduce((a,b)=>a+(b-mean)**2,0) / valid.length;
+  const stdDev = Math.sqrt(variance);
+  const smoothness = Math.round(Math.max(0, 100 - (stdDev / 1.5) * 100));
+  return { speed, smoothness };
+}
+
+function speedLabel(pct) {
+  if (pct >= 90) return '🚀 Full speed';
+  if (pct >= 70) return '⚡ Good pace';
+  if (pct >= 50) return '🚶 Steady roll';
+  if (pct >= 25) return '🐢 Slow but moving';
+  return '○ Parked';
+}
+
+function smoothnessMessage(speed, smoothness) {
+  if (speed >= 80 && smoothness >= 80) return 'Both wheels large and smooth — the wheelbarrow flies. 🌟';
+  if (smoothness >= 80) return 'Smooth ride, keep building speed together.';
+  if (speed >= 70) return 'Fast but bumpy — balance the spokes.';
+  if (speed >= 40) return 'Partial motion. Tomorrow, a little more.';
+  if (speed >= 15) return 'The wheelbarrow wobbles — seek smoothness through prayer.';
   return 'A still day. Every day is a new turn. 🙏';
 }
 
@@ -941,7 +981,7 @@ function renderBicycle(dates) {
   const R = Math.floor((W - 60) / 2 / 1.55); // equal radius, fills width
   const topPad = 20;          // space for spoke labels above
   const botPad = 22;          // space for player labels below
-  const H = R*2 + topPad + botPad + 16;
+  const H = R*2 + topPad + botPad + 30;
   canvas.width = W; canvas.height = H;
   ctx.clearRect(0,0,W,H);
 
@@ -978,9 +1018,48 @@ function renderBicycle(dates) {
   const bAvg = { do:_weekAvg(dates,'B','do'), be:_weekAvg(dates,'B','be'), ch:_weekAvg(dates,'B','ch') };
   const mAvg = { do:_weekAvg(dates,'M','do'), be:_weekAvg(dates,'M','be'), ch:_weekAvg(dates,'M','ch') };
 
-  // Both wheels exactly same size — no hierarchy
-  drawWheel(ctx, cx1, cy, R, bAvg, p.B_hub, 'B', 11);
-  drawWheel(ctx, cx2, cy, R, mAvg, p.M_hub, 'M', 11);
+  // Wheel radius = speed (avg score). Min R so wheel is always visible.
+  const bSpeed = avg([bAvg.do, bAvg.be, bAvg.ch]);
+  const mSpeed = avg([mAvg.do, mAvg.be, mAvg.ch]);
+  const minR = R * 0.35;
+  const RB = Math.round(minR + (R - minR) * (bSpeed / 3));
+  const RM = Math.round(minR + (R - minR) * (mSpeed / 3));
+
+  // reposition cy so wheels sit on same baseline
+  const baseY = topPad + R + 4;
+  const cyB = baseY + (R - RB);
+  const cyM = baseY + (R - RM);
+
+  // redraw tray at top connecting both, adjust to smaller wheel tops
+  const trayYB = cyB - RB + 2;
+  const trayYM = cyM - RM + 2;
+  const trayTop = Math.min(trayYB, trayYM);
+
+  ctx.beginPath();
+  ctx.moveTo(cx1, trayTop); ctx.lineTo(cx2, trayTop);
+  ctx.strokeStyle = p.ring_outer; ctx.lineWidth = trayH; ctx.lineCap = 'round'; ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx1, trayTop - 2); ctx.lineTo(cx2, trayTop - 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 3; ctx.stroke();
+  [cx1, cx2].forEach(x => {
+    ctx.beginPath(); ctx.arc(x, trayTop, trayH/2 + 2, 0, Math.PI*2);
+    ctx.fillStyle = p.ring_outer; ctx.fill();
+  });
+
+  drawWheel(ctx, cx1, cyB, RB, bAvg, p.B_hub, 'B', 11);
+  drawWheel(ctx, cx2, cyM, RM, mAvg, p.M_hub, 'M', 11);
+
+  // speed + smoothness annotation under each wheel
+  const bM = calcMetrics([bAvg.do, bAvg.be, bAvg.ch]);
+  const mM = calcMetrics([mAvg.do, mAvg.be, mAvg.ch]);
+  const annotY = baseY + R + 22;
+  ctx.font = `700 10px DM Sans,sans-serif`;
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = p.B_hub;
+  ctx.fillText(`⚡${bM.speed}%  ◎${bM.smoothness}%`, cx1, annotY);
+  ctx.fillStyle = p.M_hub;
+  ctx.fillText(`⚡${mM.speed}%  ◎${mM.smoothness}%`, cx2, annotY);
 }
 
 function renderScoreTable(dates) {
@@ -989,7 +1068,7 @@ function renderScoreTable(dates) {
   const p = pal();
   const hdr = document.createElement('div');
   hdr.className = 'score-row header';
-  hdr.innerHTML = '<div>Day</div><div>B · Do Be Ch</div><div>M · Do Be Ch</div>';
+  hdr.innerHTML = '<div>Day</div><div>B ⚡ ◎</div><div>M ⚡ ◎</div>';
   table.appendChild(hdr);
 
   const DAY=['Mo','Tu','We','Th','Fr','Sa','Su'], today=todayStr();
@@ -997,18 +1076,16 @@ function renderScoreTable(dates) {
     const row=document.createElement('div'); row.className='score-row';
     if(d===today) row.style.background='var(--yellow-soft)';
     const dd=data[d];
-    const pips=(pid)=>{
-      if(!dd||!dd[pid]) return '<span style="color:#ccc">—</span>';
+    const cell=(pid)=>{
+      if(!dd||!dd[pid]) return '<span style="color:#ccc;font-weight:700">—</span>';
       const pl=dd[pid];
-      return WHEEL_KEYS.map((w,j)=>{
-        const v=pl[w]!==null&&pl[w]!==undefined?Math.round(pl[w]):0;
-        const c=[p.do.fill,p.be.fill,p.ch.fill][j];
-        return Array.from({length:3},(_,k)=>
-          `<span class="pip" style="${k<v?`background:${c};border-color:${c}`:''}"></span>`
-        ).join('');
-      }).join('<span style="width:3px;display:inline-block"></span>');
+      const scores=[pl.do,pl.be,pl.ch];
+      const m=calcMetrics(scores);
+      const c = pid==='B' ? 'var(--do-c)' : 'var(--be-c)';
+      return `<span style="font-size:0.72rem;font-weight:700;color:${c}">⚡${m.speed}%</span>
+              <span style="font-size:0.68rem;font-weight:600;color:var(--mist);margin-left:4px">◎${m.smoothness}%</span>`;
     };
-    row.innerHTML=`<div style="font-size:0.74rem;font-weight:600;color:#33334a">${DAY[i]} ${parseInt(d.slice(8))}</div><div>${pips('B')}</div><div>${pips('M')}</div>`;
+    row.innerHTML=`<div style="font-size:0.74rem;font-weight:700;color:#22223a">${DAY[i]} ${parseInt(d.slice(8))}</div><div>${cell('B')}</div><div>${cell('M')}</div>`;
     table.appendChild(row);
   });
 }
