@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToDo × Time · MKDSS Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --night:   #0d1117;
+  --night2:  #161b22;
+  --night3:  #21262d;
+  --border:  #30363d;
+  --border2: #444c56;
+  --gold:    #e3b341;
+  --gold2:   #d29922;
+  --teal:    #39d0c4;
+  --teal2:   #1f8b84;
+  --mauve:   #c084fc;
+  --mauve2:  #9333ea;
+  --sand:    #c9a96e;
+  --sand2:   #a07840;
+  --text:    #e6edf3;
+  --text2:   #8b949e;
+  --text3:   #484f58;
+  --green:   #3fb950;
+  --red:     #f85149;
+  --mono:    'DM Mono', monospace;
+  --serif:   'Fraunces', Georgia, serif;
+  --sans:    'DM Sans', sans-serif;
+
+  /* PDCA */
+  --p-col:   #3b82f6;
+  --d-col:   #22c55e;
+  --c-col:   #f59e0b;
+  --a-col:   #a855f7;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; height: 100%; }
+body {
+  background: var(--night);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── SETUP SCREEN ── */
+.setup-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--night);
+  position: relative;
+  overflow: hidden;
+}
+.setup-screen::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(227,179,65,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.setup-screen::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(ellipse, rgba(57,208,196,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.setup-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--night2);
+  border: 1px solid var(--border);
+  padding: 40px 44px;
+  position: relative;
+}
+.setup-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--teal) 50%, var(--mauve) 100%);
+}
+
+.setup-logo {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+.setup-logo span { color: var(--gold); font-style: italic; font-weight: 300; }
+.setup-tagline {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 32px;
+}
+
+.setup-section {
+  margin-bottom: 28px;
+}
+.setup-section-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.setup-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.field { margin-bottom: 12px; }
+.field label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--text2);
+  display: block;
+  margin-bottom: 5px;
+}
+.field input {
+  width: 100%;
+  background: var(--night3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--gold2); }
+.field input::placeholder { color: var(--text3); }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.n-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.n-btn {
+  width: 40px; height: 36px;
+  background: var(--night3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.n-btn:hover { border-color: var(--gold); color: var(--gold); }
+.n-btn.active { border-color: var(--gold); background: rgba(227,179,65,0.12); color: var(--gold); }
+.n-hint {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+/* tier cards */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.tier-card {
+  background: var(--night3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+  border-top: 3px solid transparent;
+}
+.tier-card:hover { border-color: var(--border2); }
+.tier-card.active {
+  border-color: var(--border2);
+  border-top-color: var(--gold);
+  background: rgba(227,179,65,0.06);
+}
+.tier-name {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 2px;
+}
+.tier-card.active .tier-name { color: var(--gold); }
+.tier-n {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.tier-desc {
+  font-size: 0.72rem;
+  color: var(--text3);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.tier-detail {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--teal2);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 500px) {
+  .tier-grid { grid-template-columns: 1fr; }
+}
+
+.setup-btn {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  background: rgba(227,179,65,0.1);
+  border: 1px solid var(--gold2);
+  border-radius: 2px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.setup-btn:hover { background: rgba(227,179,65,0.18); }
+.setup-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.setup-footer {
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text3);
+  text-align: center;
+  line-height: 1.6;
+}
+.setup-footer a { color: var(--teal2); text-decoration: none; }
+
+.instance-display {
+  background: var(--night3);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--teal);
+  word-break: break-all;
+  line-height: 1.5;
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* ── APP SHELL ── */
+.app { display: none; flex-direction: column; min-height: 100vh; }
+.app.visible { display: flex; }
+
+/* ── PDCA BAR ── */
+.pdca-bar {
+  background: var(--night2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 16px;
+  display: flex;
+  align-items: stretch;
+  height: 42px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  user-select: none;
+}
+.pdca-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  padding-right: 12px;
+  border-right: 1px solid var(--border);
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+.pdca-steps { display: flex; align-items: stretch; flex: 1; }
+.pdca-step {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0 12px 0 10px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.15s;
+  border-radius: 2px;
+}
+.pdca-step:hover { background: rgba(255,255,255,0.03); }
+.pdca-step:not(:last-child)::after {
+  content: '';
+  position: absolute; right: -6px; top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid var(--border);
+  z-index: 2;
+  transition: border-left-color 0.2s;
+}
+.pdca-step.active:not(:last-child)::after,
+.pdca-step.done:not(:last-child)::after { border-left-color: currentColor; opacity: 0.25; }
+.pdca-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text3);
+  flex-shrink: 0; transition: all 0.22s;
+  position: relative;
+}
+.pdca-ltr {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.06em; color: var(--text3);
+  line-height: 1; transition: color 0.22s;
+}
+.pdca-name {
+  font-size: 0.66rem; font-weight: 300;
+  color: var(--text3); white-space: nowrap;
+  transition: color 0.22s;
+}
+.pdca-time {
+  font-family: var(--mono); font-size: 0.5rem;
+  color: var(--text3); opacity: 0.5;
+  transition: color 0.22s;
+}
+.pdca-step[data-p="P"] { color: var(--p-col); }
+.pdca-step[data-p="D"] { color: var(--d-col); }
+.pdca-step[data-p="C"] { color: var(--c-col); }
+.pdca-step[data-p="A"] { color: var(--a-col); }
+.pdca-step.active .pdca-dot { border-color: currentColor; animation: pdca-pulse 2s ease-in-out infinite; }
+.pdca-step.active .pdca-ltr, .pdca-step.active .pdca-name, .pdca-step.active .pdca-time { color: currentColor; }
+.pdca-step.active .pdca-ltr { font-weight: 500; }
+.pdca-step.done .pdca-dot { background: currentColor; border-color: currentColor; }
+.pdca-step.done .pdca-dot::after {
+  content: ''; position: absolute;
+  top: 0px; left: 1.5px;
+  width: 3px; height: 4.5px;
+  border-right: 1.5px solid var(--night2);
+  border-bottom: 1.5px solid var(--night2);
+  transform: rotate(45deg);
+}
+.pdca-step.done .pdca-ltr, .pdca-step.done .pdca-name, .pdca-step.done .pdca-time { color: currentColor; opacity: 0.6; }
+.pdca-step.ambient .pdca-dot { border-color: currentColor; background: currentColor; opacity: 0.35; }
+.pdca-step.ambient .pdca-ltr, .pdca-step.ambient .pdca-name { color: currentColor; opacity: 0.55; }
+@keyframes pdca-pulse { 0%,100% { box-shadow: 0 0 0 0 currentColor; } 50% { box-shadow: 0 0 0 3px transparent; } }
+
+.pdca-right {
+  display: flex; align-items: center; gap: 10px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+  margin-left: auto; flex-shrink: 0;
+}
+.pdca-clock { font-family: var(--mono); font-size: 0.63rem; color: var(--text2); }
+.pdca-toggle {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 3px 8px;
+  border: 1px solid var(--border); background: none;
+  color: var(--text3); cursor: pointer; transition: all 0.18s; border-radius: 2px;
+}
+.pdca-toggle:hover { border-color: var(--text2); color: var(--text2); }
+.pdca-toggle.on { border-color: var(--d-col); color: var(--d-col); background: rgba(34,197,94,0.08); }
+
+/* ── SYNC STATUS BAR ── */
+.sync-bar {
+  background: var(--night2);
+  border-bottom: 1px solid var(--border);
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text3);
+}
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); flex-shrink: 0; }
+.sync-dot.ok     { background: var(--green); }
+.sync-dot.syncing { background: var(--gold); animation: pdca-pulse 1s ease-in-out infinite; }
+.sync-dot.error  { background: var(--red); }
+.sync-actions { margin-left: auto; display: flex; gap: 8px; }
+.sync-btn {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 2px 8px;
+  border: 1px solid var(--border); background: none;
+  color: var(--text3); cursor: pointer; transition: all 0.15s; border-radius: 2px;
+}
+.sync-btn:hover { border-color: var(--teal2); color: var(--teal); }
+.sync-btn.export-btn:hover { border-color: var(--gold2); color: var(--gold); }
+
+/* ── MAIN LAYOUT ── */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL — TODO ── */
+.todo-panel {
+  background: var(--night2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.panel-count {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+}
+
+/* month slider */
+.month-slider {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.month-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--gold);
+  min-width: 100px;
+}
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: var(--border);
+  outline: none;
+  border-radius: 1px;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+}
+
+/* add todo */
+.add-todo {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+}
+.add-input {
+  flex: 1;
+  background: var(--night3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 7px 10px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.add-input:focus { border-color: var(--gold2); }
+.add-input::placeholder { color: var(--text3); }
+.add-btn {
+  padding: 7px 12px;
+  background: rgba(227,179,65,0.1);
+  border: 1px solid var(--gold2);
+  border-radius: 2px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.add-btn:hover { background: rgba(227,179,65,0.2); }
+
+/* todo list */
+.todo-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+.todo-list::-webkit-scrollbar { width: 3px; }
+.todo-list::-webkit-scrollbar-track { background: transparent; }
+.todo-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 2px solid transparent;
+}
+.todo-item:hover { background: rgba(255,255,255,0.02); }
+.todo-item.selected { background: rgba(227,179,65,0.05); border-left-color: var(--gold); }
+.todo-item.done-item .todo-text { text-decoration: line-through; color: var(--text3); }
+
+.todo-check {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text3);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.todo-item.done-item .todo-check {
+  background: var(--green);
+  border-color: var(--green);
+}
+.todo-item.done-item .todo-check::after {
+  content: '';
+  width: 4px; height: 6px;
+  border-right: 1.5px solid var(--night);
+  border-bottom: 1.5px solid var(--night);
+  transform: rotate(45deg) translate(-1px,-1px);
+}
+.todo-text { font-size: 0.84rem; line-height: 1.4; flex: 1; }
+.todo-tags {
+  display: flex; gap: 4px; margin-top: 3px; flex-wrap: wrap;
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.tag-W { background: rgba(57,208,196,0.12); color: var(--teal); border: 1px solid rgba(57,208,196,0.2); }
+.tag-L { background: rgba(192,132,252,0.12); color: var(--mauve); border: 1px solid rgba(192,132,252,0.2); }
+
+/* ── RIGHT PANEL — KANBAN ── */
+.kanban-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--night);
+}
+.kanban-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kanban-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  flex: 1;
+  overflow: hidden;
+}
+.kanban-col {
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.kanban-col:last-child { border-right: none; }
+.col-head {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.col-title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  flex: 1;
+}
+.col-count {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text3);
+}
+.col-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.col-items::-webkit-scrollbar { width: 2px; }
+.col-items::-webkit-scrollbar-thumb { background: var(--border); }
+
+.kanban-card {
+  background: var(--night2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  border-left: 3px solid transparent;
+}
+.kanban-card:hover { border-color: var(--border2); background: var(--night3); }
+.kanban-card.k-backlog { border-left-color: var(--text3); }
+.kanban-card.k-planned { border-left-color: var(--p-col); }
+.kanban-card.k-doing   { border-left-color: var(--d-col); }
+.kanban-card.k-done    { border-left-color: var(--green); opacity: 0.7; }
+
+/* col header colors */
+.col-backlog .col-title { color: var(--text2); }
+.col-planned .col-title { color: var(--p-col); }
+.col-doing   .col-title { color: var(--d-col); }
+.col-done    .col-title { color: var(--green); }
+
+/* drag */
+.kanban-col.drag-over { background: rgba(255,255,255,0.02); }
+.kanban-card.dragging { opacity: 0.4; }
+
+/* ── PROMPT PANEL ── */
+.prompt-slide {
+  background: var(--night2);
+  border-bottom: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.prompt-slide.open { max-height: 120px; }
+.prompt-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 18px;
+}
+.prompt-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.prompt-q {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  flex: 1;
+  line-height: 1.4;
+}
+.prompt-sub { font-size: 0.75rem; color: var(--text2); margin-top: 3px; }
+.prompt-acts { display: flex; gap: 8px; margin-top: 10px; }
+.prompt-ok {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 14px; border-radius: 2px;
+  border: 1px solid; cursor: pointer; background: none; transition: all 0.18s;
+}
+.prompt-later {
+  font-family: var(--mono); font-size: 0.6rem;
+  padding: 5px 10px; border: 1px solid var(--border);
+  background: none; color: var(--text2); cursor: pointer;
+  border-radius: 2px; transition: all 0.15s;
+}
+.prompt-later:hover { border-color: var(--text2); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--night3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 8px 18px;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s;
+  white-space: nowrap;
+  z-index: 200;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── MOBILE ── */
+@media (max-width: 680px) {
+  .main-layout { grid-template-columns: 1fr; }
+  .kanban-panel { display: none; }
+  .setup-card { padding: 28px 24px; }
+  .pdca-name, .pdca-time { display: none; }
+  .pdca-step { padding: 0 10px 0 8px; }
+  .pdca-label { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SETUP SCREEN ── -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">ToDo<span> × Time</span></div>
+    <div class="setup-tagline">MKDSS Edition · Banyan Logic · v2.0</div>
+
+    <!-- GITHUB CONFIG -->
+    <div class="setup-section">
+      <div class="setup-section-label">GitHub Storage</div>
+
+      <div class="field">
+        <label>Repo Owner (throwaway GitHub account username)</label>
+        <input type="text" id="ghOwner" placeholder="e.g. my-storage-account" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Repo A Name</label>
+          <input type="text" id="ghRepoA" placeholder="e.g. store-alpha" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>Repo B Name</label>
+          <input type="text" id="ghRepoB" placeholder="e.g. store-beta" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label>GitHub PAT (contents:write scope only)</label>
+        <input type="password" id="ghPat" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- INSTANCE CONFIG -->
+    <div class="setup-section">
+      <div class="setup-section-label">Instance Identity</div>
+
+      <div class="field">
+        <label>Storage ID A (filename in Repo A — leave blank to generate)</label>
+        <input type="text" id="storageA" placeholder="auto-generated on first launch" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Storage ID B (filename in Repo B — leave blank to generate)</label>
+        <input type="text" id="storageB" placeholder="auto-generated on first launch" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>INSTANCE_ID (n::random — leave blank to generate)</label>
+        <input type="text" id="instanceId" placeholder="auto-generated on first launch" autocomplete="off">
+      </div>
+
+      <div id="generatedIds" style="display:none">
+        <div class="instance-display" id="idsDisplay"></div>
+        <div class="n-hint" style="margin-top:6px;color:var(--red)">⚠ Save these three values before continuing — they cannot be recovered.</div>
+      </div>
+    </div>
+
+    <!-- SENSITIVITY TIER -->
+    <div class="setup-section">
+      <div class="setup-section-label">Data Sensitivity Tier</div>
+      <div class="tier-grid">
+        <div class="tier-card active" data-n="3" onclick="selectTier(this,3)">
+          <div class="tier-name">Ephemeral</div>
+          <div class="tier-n">n = 3</div>
+          <div class="tier-desc">Task lists, UI state, daily PDCA — loss-tolerant, non-personal.</div>
+          <div class="tier-detail">3 repos · 6 orderings</div>
+        </div>
+        <div class="tier-card" data-n="5" onclick="selectTier(this,5)">
+          <div class="tier-name">Standard</div>
+          <div class="tier-n">n = 5</div>
+          <div class="tier-desc">Work items, project notes — structured but not deeply personal.</div>
+          <div class="tier-detail">5 repos · 120 orderings</div>
+        </div>
+        <div class="tier-card" data-n="7" onclick="selectTier(this,7)">
+          <div class="tier-name">Sensitive</div>
+          <div class="tier-n">n = 7</div>
+          <div class="tier-desc">Personal reflections, private items — higher combinatorial resistance.</div>
+          <div class="tier-detail">7 repos · 5,040 orderings</div>
+        </div>
+      </div>
+      <div class="n-hint" id="tierHint">Ephemeral selected — 3 GitHub repos required. Data split by character position across all repos.</div>
+    </div>
+
+    <button class="setup-btn" id="setupBtn" onclick="handleSetup()">
+      ▶ Launch App
+    </button>
+
+    <div class="setup-footer">
+      MKDSS Architecture · nDemux/nMux · Kasturi/Perry 1991 lineage<br>
+      <a href="https://srinimkasturi.github.io/Hums/" target="_blank">Banyan Logic</a> · MIT License · Non-PII data only
+    </div>
+  </div>
+</div>
+
+<!-- ── APP SHELL ── -->
+<div class="app" id="appShell">
+
+  <!-- PDCA BAR -->
+  <div class="pdca-bar">
+    <div class="pdca-label">Today</div>
+    <div class="pdca-steps">
+      <div class="pdca-step" data-p="P" data-i="0" onclick="pdcaTap(0)">
+        <div class="pdca-dot"></div>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div class="pdca-ltr">P</div>
+          <div class="pdca-name">Plan</div>
+          <div class="pdca-time">9 AM</div>
+        </div>
+      </div>
+      <div class="pdca-step" data-p="D" data-i="1" onclick="pdcaTap(1)">
+        <div class="pdca-dot"></div>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div class="pdca-ltr">D</div>
+          <div class="pdca-name">Do</div>
+          <div class="pdca-time">All day</div>
+        </div>
+      </div>
+      <div class="pdca-step" data-p="C" data-i="2" onclick="pdcaTap(2)">
+        <div class="pdca-dot"></div>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div class="pdca-ltr">C</div>
+          <div class="pdca-name">Check</div>
+          <div class="pdca-time">2 PM</div>
+        </div>
+      </div>
+      <div class="pdca-step" data-p="A" data-i="3" onclick="pdcaTap(3)">
+        <div class="pdca-dot"></div>
+        <div style="display:flex;flex-direction:column;gap:1px">
+          <div class="pdca-ltr">A</div>
+          <div class="pdca-name">Adjust</div>
+          <div class="pdca-time">End of day</div>
+        </div>
+      </div>
+    </div>
+    <div class="pdca-right">
+      <div class="pdca-clock" id="pdcaClock"></div>
+      <button class="pdca-toggle" id="pdcaToggle" onclick="togglePdca()">Off</button>
+    </div>
+  </div>
+
+  <!-- PROMPT SLIDE -->
+  <div class="prompt-slide" id="promptSlide">
+    <div class="prompt-inner">
+      <div class="prompt-badge" id="promptBadge">P</div>
+      <div style="flex:1">
+        <div class="prompt-q" id="promptQ"></div>
+        <div class="prompt-sub" id="promptSub"></div>
+        <div class="prompt-acts">
+          <button class="prompt-ok" id="promptOk" onclick="pdcaMarkDone()">Done</button>
+          <button class="prompt-later" onclick="closePrompt()">Later</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYNC BAR -->
+  <div class="sync-bar">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncStatus">Connecting...</span>
+    <div class="sync-actions">
+      <button class="sync-btn" onclick="syncNow()">↻ Sync</button>
+      <button class="sync-btn export-btn" onclick="exportHTML()">↓ Export HTML</button>
+      <button class="sync-btn" onclick="resetApp()" style="color:var(--text3)">⚙ Reset</button>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+
+    <!-- TODO PANEL -->
+    <div class="todo-panel">
+      <div class="panel-header">
+        <div class="panel-title">Tasks</div>
+        <div class="panel-count" id="todoCount">0 items</div>
+      </div>
+
+      <div class="month-slider">
+        <div class="month-label" id="monthLabel">May 2026</div>
+        <input type="range" class="slider" id="monthSlider" min="0" max="23" value="0" oninput="changeMonth(this.value)">
+      </div>
+
+      <div class="add-todo">
+        <input class="add-input" id="addInput" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()">
+        <button class="add-btn" onclick="addTodo()">+ Add</button>
+      </div>
+
+      <div class="todo-list" id="todoList"></div>
+    </div>
+
+    <!-- KANBAN PANEL -->
+    <div class="kanban-panel">
+      <div class="kanban-header">
+        <div class="panel-title">Kanban · SAFe Funnel</div>
+        <div class="panel-count" id="kanbanCount">0 cards</div>
+      </div>
+
+      <div class="kanban-cols">
+        <div class="kanban-col col-backlog" id="col-backlog"
+             ondragover="dragOver(event,'backlog')" ondrop="drop(event,'backlog')">
+          <div class="col-head">
+            <div class="col-title">Backlog</div>
+            <div class="col-count" id="cnt-backlog">0</div>
+          </div>
+          <div class="col-items" id="items-backlog"></div>
+        </div>
+        <div class="kanban-col col-planned" id="col-planned"
+             ondragover="dragOver(event,'planned')" ondrop="drop(event,'planned')">
+          <div class="col-head">
+            <div class="col-title">Planned</div>
+            <div class="col-count" id="cnt-planned">0</div>
+          </div>
+          <div class="col-items" id="items-planned"></div>
+        </div>
+        <div class="kanban-col col-doing" id="col-doing"
+             ondragover="dragOver(event,'doing')" ondrop="drop(event,'doing')">
+          <div class="col-head">
+            <div class="col-title">Doing</div>
+            <div class="col-count" id="cnt-doing">0</div>
+          </div>
+          <div class="col-items" id="items-doing"></div>
+        </div>
+        <div class="kanban-col col-done" id="col-done"
+             ondragover="dragOver(event,'done')" ondrop="drop(event,'done')">
+          <div class="col-head">
+            <div class="col-title">Done</div>
+            <div class="col-count" id="cnt-done">0</div>
+          </div>
+          <div class="col-items" id="items-done"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────────────
+var cfg = {};      // GitHub config
+var appData = {    // main app state
+  todos: [],
+  kanban: {},      // id → column
+  pdcaDone: [false,false,false,false],
+  currentMonth: 0,
+  _ts: 0
+};
+var selectedN = 3;
+var pdcaOn = false;
+var pdcaDone = [false,false,false,false];
+var syncTimer = null;
+var dragId = null;
+var toastTimer = null;
+var activePrompt = -1;
+
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var NOW = new Date();
+
+// ── nDEMUX / nMUX ─────────────────────────────────────────────────────────────
+function nDemux(str, n) {
+  var b = Array.from({length: n}, function(){ return ''; });
+  for (var i = 0; i < str.length; i++) b[i % n] += str[i];
+  return b;
+}
+function nMux(buckets) {
+  var out = '', n = buckets.length;
+  var len = Math.max.apply(null, buckets.map(function(x){ return x.length; }));
+  for (var i = 0; i < len; i++)
+    for (var j = 0; j < n; j++)
+      if (i < buckets[j].length) out += buckets[j][i];
+  return out;
+}
+
+// ── ID GENERATION ─────────────────────────────────────────────────────────────
+function randomHex(bytes) {
+  var arr = crypto.getRandomValues(new Uint8Array(bytes));
+  return Array.from(arr).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+function generateIds(n) {
+  var primes = [2,3,5,7,11];
+  var prime = primes.indexOf(n) >= 0 ? n : 3;
+  var randomId = randomHex(32);
+  var instanceId = prime + '::' + randomId;
+  var storageIds = Array.from({length: prime}, function(){ return randomHex(8); });
+  return { instanceId: instanceId, storageIds: storageIds, n: prime };
+}
+
+// ── SETUP ─────────────────────────────────────────────────────────────────────
+function selectTier(el, n) {
+  selectedN = n;
+  document.querySelectorAll('.tier-card').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var hints = {
+    3: 'Ephemeral selected — 3 GitHub repos required. Good for task lists and daily state.',
+    5: 'Standard selected — 5 GitHub repos required. 120 orderings. Good for work items.',
+    7: 'Sensitive selected — 7 GitHub repos required. 5,040 orderings. Best for private data.'
+  };
+  document.getElementById('tierHint').textContent = hints[n] || '';
+}
+function selectN(n) { /* legacy compat */ selectedN = n; }
+
+function handleSetup() {
+  var owner  = document.getElementById('ghOwner').value.trim();
+  var repoA  = document.getElementById('ghRepoA').value.trim();
+  var repoB  = document.getElementById('ghRepoB').value.trim();
+  var pat    = document.getElementById('ghPat').value.trim();
+  var sidA   = document.getElementById('storageA').value.trim();
+  var sidB   = document.getElementById('storageB').value.trim();
+  var iid    = document.getElementById('instanceId').value.trim();
+
+  if (!owner || !repoA || !repoB || !pat) {
+    showToast('Fill in GitHub owner, both repo names, and PAT');
+    return;
+  }
+
+  // Generate IDs if not provided
+  var generated = false;
+  if (!iid || !sidA || !sidB) {
+    var ids = generateIds(selectedN);
+    iid  = iid  || ids.instanceId;
+    sidA = sidA || ids.storageIds[0];
+    sidB = sidB || (ids.storageIds[1] || randomHex(8));
+    generated = true;
+
+    var display = document.getElementById('idsDisplay');
+    display.innerHTML =
+      'INSTANCE_ID:  ' + iid + '\n' +
+      'Storage ID A: ' + sidA + '\n' +
+      'Storage ID B: ' + sidB;
+    document.getElementById('generatedIds').style.display = 'block';
+
+    if (generated) {
+      showToast('IDs generated — save them before continuing!');
+      // Give user time to save
+      document.getElementById('setupBtn').textContent = '▶ I\'ve Saved My IDs — Launch';
+      document.getElementById('setupBtn').onclick = function() { doLaunch(owner, repoA, repoB, pat, sidA, sidB, iid); };
+      return;
+    }
+  }
+
+  doLaunch(owner, repoA, repoB, pat, sidA, sidB, iid);
+}
+
+function doLaunch(owner, repoA, repoB, pat, sidA, sidB, iid) {
+  cfg = { owner: owner, repoA: repoA, repoB: repoB, pat: pat, sidA: sidA, sidB: sidB, instanceId: iid };
+  var n = parseInt(iid.split('::')[0]) || 3;
+  cfg.n = n;
+
+  // Save config (minus PAT — PAT stays in memory only)
+  localStorage.setItem('mkdss_cfg', JSON.stringify({
+    owner: owner, repoA: repoA, repoB: repoB,
+    sidA: sidA, sidB: sidB, instanceId: iid, n: n
+  }));
+
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('appShell').classList.add('visible');
+
+  initApp();
+  syncFromGitHub();
+}
+
+// ── GITHUB READ / WRITE ───────────────────────────────────────────────────────
+function ghUrl(repo, filename) {
+  return 'https://api.github.com/repos/' + cfg.owner + '/' + repo + '/contents/' + filename + '.txt';
+}
+function ghRawUrl(repo, filename) {
+  return 'https://raw.githubusercontent.com/' + cfg.owner + '/' + repo + '/main/' + filename + '.txt';
+}
+
+function ghRead(repo, filename) {
+  return fetch(ghRawUrl(repo, filename), { cache: 'no-store' })
+    .then(function(r) {
+      if (r.status === 404) return '';
+      return r.ok ? r.text() : '';
+    })
+    .catch(function(){ return ''; });
+}
+
+function ghWrite(repo, filename, content) {
+  var url = ghUrl(repo, filename);
+  return fetch(url, { headers: { 'Authorization': 'token ' + cfg.pat } })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(meta) {
+      var body = { message: 'mkdss update', content: btoa(unescape(encodeURIComponent(content))) };
+      if (meta && meta.sha) body.sha = meta.sha;
+      return fetch(url, {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + cfg.pat, 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+    });
+}
+
+// ── MKDSS READ / WRITE ────────────────────────────────────────────────────────
+function setSyncStatus(state, msg) {
+  var dot = document.getElementById('syncDot');
+  var status = document.getElementById('syncStatus');
+  dot.className = 'sync-dot ' + state;
+  status.textContent = msg;
+}
+
+function syncFromGitHub() {
+  setSyncStatus('syncing', 'Fetching from GitHub...');
+  Promise.all([
+    ghRead(cfg.repoA, cfg.sidA),
+    ghRead(cfg.repoB, cfg.sidB)
+  ]).then(function(buckets) {
+    var combined = nMux(buckets);
+    if (!combined.trim()) {
+      setSyncStatus('ok', 'Ready — no remote data yet');
+      return;
+    }
+    try {
+      var remote = JSON.parse(combined);
+      if (!appData._ts || remote._ts > appData._ts) {
+        appData = remote;
+        localStorage.setItem('mkdss_data', combined);
+        renderAll();
+      }
+      setSyncStatus('ok', 'Synced · ' + new Date().toLocaleTimeString());
+    } catch(e) {
+      setSyncStatus('error', 'Parse error — local data retained');
+    }
+  }).catch(function() {
+    setSyncStatus('error', 'GitHub unreachable — working offline');
+  });
+}
+
+function syncToGitHub() {
+  if (!cfg.pat) return;
+  appData._ts = Date.now();
+  var str = JSON.stringify(appData);
+  localStorage.setItem('mkdss_data', str);
+  var buckets = nDemux(str, cfg.n);
+  setSyncStatus('syncing', 'Saving to GitHub...');
+  Promise.all([
+    ghWrite(cfg.repoA, cfg.sidA, buckets[0] || ''),
+    ghWrite(cfg.repoB, cfg.sidB, buckets[1] || '')
+  ]).then(function() {
+    setSyncStatus('ok', 'Saved · ' + new Date().toLocaleTimeString());
+  }).catch(function() {
+    setSyncStatus('error', 'Save failed — data in localStorage');
+  });
+}
+
+function syncNow() { syncFromGitHub(); }
+
+function scheduleSave() {
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncToGitHub, 2000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function initApp() {
+  // Load from localStorage first (instant boot)
+  var cached = localStorage.getItem('mkdss_data');
+  if (cached) {
+    try { appData = JSON.parse(cached); } catch(e) {}
+  }
+  if (!appData.todos) appData.todos = [];
+  if (!appData.kanban) appData.kanban = {};
+  if (!appData.pdcaDone) appData.pdcaDone = [false,false,false,false];
+  if (!appData.currentMonth) appData.currentMonth = 0;
+  pdcaDone = appData.pdcaDone.slice();
+
+  renderAll();
+  tickClock();
+  setInterval(tickClock, 30000);
+  setDate();
+}
+
+// ── DATE / MONTH ──────────────────────────────────────────────────────────────
+function setDate() {
+  var d = new Date();
+  d.setMonth(d.getMonth() + appData.currentMonth);
+  var label = MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  document.getElementById('monthLabel').textContent = label;
+  document.getElementById('monthSlider').value = appData.currentMonth;
+}
+
+function changeMonth(val) {
+  appData.currentMonth = parseInt(val);
+  setDate();
+  scheduleSave();
+}
+
+// ── TODOS ─────────────────────────────────────────────────────────────────────
+function addTodo() {
+  var inp = document.getElementById('addInput');
+  var text = inp.value.trim();
+  if (!text) return;
+  var todo = { id: Date.now().toString(), text: text, done: false, tag: null };
+  appData.todos.push(todo);
+  if (!appData.kanban[todo.id]) appData.kanban[todo.id] = 'backlog';
+  inp.value = '';
+  renderAll();
+  scheduleSave();
+}
+
+function toggleTodo(id) {
+  var todo = appData.todos.find(function(t){ return t.id === id; });
+  if (!todo) return;
+  todo.done = !todo.done;
+  if (todo.done && appData.kanban[id] !== 'done') appData.kanban[id] = 'done';
+  if (!todo.done && appData.kanban[id] === 'done') appData.kanban[id] = 'doing';
+  renderAll();
+  scheduleSave();
+}
+
+function setTag(id, tag) {
+  var todo = appData.todos.find(function(t){ return t.id === id; });
+  if (!todo) return;
+  todo.tag = todo.tag === tag ? null : tag;
+  renderAll();
+  scheduleSave();
+}
+
+function renderTodos() {
+  var list = document.getElementById('todoList');
+  var todos = appData.todos;
+  list.innerHTML = '';
+  todos.forEach(function(todo) {
+    var item = document.createElement('div');
+    item.className = 'todo-item' + (todo.done ? ' done-item' : '');
+    item.innerHTML =
+      '<div class="todo-check" onclick="event.stopPropagation();toggleTodo(\'' + todo.id + '\')"></div>' +
+      '<div style="flex:1">' +
+        '<div class="todo-text">' + escHtml(todo.text) + '</div>' +
+        '<div class="todo-tags">' +
+          '<span class="tag tag-W' + (todo.tag==='W'?' ':'') + '" onclick="event.stopPropagation();setTag(\'' + todo.id + '\',\'W\')" style="cursor:pointer;opacity:' + (todo.tag==='W'?'1':'0.35') + '">W</span>' +
+          '<span class="tag tag-L" onclick="event.stopPropagation();setTag(\'' + todo.id + '\',\'L\')" style="cursor:pointer;opacity:' + (todo.tag==='L'?'1':'0.35') + '">L</span>' +
+        '</div>' +
+      '</div>';
+    list.appendChild(item);
+  });
+  document.getElementById('todoCount').textContent = todos.length + ' item' + (todos.length !== 1 ? 's' : '');
+}
+
+// ── KANBAN ────────────────────────────────────────────────────────────────────
+function renderKanban() {
+  var cols = ['backlog','planned','doing','done'];
+  cols.forEach(function(col) {
+    document.getElementById('items-' + col).innerHTML = '';
+    document.getElementById('cnt-' + col).textContent = '0';
+  });
+
+  var counts = { backlog:0, planned:0, doing:0, done:0 };
+  appData.todos.forEach(function(todo) {
+    var col = appData.kanban[todo.id] || 'backlog';
+    if (!counts[col] && counts[col] !== 0) col = 'backlog';
+    counts[col]++;
+    var card = document.createElement('div');
+    card.className = 'kanban-card k-' + col;
+    card.draggable = true;
+    card.dataset.id = todo.id;
+    card.textContent = todo.text;
+    card.addEventListener('dragstart', function(e) {
+      dragId = todo.id;
+      setTimeout(function(){ card.classList.add('dragging'); }, 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', function() { card.classList.remove('dragging'); dragId = null; });
+    document.getElementById('items-' + col).appendChild(card);
+  });
+
+  cols.forEach(function(col) {
+    document.getElementById('cnt-' + col).textContent = counts[col];
+  });
+  document.getElementById('kanbanCount').textContent =
+    appData.todos.length + ' card' + (appData.todos.length !== 1 ? 's' : '');
+}
+
+function dragOver(e, col) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+function drop(e, col) {
+  e.preventDefault();
+  if (!dragId) return;
+  appData.kanban[dragId] = col;
+  renderKanban();
+  scheduleSave();
+}
+
+function renderAll() {
+  renderTodos();
+  renderKanban();
+  setDate();
+  if (pdcaOn) renderPdca(new Date().getHours());
+}
+
+// ── PDCA ─────────────────────────────────────────────────────────────────────
+var PDCA_CONFIG = [
+  { letter:'P', q:'What are you doing today?', sub:'Set your intention for the day.', color:'var(--p-col)', bg:'rgba(59,130,246,0.12)' },
+  { letter:'D', q:'Working your list.', sub:'Ambient — stay with it.', color:'var(--d-col)', bg:'rgba(34,197,94,0.1)' },
+  { letter:'C', q:'How is it going?', sub:'What is done, stuck, or needs to shift?', color:'var(--c-col)', bg:'rgba(245,158,11,0.12)' },
+  { letter:'A', q:'What changes tomorrow?', sub:'Close the loop. One honest observation.', color:'var(--a-col)', bg:'rgba(168,85,247,0.12)' }
+];
+
+function togglePdca() {
+  pdcaOn = !pdcaOn;
+  var btn = document.getElementById('pdcaToggle');
+  btn.textContent = pdcaOn ? 'On' : 'Off';
+  btn.className = pdcaOn ? 'pdca-toggle on' : 'pdca-toggle';
+  if (pdcaOn) renderPdca(new Date().getHours());
+  else document.querySelectorAll('.pdca-step').forEach(function(s){ s.className = 'pdca-step'; s.setAttribute('data-p', s.dataset.p); });
+}
+
+function renderPdca(h) {
+  var steps = document.querySelectorAll('.pdca-step');
+  steps.forEach(function(s){ s.classList.remove('active','done','ambient'); });
+  if (pdcaDone[0]) steps[0].classList.add('done');
+  else if (h === 9) steps[0].classList.add('active');
+  if (pdcaDone[1]) steps[1].classList.add('done');
+  else if (h >= 9 && h < 14) steps[1].classList.add('ambient');
+  if (pdcaDone[2]) steps[2].classList.add('done');
+  else if (h === 14) steps[2].classList.add('active');
+  if (pdcaDone[3]) steps[3].classList.add('done');
+  else if (pdcaDone[2] || h >= 17) steps[3].classList.add('active');
+
+  if (h === 9 && !pdcaDone[0] && activePrompt !== 0) triggerPrompt(0);
+  if (h === 14 && !pdcaDone[2] && activePrompt !== 2) triggerPrompt(2);
+}
+
+function pdcaTap(i) {
+  if (!pdcaOn) return;
+  if (i === 3 && !pdcaDone[3]) { triggerPrompt(3); return; }
+  if (!pdcaDone[i]) triggerPrompt(i);
+}
+
+function triggerPrompt(i) {
+  if (!pdcaOn) return;
+  activePrompt = i;
+  var p = PDCA_CONFIG[i];
+  var badge = document.getElementById('promptBadge');
+  badge.textContent = p.letter;
+  badge.style.background = p.bg;
+  badge.style.color = p.color;
+  badge.style.border = '1px solid ' + p.color;
+  document.getElementById('promptQ').textContent = p.q;
+  document.getElementById('promptSub').textContent = p.sub;
+  var ok = document.getElementById('promptOk');
+  ok.style.borderColor = p.color;
+  ok.style.color = p.color;
+  document.getElementById('promptSlide').classList.add('open');
+}
+
+function closePrompt() {
+  document.getElementById('promptSlide').classList.remove('open');
+  activePrompt = -1;
+}
+
+function pdcaMarkDone() {
+  if (activePrompt >= 0) {
+    pdcaDone[activePrompt] = true;
+    if (activePrompt === 0) pdcaDone[1] = true;
+    appData.pdcaDone = pdcaDone.slice();
+    renderPdca(new Date().getHours());
+  }
+  closePrompt();
+  scheduleSave();
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+function tickClock() {
+  var d = new Date();
+  var h = d.getHours(), m = d.getMinutes();
+  var ap = h >= 12 ? 'PM' : 'AM';
+  var hh = h % 12 || 12;
+  document.getElementById('pdcaClock').textContent = hh + ':' + (m<10?'0'+m:m) + ' ' + ap;
+  if (pdcaOn) renderPdca(h);
+}
+
+// ── HTML EXPORT ───────────────────────────────────────────────────────────────
+function exportHTML() {
+  var todos = appData.todos;
+  var kanban = appData.kanban;
+  var dt = new Date().toLocaleString();
+
+  var rows = todos.map(function(t) {
+    return '<tr><td>' + escHtml(t.text) + '</td><td>' + (t.done ? '✓' : '○') + '</td><td>' + (kanban[t.id]||'backlog') + '</td><td>' + (t.tag||'') + '</td></tr>';
+  }).join('');
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ToDo Export · ' + dt + '</title>' +
+    '<style>body{font-family:system-ui;max-width:700px;margin:40px auto;padding:20px;color:#111}' +
+    'h1{font-size:1.4rem;margin-bottom:4px}p{color:#666;font-size:0.85rem;margin-bottom:24px}' +
+    'table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 12px;border-bottom:1px solid #eee}' +
+    'th{background:#f5f5f5;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em}' +
+    '.restore{margin-top:32px;padding:16px;background:#f9f9f9;border:1px solid #ddd;font-size:0.82rem}' +
+    '</style></head><body>' +
+    '<h1>ToDo × Time Export</h1>' +
+    '<p>Exported: ' + dt + ' · MKDSS Architecture · Banyan Logic</p>' +
+    '<table><thead><tr><th>Task</th><th>Done</th><th>Column</th><th>Tag</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+    '<div class="restore"><strong>Restore to MKDSS:</strong> Copy your INSTANCE_ID and Storage IDs, open the app, enter them on the setup screen. All data will restore from GitHub.</div>' +
+    '<script>var DATA=' + JSON.stringify(appData) + ';<\/script>' +
+    '</body></html>';
+
+  var blob = new Blob([html], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'todoxtime-export-' + Date.now() + '.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('HTML export downloaded');
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function resetApp() {
+  if (!confirm('Reset app? This clears local data and returns to setup. Remote GitHub data is NOT deleted.')) return;
+  localStorage.removeItem('mkdss_data');
+  localStorage.removeItem('mkdss_cfg');
+  location.reload();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+var toastTimer = null;
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+}
+
+// ── AUTO-LOAD SAVED CONFIG ────────────────────────────────────────────────────
+(function() {
+  var saved = localStorage.getItem('mkdss_cfg');
+  if (saved) {
+    try {
+      var c = JSON.parse(saved);
+      // Restore config fields
+      document.getElementById('ghOwner').value = c.owner || '';
+      document.getElementById('ghRepoA').value = c.repoA || '';
+      document.getElementById('ghRepoB').value = c.repoB || '';
+      document.getElementById('storageA').value = c.sidA || '';
+      document.getElementById('storageB').value = c.sidB || '';
+      document.getElementById('instanceId').value = c.instanceId || '';
+      if (c.n) {
+        var tierCard = document.querySelector('.tier-card[data-n="' + c.n + '"]');
+        if (tierCard) selectTier(tierCard, c.n);
+        else selectN(c.n);
+      }
+    } catch(e) {}
+  }
+})();
+</script>
+</body>
+</html>
